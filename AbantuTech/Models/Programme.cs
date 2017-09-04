@@ -22,16 +22,9 @@ namespace Abantu_System.Models
         [MaxLength(200)]
         public string Description { get; set; }
 
-        ////Navigational properties:
-        //public int? Budget_ID { get; set; }
-        //public virtual Budget Budget { get; set; }
-
         public ICollection<Event> Events { get; set; }
 
         public int? Committee_ID { get; set; }
         public Committee Committee { get; set; }
-
-        ////for many-to-to many references
-        //public virtual ICollection<ProgrammeMember> ProgrammeMembers { get; set; }
     }
 }

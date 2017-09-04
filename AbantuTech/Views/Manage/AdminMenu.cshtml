@@ -1,0 +1,45 @@
+﻿
+@{
+    ViewBag.Title = "AdminMenu";
+    Layout = "~/Views/Shared/_Layout2.cshtml";
+}
+<style>
+    img {
+        display: block;
+        margin: auto;
+    }
+</style>
+<img src="~/Content/Template/images/5.jpg" height="110" width=110" />
+<h1><p align="center">Manage</p></h1>
+<h2>Admin Menu</h2>
+<ul class="table">
+    <li class="h4">
+        @Html.ActionLink("Members", "Index", "Members")
+    </li>
+    <li class="h4">
+        @Html.ActionLink("Meetings", "Index", "Meetings")
+    </li>
+    <li class="h4">
+        @Html.ActionLink("Branches", "Index", "Branches")
+    </li>
+    <li class="h4">
+        @Html.ActionLink("Committees", "Index", "Committees")
+    </li>
+    <li class="h4">
+        @Html.ActionLink("Tasks", "Index", "Tasks")
+    </li>
+    <li class="h4">
+        @Html.ActionLink("Budgets", "Index", "Budgets")
+    </li>
+    <li class="h4">
+        @Html.ActionLink("Budget Expenses", "Index", "BudgetExpenses")
+    </li>
+    <li class="h4">
+        @Html.ActionLink("Donations", "Index", "DonationAmounts")
+    </li>
+    <li class="h4">
+        @Html.ActionLink("Administer Roles", "Index", "Roles")
+    </li>
+
+</ul>
+

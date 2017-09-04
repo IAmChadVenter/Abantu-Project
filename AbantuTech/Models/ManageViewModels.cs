@@ -12,6 +12,12 @@ namespace AbantuTech.Models
         public string PhoneNumber { get; set; }
         public bool TwoFactor { get; set; }
         public bool BrowserRemembered { get; set; }
+        public bool isProfileActive { get; set; }
+        public bool isDeactRequested { get; set; }
+        public bool isReactRequested { get; set; }
+        public bool isDeactApproved { get; set; }
+        public bool isReactApproved { get; set; }
+
     }
 
     public class ManageLoginsViewModel

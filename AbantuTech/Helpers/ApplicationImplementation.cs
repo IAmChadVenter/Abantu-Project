@@ -15,6 +15,7 @@ namespace AbantuTech.Helpers
     public class ApplicationImplementation : IApplication
     {
         private readonly ApplicationDbContext _context = new ApplicationDbContext();
+        SendGridKey _key = new SendGridKey();
         public void postApplication(AbantuMember member)
         {
             if(member != null)
@@ -60,6 +61,7 @@ namespace AbantuTech.Helpers
             if(member != null)
             {
                 member.isAccepted = true;
+                member.isProfileActive = true;
                 Save();
                 // create user
                 var user = createUser(member.Member_ID);
@@ -85,7 +87,7 @@ namespace AbantuTech.Helpers
             if(member != null)
             {
                 var to = new EmailAddress(member.Email, member.FirstName);
-                var client = new SendGridClient("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");
+                var client = new SendGridClient("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");
                 var from = new EmailAddress("no-reply@abantutech.com", "Abantu Tech");
 
                 var htmlContent = emailMessage(member.Member_ID);

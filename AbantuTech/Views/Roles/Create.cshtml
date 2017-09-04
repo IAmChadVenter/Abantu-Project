@@ -1,35 +1,31 @@
-﻿@model AbantuTech.Models.RolesViewModel
-
+﻿
 @{
     ViewBag.Title = "Create";
+    Layout = "~/Views/Shared/_Layout2.cshtml";
 }
+<style>
+    img {
+        display: block;
+        margin: auto;
+    }
+</style>
+<img src="~/Content/Template/images/5.jpg" height="110" width=110" />
+<h1><p align="center">Roles</p></h1>
+<h2>Create Role</h2>
 
-<h2>Create</h2>
-
-@using (Html.BeginForm()) 
+@Html.ActionLink("List Roles", "Index") | @Html.ActionLink("Manage User Role", "ManageUserRoles")
+<hr />
+@using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
-    
-    <div class="form-horizontal">
-        <h4>RolesViewModel</h4>
-        <hr />
-        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        <div class="form-group">
-            @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
-            </div>
-        </div>
+    @Html.ValidationSummary(true)
 
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
-        </div>
+    <div>
+        Role name
     </div>
+    <p>
+        @Html.TextBox("RoleName")
+    </p>
+    <input type="submit" value="Save" />
 }
 
-<div>
-    @Html.ActionLink("Back to List", "Index")
-</div>

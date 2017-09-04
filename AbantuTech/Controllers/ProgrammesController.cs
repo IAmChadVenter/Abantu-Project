@@ -11,6 +11,7 @@ using Abantu_System.Models;
 
 namespace AbantuTech.Controllers
 {
+    [Authorize]
     public class ProgrammesController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();
@@ -21,7 +22,21 @@ namespace AbantuTech.Controllers
             var programmes = db.Programmes.Include(p => p.Committee);
             return View(programmes.ToList());
         }
-
+        [HttpGet]
+        public ActionResult ProgrammeMembers(int id)
+        {
+            var programme = db.Programmes
+                .FirstOrDefault(p => p.Programme_ID == id);
+            if(programme != null)
+            {
+                var programmeMembers = db.ProgrammeMembers
+                    .Include(p => p.Member)
+                    .Where(x => x.Programme_ID == programme.Programme_ID)
+                    .ToList();
+                return View(programmeMembers);
+            }
+            return View();
+        }
         // GET: Programmes/Details/5
         public ActionResult Details(int? id)
         {
@@ -121,6 +136,66 @@ namespace AbantuTech.Controllers
             return RedirectToAction("Index");
         }
 
+        // ADD YOURSELF TO PROGRAMME
+        [HttpPost]
+        public JsonResult AddToProgramme(int id)
+        {
+            var email = HttpContext.User.Identity.Name;
+            var programme = db.Programmes
+                .FirstOrDefault(x => x.Programme_ID == id);
+            var member = db.Members
+                .FirstOrDefault(x => x.Email == email);
+            if(programme != null && member != null)
+            {
+                var userprogramme = db.ProgrammeMembers
+                    .FirstOrDefault(p => p.Member_ID == member.Member_ID 
+                    && p.Programme_ID == programme.Programme_ID);
+                if(userprogramme != null)
+                {
+                    return Json(new { message = "You already in" });
+                }
+                else
+                {
+                    var memberprograme = new ProgrammeMember
+                    {
+                        Member_ID = member.Member_ID,
+                        Member = member,
+                        Programme_ID = programme.Programme_ID,
+                        Programme = programme
+                    };
+                    db.ProgrammeMembers.Add(memberprograme);
+                    db.SaveChanges();
+                }
+                return Json(new { success = true }, JsonRequestBehavior.AllowGet);
+            }
+            return Json(new { success = false }, JsonRequestBehavior.AllowGet);
+        }
+        [HttpDelete]
+        public JsonResult RemoveToProgramme(int id)
+        {
+            var email = HttpContext.User.Identity.Name;
+            var programme = db.Programmes
+                .FirstOrDefault(x => x.Programme_ID == id);
+            var member = db.Members
+                .FirstOrDefault(x => x.Email == email);
+            if (programme != null && member != null)
+            {
+                var userprogramme = db.ProgrammeMembers
+                    .FirstOrDefault(p => p.Member_ID == member.Member_ID
+                    && p.Programme_ID == programme.Programme_ID);
+                if (userprogramme == null)
+                {
+                    return Json(new { message = "Not in programme" });
+                }
+                else
+                {
+                    db.ProgrammeMembers.Remove(userprogramme);
+                    db.SaveChanges();
+                }
+                return Json(new { success = true }, JsonRequestBehavior.AllowGet);
+            }
+            return Json(new { success = false }, JsonRequestBehavior.AllowGet);
+        }
         protected override void Dispose(bool disposing)
         {
             if (disposing)

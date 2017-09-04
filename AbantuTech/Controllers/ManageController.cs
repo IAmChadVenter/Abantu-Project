@@ -7,34 +7,35 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using AbantuTech.Models;
+using Abantu_System.Models;
+using AbantuTech.Helpers;
+using Microsoft.AspNet.Identity.EntityFramework;
 
 namespace AbantuTech.Controllers
 {
-    [Authorize]
+
     public class ManageController : Controller
     {
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
+        private readonly ApplicationDbContext _context = new ApplicationDbContext();
 
-        public ManageController()
-        {
-        }
-
+        public ManageController() { }
         public ManageController(ApplicationUserManager userManager, ApplicationSignInManager signInManager)
         {
             UserManager = userManager;
             SignInManager = signInManager;
-        }
 
+        }
         public ApplicationSignInManager SignInManager
         {
             get
             {
                 return _signInManager ?? HttpContext.GetOwinContext().Get<ApplicationSignInManager>();
             }
-            private set 
-            { 
-                _signInManager = value; 
+            private set
+            {
+                _signInManager = value;
             }
         }
 
@@ -61,6 +62,10 @@ namespace AbantuTech.Controllers
                 : message == ManageMessageId.Error ? "An error has occurred."
                 : message == ManageMessageId.AddPhoneSuccess ? "Your phone number was added."
                 : message == ManageMessageId.RemovePhoneSuccess ? "Your phone number was removed."
+                : message == ManageMessageId.DeactProfileSuccess ? "Your request for profile deactivation has been sent."
+                : message == ManageMessageId.ReactProfileSuccess ? "Your request for profile reactivation has been sent."
+                : message == ManageMessageId.DeactCancelSuccess ? "You have successfully cancelled the profile deactivation request."
+                : message == ManageMessageId.ReactCancelSuccess ? "You have successfully cancelled the profile reactivation request."
                 : "";
 
             var userId = User.Identity.GetUserId();
@@ -70,7 +75,12 @@ namespace AbantuTech.Controllers
                 PhoneNumber = await UserManager.GetPhoneNumberAsync(userId),
                 TwoFactor = await UserManager.GetTwoFactorEnabledAsync(userId),
                 Logins = await UserManager.GetLoginsAsync(userId),
-                BrowserRemembered = await AuthenticationManager.TwoFactorBrowserRememberedAsync(userId)
+                BrowserRemembered = await AuthenticationManager.TwoFactorBrowserRememberedAsync(userId),
+                isProfileActive = HasActiveProfile(),
+                isDeactRequested = HasRequestedDeact(),
+                isReactRequested = HasRequestedReact(),
+                isDeactApproved = isDeactApproved(),
+                isReactApproved = isReactApproved()
             };
             return View(model);
         }
@@ -105,7 +115,10 @@ namespace AbantuTech.Controllers
         {
             return View();
         }
-
+        private async Task<ApplicationUser> GetCurrentUserAsync()
+        {
+            return await UserManager.FindByIdAsync(User.Identity.GetUserId());
+        }
         //
         // POST: /Manage/AddPhoneNumber
         [HttpPost]
@@ -243,7 +256,95 @@ namespace AbantuTech.Controllers
             AddErrors(result);
             return View(model);
         }
+        public ActionResult RequestDeact()
+        {
+            return View();
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> RequestDeact(IndexViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = await UserManager.FindByIdAsync(User.Identity.GetUserId());
+                var mem = _context.Members.Where(m => m.Email == user.Email).FirstOrDefault();
+                if (mem != null && model.isProfileActive == true)
+                {
+                    postDeactRequest(mem);
+                    return RedirectToAction("Index", new { Message = ManageMessageId.DeactProfileSuccess });
+                }
+                else
+                {
+                    return RedirectToAction("Index", new { Message = ManageMessageId.Error });
+                }
+            }
+            return View(model);
+        }
+        public ActionResult RequestReact()
+        {
+            return View();
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> RequestReact(AbantuMember member)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = await UserManager.FindByIdAsync(User.Identity.GetUserId());
+                var mem = _context.Members.Where(m => user.Email == member.Email).FirstOrDefault();
+                if (mem != null && HasActiveProfile() == false)
+                {
+                    postReactRequest(mem);
+                    return RedirectToAction("Index", new { Message = ManageMessageId.ReactProfileSuccess });
+                }
+                else
+                {
+                    return RedirectToAction("Index", new { Message = ManageMessageId.Error });
+                }
+            }
+            return View(member);
 
+        }
+        public async Task<ActionResult> CancelDeact(AbantuMember member)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = await UserManager.FindByIdAsync(User.Identity.GetUserId());
+                var mem = _context.Members.Where(x => x.Email == user.Email && x.deactApproved == false).FirstOrDefault();
+                if (mem != null && HasRequestedDeact() && HasActiveProfile())
+                {
+                    member.isDeactRequested = false;
+                    mem.isDeactRequested = member.isDeactRequested;
+                    _context.SaveChanges();
+                    return RedirectToAction("Index", new { Message = ManageMessageId.DeactCancelSuccess });
+                }
+                else
+                {
+                    return RedirectToAction("Index", new { Message = ManageMessageId.Error });
+                }
+            }
+            return View(member);
+        }
+        public async Task<ActionResult> CancelReact(AbantuMember member)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = await UserManager.FindByIdAsync(User.Identity.GetUserId());
+                var mem = _context.Members.Where(x => x.Email == user.Email).FirstOrDefault();
+                if (mem != null && HasRequestedReact() && HasActiveProfile() == false)
+                {
+                    member.isReactRequested = false;
+                    mem.isReactRequested = member.isReactRequested;
+                    _context.SaveChanges();
+                    return RedirectToAction("Index", new { Message = ManageMessageId.ReactCancelSuccess });
+                }
+                else
+                {
+                    return RedirectToAction("Index", new { Message = ManageMessageId.Error });
+                }
+            }
+            return View(member);
+        }
         //
         // GET: /Manage/SetPassword
         public ActionResult SetPassword()
@@ -333,7 +434,7 @@ namespace AbantuTech.Controllers
             base.Dispose(disposing);
         }
 
-#region Helpers
+        #region Helpers
         // Used for XSRF protection when adding external logins
         private const string XsrfKey = "XsrfId";
 
@@ -363,6 +464,106 @@ namespace AbantuTech.Controllers
             return false;
         }
 
+        private bool HasActiveProfile()
+        {
+            ApplicationDbContext db = new ApplicationDbContext();
+            var UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(db));
+            ApplicationUser currentUser = UserManager.FindById(User.Identity.GetUserId());
+            var mem = _context.Members.FirstOrDefault(m => m.Email == currentUser.Email);
+            if (mem != null && mem.isProfileActive == true)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        private bool HasRequestedDeact()
+        {
+            ApplicationDbContext db = new ApplicationDbContext();
+            var UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(db));
+            ApplicationUser currentUser = UserManager.FindById(User.Identity.GetUserId());
+            var mem = _context.Members.FirstOrDefault(m => m.Email == currentUser.Email);
+            if (mem != null && mem.isDeactRequested == true)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        private bool HasRequestedReact()
+        {
+            ApplicationDbContext db = new ApplicationDbContext();
+            var UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(db));
+            ApplicationUser currentUser = UserManager.FindById(User.Identity.GetUserId());
+            var mem = _context.Members.FirstOrDefault(m => m.Email == currentUser.Email);
+            if (mem != null && mem.isReactRequested == true)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        private bool isDeactApproved()
+        {
+            ApplicationDbContext db = new ApplicationDbContext();
+            var UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(db));
+            ApplicationUser currentUser = UserManager.FindById(User.Identity.GetUserId());
+            var mem = _context.Members.FirstOrDefault(m => m.Email == currentUser.Email);
+            if (mem != null && mem.deactApproved == true)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        private bool isReactApproved()
+        {
+            ApplicationDbContext db = new ApplicationDbContext();
+            var UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(db));
+            ApplicationUser currentUser = UserManager.FindById(User.Identity.GetUserId());
+            var mem = _context.Members.FirstOrDefault(m => m.Email == currentUser.Email);
+            if (mem != null && mem.reactApproved == true)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        public void postDeactRequest(AbantuMember member)
+        {
+            ApplicationDbContext db = new ApplicationDbContext();
+            var UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(db));
+            ApplicationUser currentUser = UserManager.FindById(User.Identity.GetUserId());
+            AbantuMember mem = _context.Members.Where(m => m.Email == currentUser.Email && m.isDeactRequested == false).FirstOrDefault();
+            if (mem != null)
+            {
+                member.isDeactRequested = true;
+                mem.isDeactRequested = member.isDeactRequested;
+                Save();
+            }
+        }
+
+        public void postReactRequest(AbantuMember member)
+        {
+            AbantuMember mem = _context.Members.Where(m => m.Email == member.Email && m.isProfileActive == false && m.isReactRequested == false).FirstOrDefault();
+            member.isReactRequested = true;
+            mem.isReactRequested = member.isReactRequested;
+            Save();
+        }
+        public void Save()
+        {
+            _context.SaveChanges();
+        }
         private bool HasPhoneNumber()
         {
             var user = UserManager.FindById(User.Identity.GetUserId());
@@ -381,9 +582,32 @@ namespace AbantuTech.Controllers
             SetPasswordSuccess,
             RemoveLoginSuccess,
             RemovePhoneSuccess,
+            DeactProfileSuccess,
+            ReactProfileSuccess,
+            DeactCancelSuccess,
+            ReactCancelSuccess,
             Error
         }
 
-#endregion
+        #endregion
+
+        [Authorize(Roles = "Admin")]
+        public ActionResult AdminMenu()
+        {
+            return View();
+        }
+
+        [Authorize(Roles = "Intern")]
+        public ActionResult InternMenu()
+        {
+            return View();
+        }
+
+        [Authorize(Roles = "Volunteer")]
+        public ActionResult VolunteerMenu()
+        {
+            return View();
+        }
+
     }
 }

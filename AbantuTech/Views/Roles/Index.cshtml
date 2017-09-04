@@ -1,33 +1,30 @@
-﻿@model IEnumerable<AbantuTech.Models.RolesViewModel>
+﻿@model IEnumerable<Microsoft.AspNet.Identity.EntityFramework.IdentityRole>
 
 @{
     ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout2.cshtml";
 }
+<style>
+    img {
+        display: block;
+        margin: auto;
+    }
+</style>
+<h1><p align="center">Roles</p></h1>
+<h2>Role Listing</h2>
 
-<h2>Index</h2>
+@Html.ActionLink("Create New Role", "Create") | @Html.ActionLink("Manage User Role", "AnotherUserToRole")
+<hr />
+<div>
+    @foreach (var role in Model)
+    {
+        <p>
+            <strong>@role.Name | </strong>
+            <span onclick="return confirm('Are you sure to delete?')"><a href="/Roles/Delete?RoleName=@role.Name" class="delLink" style="color:red;">Delete</a></span> |
+            @Html.ActionLink("Edit", "Edit", new { roleName = @role.Name })
+        </p>
+    }
+</div>
 
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.Name)
-        </th>
-        <th></th>
-    </tr>
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.Name)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
-            @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
-            @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
-        </td>
-    </tr>
-}
 
-</table>

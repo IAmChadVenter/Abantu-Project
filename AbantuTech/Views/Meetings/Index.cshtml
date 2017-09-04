@@ -2,13 +2,28 @@
 
 @{
     ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout2.cshtml";
 }
-
+}
+<style>
+    img {
+        display: block;
+        margin: auto;
+    }
+</style>
+<img src="~/Content/Template/images/5.jpg" height="110" width="110" />
+<h1><p align="center">Meetings</p></h1>
 <h2>Index</h2>
 
 <p>
     @Html.ActionLink("Create New", "Create")
 </p>
+@using (Html.BeginForm("Index", "Events", FormMethod.Post))
+{
+    <input type="search" name="Name" id="Name" , placeholder="Search By Name" class="form-control" />
+    <br />
+    <input type="submit" value="Search" class="btn btn-default" />
+}
 <table class="table">
     <tr>
         <th>

@@ -20,6 +20,26 @@ namespace AbantuTech.Controllers
         {
             this._apply = _apply;
         }
+      //[HttpPost]
+      //  public ActionResult PhoneFormat(AbantuMember tephone)
+      //  {
+      //      string result=tephone.PhoneNumber;
+      //      if ((!string.IsNullOrEmpty(result)) && (result.Length >= 10))
+      //          result = string.Format("{0:(123)456-" + new string('7', result.Length - 6) + "}",
+      //              Convert.ToInt64(result));
+      //      return RedirectToAction("Apply");
+      //  }
+      
+       [HttpGet]
+        //public ActionResult PhoneFormat(AbantuMember telphone)
+        //{
+        //    String phone = telphone.PhoneNumber;
+        //    string countrycode = phone.Substring(0, 3);
+        //    string areacode = phone.Substring(0, 3);
+        //    string number = phone.Substring(6, phone.Length);
+        //    phone = "(" + "countrycode" + ")" + areacode + "-" + number;
+        //     //return RedirectToAction("AltContact", new { id = member.Member_ID });
+        //}
 
         public ActionResult Create()
         {
@@ -29,7 +49,7 @@ namespace AbantuTech.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Member_ID,Surname,FirstName,DateOfBirth,Gender,Email,PhoneNumber,Type,Branch_ID,ZipCode,Province,City")] AbantuMember member)
+        public ActionResult Create([Bind(Include = "Member_ID,Surname,FirstName,DateOfBirth,Gender,Email,PhoneNumber,Type,ZipCode,Province,City,Branch_ID,Address,")] AbantuMember member)
         {
             if (!ModelState.IsValid)
             {
@@ -59,6 +79,7 @@ namespace AbantuTech.Controllers
         [AllowAnonymous]
         public ActionResult Application(int id)
         {
+            TempData["Message"] = "Your application has been completed. Feedback will be emailed to you soon.";
             var application = _apply.viewApplication(id);
             if (application == null)
                 return HttpNotFound();

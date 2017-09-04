@@ -1,0 +1,44 @@
+﻿@model AbantuTech.Models.RolesView
+@{
+    ViewBag.Title = "AnotherUserToRole";
+    Layout = "~/Views/Shared/_Layout2.cshtml";
+}
+<style>
+    img {
+        display: block;
+        margin: auto;
+    }
+</style>
+<img src="~/Content/Template/images/5.jpg" height="110" width=110" />
+<h1><p align="center">Roles</p></h1>
+<h2>Add User To Role</h2>
+
+@using (Html.BeginForm("AnotherUserToRole", "Roles", FormMethod.Get))
+{
+
+    <table align="center" class="table">
+        <tr>
+            <td>
+                User:
+            </td>
+            <td>
+                @Html.DropDownList("MyUser")
+            </td>
+            <td>
+                Role:
+            </td>
+            <td>
+                @Html.DropDownList("Hey")
+            </td>
+            <td>
+                <input type="submit" value="Add User To Role" class="btn btn-primary btn-sm">
+            </td>
+        </tr>
+    </table>
+}
+
+@ViewBag.Message
+
+
+
+

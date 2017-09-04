@@ -8,6 +8,7 @@ using System.Web;
 using System.Web.Mvc;
 using AbantuTech.Models;
 using Abantu_System.Models;
+using System.Collections;
 
 namespace AbantuTech.Controllers
 {
@@ -21,10 +22,26 @@ namespace AbantuTech.Controllers
             var tasks = db.Tasks.Include(t => t.Committee);
             return View(tasks.ToList());
         }
+        public ActionResult ViewTasks()
+        {
+            ApplicationDbContext pp = new ApplicationDbContext();
+            List<Tasks> tastAssigned = pp.Tasks.ToList();
+            return View(tastAssigned);
+        }
 
         // GET: Tasks/Details/5
         public ActionResult Details(int? id)
         {
+            if (User.Identity.IsAuthenticated)
+            {
+                var notify = db.Notifications.FirstOrDefault(x => x.ID == id
+                && x.userName == User.Identity.Name);
+                if(notify != null)
+                {
+                    notify.seen = true;
+                    db.SaveChanges();
+                }
+            }
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -55,6 +72,24 @@ namespace AbantuTech.Controllers
             {
                 db.Tasks.Add(tasks);
                 db.SaveChanges();
+                // create notifications
+                var members = getMembers(tasks.Committee_ID);
+                if (members != null)
+                {
+                    foreach (var m in members)
+                    {
+                        var notify = new Notification
+                        {
+                            userName = m.Email,
+                            Task = tasks,
+                            ID = tasks.ID,
+                            message = "You have a new " + tasks.Name + " task",
+                            seen = false
+                        };
+                        db.Notifications.Add(notify);
+                    }
+                    db.SaveChanges();
+                }
                 return RedirectToAction("Index");
             }
 
@@ -87,6 +122,7 @@ namespace AbantuTech.Controllers
         {
             if (ModelState.IsValid)
             {
+
                 db.Entry(tasks).State = EntityState.Modified;
                 db.SaveChanges();
                 return RedirectToAction("Index");
@@ -121,6 +157,26 @@ namespace AbantuTech.Controllers
             return RedirectToAction("Index");
         }
 
+        [HttpGet]
+        public JsonResult userNotifications()
+        {
+            if (User.Identity.IsAuthenticated)
+            {
+                var notifs = db.Notifications
+                    .Where(x => x.userName == User.Identity.Name
+                    && x.seen == false);
+                if(notifs != null)
+                    return Json(notifs, JsonRequestBehavior.AllowGet);
+                return Json(new { message = "You have not new notifications" }, JsonRequestBehavior.AllowGet);
+            }
+            return Json(new { message = "Log in to see your notifications" }, JsonRequestBehavior.AllowGet);
+        }
+        public IEnumerable<AbantuMember> getMembers(int committeId)
+        {
+            var members = db.Members
+                .Where(x => x.Committee_ID == committeId);
+            return members;
+        }
         protected override void Dispose(bool disposing)
         {
             if (disposing)

@@ -1,8 +1,15 @@
 ﻿@model AbantuTech.Models.VerifyPhoneNumberViewModel
 @{
     ViewBag.Title = "Verify Phone Number";
+    Layout = "~/Views/Shared/_Layout2.cshtml";
 }
-
+<style>
+    img {
+        display: block;
+        margin: auto;
+    }
+</style>
+<img src="~/Content/Template/images/5.jpg" height="110" width=110" />
 <h2>@ViewBag.Title.</h2>
 
 @using (Html.BeginForm("VerifyPhoneNumber", "Manage", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))

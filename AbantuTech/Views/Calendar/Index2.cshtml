@@ -1,0 +1,45 @@
+﻿@*@model IEnumerable<Abantu_System.Models.Event>
+
+@{
+    ViewBag.Title = "Index2";
+}
+
+<h2>Index2</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Index","Calendar")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.text)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.start_date)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.end_date)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.text)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.start_date)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.end_date)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.Event_ID }) |
+            @Html.ActionLink("Details", "Details", new { id=item.Event_ID }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.Event_ID })
+        </td>
+    </tr>
+}
+
+</table>*@

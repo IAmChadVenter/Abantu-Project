@@ -1,0 +1,331 @@
+﻿@using AbantuTech.Models;
+@using Abantu_System.Models;
+@using Microsoft.AspNet.Identity;
+@using Microsoft.AspNet.Identity.EntityFramework;
+@using System.Data.Entity;
+@using System.Linq;
+
+@{
+    ViewBag.Title = "ViewProfile";
+    Layout = "~/Views/Shared/_Layout2.cshtml";
+}
+<style>
+    img {
+        display: block;
+        margin: auto;
+    }
+</style>
+<img src="~/Content/Template/images/5.jpg" height="110" width=110" />
+<h1><p align="center">Profile</p></h1>
+<p class="text-success">@ViewBag.StatusMessage</p>
+
+<script src="~/Scripts/jquery-3.1.1.min.js"></script>
+<script src="~/Scripts/jquery.validate.min.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+<link href="~/Content/JQueryIU/jquery-ui.min.css" rel="stylesheet" />
+<link href="~/Content/JQueryIU/jquery-ui.theme.min.css" rel="stylesheet" />
+@{
+    ApplicationDbContext db = new ApplicationDbContext();
+    var UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(db));
+    ApplicationUser currentUser = UserManager.FindById(User.Identity.GetUserId());
+    var e = db.Members.Where(m => m.Email == currentUser.Email).FirstOrDefault();
+}
+@{
+    DateTime bday = e.DateOfBirth;
+    DateTime now = DateTime.Today;
+    int age = now.Year - bday.Year;
+    if (now < bday.AddYears(age))
+    {
+        age--;
+    }
+}
+@{
+    var bdayMsg = "";
+    var birthday = e.DateOfBirth;
+    var nextBirthday = birthday.AddYears(DateTime.Today.Year - birthday.Year);
+    if (nextBirthday < DateTime.Today)
+    {
+        nextBirthday = nextBirthday.AddYears(1);
+    }
+    var daysUntilBday = (nextBirthday - DateTime.Today).Days;
+    if (daysUntilBday == 0)
+    {
+        bdayMsg = "Happy Birthday, Usuku olumnandi lokuzalwa, gelukkige verjaarsdag " + e.FirstName + " " + e.Surname + "! :)";
+    }
+}
+@{
+    var progname = "";
+    var progmember = db.ProgrammeMembers.FirstOrDefault(x => x.Member_ID == e.Member_ID);
+    if (progmember != null)
+    {
+        var programme = db.Programmes
+                    .FirstOrDefault(p => p.Programme_ID == progmember.Programme_ID);
+        if (programme != null)
+        {
+            progname = programme.Name;
+        }
+    }
+}
+@{
+    List<Event> upcomeEvents = new List<Event>();
+
+    var eventmember = db.EventMembers.Include(a => a.Event)
+        .Where(x => x.Member_ID == e.Member_ID).ToList();
+    if (eventmember != null)
+    {
+        foreach(var i in eventmember)
+        {
+            Event memeberEvent = db.Events.FirstOrDefault(x => x.Event_ID == i.Event_ID);
+            upcomeEvents.Add(memeberEvent);
+            //upcomeEvents = db.Events.Where(x => i.Event.Event_ID == x.Event_ID).ToList();
+        }
+
+        //upcomeEvents = db.Events.Where(x => eventmember.Event.Event_ID == x.Event_ID).ToList();
+    }
+}
+@{
+    List<Meeting> meetings = new List<Meeting>();
+    DateTime meetingDate = DateTime.Today.AddDays(2);
+
+    var committee = db.Committtes.Include(m=>m.Meetings)
+        .Where(x => x.Committee_ID == e.Committee_ID).ToList();
+    if (committee != null)
+    {
+        foreach(var cm in committee)
+        {
+            Meeting commMeetings = db.Meetings.FirstOrDefault(x => x.Committee_ID == cm.Committee_ID && x.Date <= meetingDate);
+            meetings.Add(commMeetings);
+        }
+
+    }
+}
+<div class="container">
+    <h2 style="text-align:center;">Your Profile</h2>
+    <br />
+    <p class="text-success"><b>@bdayMsg.ToString()</b></p>
+    <br />
+    <b>Welcome back @e.FirstName , Hope you are doing great today</b>
+    <ul class="nav nav-tabs">
+        <li class="active"><a data-toggle="tab" href="#profile">Personal</a></li>
+        <li><a data-toggle="tab" href="#ymca">YMCA</a></li>
+        <li><a data-toggle="tab" href="#notif">Notifications</a></li>
+    </ul>
+    @if (e != null)
+    {
+        var imgUrl = Url.Content("~/Content/images/profile/" + e.FirstName + "_" + e.Surname + ".png") + "?time=" + DateTime.Now.ToString();
+        <div>
+            <div style="width:25%; margin:0 auto;">
+                <br />
+                <img src="@imgUrl" alt="pic_of_@e.FirstName @e.Surname" height="300" width="300" style="border:2px solid white; display:inline-block;margin:0 auto;" />
+            </div>
+            <div style="width:25%; margin:0 auto;">
+
+                @using (Html.BeginForm("UploadPhoto", "Profile", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                {
+                    <div class="btn btn-default">
+                        <input type="file" name="file" id="files" onchange="this.form.submit()" />
+                    </div>
+                }
+            </div>
+        </div>
+    }
+    <hr />
+    <div class="tab-content clearfix">
+        <div id="profile" class="tab-pane fade in active">
+            <h3 class="list-group-item-heading" style="text-align:center;">Personal Details</h3>
+            <br />
+            <ul class="list-group">
+                <li class="list-group-item">
+                    <b>Full Name :</b> @e.FirstName @e.Surname
+                </li>
+                <li class="list-group-item">
+                    <b>Email :</b> @e.Email
+                </li>
+                <li class="list-group-item">
+                    <b>Physical Address :</b> @e.City @e.Province @e.ZipCode
+                </li>
+                <li class="list-group-item">
+                    <b>Date of Birth :</b> @e.DateOfBirth.ToLongDateString()
+                </li>
+                <li class="list-group-item">
+                    <b>Age:</b>@age.ToString() years old
+                </li>
+                <li class="list-group-item">
+                    <b>Days until next birthday :</b> @daysUntilBday.ToString() days
+                </li>
+                <li class="list-group-item">
+                    <b>Phone Number:</b> @e.PhoneNumber
+                </li>
+            </ul>
+            @*<p>@Html.ActionLink("Edit Profile","Edit","Members", null, new { @class = "btn btn-primary" })</p>*@
+
+        </div>
+        <div id="ymca" class="tab-pane fade">
+            <h3 class="list-group-item-heading" style="text-align:center;">YMCA Details</h3>
+            <br />
+            <ul class="list-group">
+                <li class="list-group-item">
+                    <b>Branch :</b> @e.Branch.Branch_Name
+                </li>
+                <li class="list-group-item">
+                    <b>Member Type :</b> @e.Type
+                </li>
+                <li class="list-group-item">
+                    <b>Committee :</b> @e.CommitteeName
+                </li>
+                <li class="list-group-item">
+                    <b>Current Programme: </b> @progname
+                </li>
+            </ul>
+        </div>
+        <div id="notif" class="tab-pane fade">
+            <div class="tabbable">
+                <ul class="nav nav-tabs">
+                    <li class="active"><a href="#events" data-toggle="tab">Events</a></li>
+                    <li><a href="#meetings" data-toggle="tab">Meetings</a></li>
+                    <li><a href="#tasks" data-toggle="tab">Tasks</a></li>
+                </ul>
+                <div class="tab-content">
+                    <div class="tab-pane active" id="events">
+                        <br />
+                        <h4><b>Upcoming Events</b></h4>
+                        <br />
+                        <table class="table">
+                            <tr>
+                                <th>
+                                    Event Name
+                                </th>
+                                <th>
+                                    Start Date
+                                </th>
+                                <th>
+                                    End Date
+                                </th>
+                                <th>
+                                    Days Remaining
+                                </th>
+                            </tr>
+                            @if (upcomeEvents != null)
+                            {
+
+                                foreach (Event events in upcomeEvents)
+                                {
+                                    var daysLeft = (events.start_date - DateTime.Today).Days;
+                                    var duration = (events.end_date.Hour - events.start_date.Hour);
+                                    <tr>
+                                        <td>
+                                            @events.Name
+                                        </td>
+                                        <td>
+                                            @events.start_date.ToLongDateString()
+                                        </td>
+                                        <td>
+                                            @events.end_date.ToLongDateString()
+                                        </td>
+                                        <td>
+                                            @daysLeft days left
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                        </table>
+                    </div>
+                    <div class="tab-pane" id="meetings">
+                        <br />
+                        <h4><b>Upcoming Meetings</b></h4>
+                        <br />
+                        <table class="table">
+                            <tr>
+                                <th>
+                                    Purpose
+                                </th>
+                                <th>
+                                    Date
+                                </th>
+                                <th>
+                                    Start time
+                                </th>
+                                <th>
+                                    End time
+                                </th>
+                                <th>
+                                    Location
+                                </th>
+                            </tr>
+                            @if (meetings != null)
+                            {
+                                foreach (Meeting mt in meetings)
+                                {
+                                    <tr>
+                                        <td>
+                                            @mt.Purpose
+                                        </td>
+                                        <td>
+                                            @mt.Date.ToLongDateString()
+                                        </td>
+                                        <td>
+                                            @mt.Start_Time
+                                        </td>
+                                        <td>
+                                            @mt.End_Time
+                                        </td>
+                                        <td>
+                                            @mt.Location
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                        </table>
+                    </div>
+                    @*<div class="tab-pane" id="tasks">
+                        <br />
+                        <h4><b>Currently Assigned Tasks</b></h4>
+                        <br />
+                        <table class="table">
+                            <tr>
+                                <th>
+                                    Task Name
+                                </th>
+                                <th>
+                                    Status
+                                </th>
+                                <th>
+                                    End Date
+                                </th>
+                                <th>
+                                    Days Remaining
+                                </th>
+                            </tr>
+                            @if (tasks != null)
+                            {
+                                foreach (var t in tasks)
+                                {
+                                    var daysRemain = (t.EndDate - DateTime.Today).Days;
+                                    <tr>
+                                        <td>
+                                            @t.Name
+                                        </td>
+                                        <td>
+                                            @t.status
+                                        </td>
+                                        <td>
+                                            @t.EndDate.ToLongDateString()
+                                        </td>
+                                        <td>
+                                            @daysRemain
+                                        </td>
+                                    </tr>
+                                }
+                            }
+
+                        </table>
+                        <br />
+                        <p>
+                            @Html.ActionLink("View TaskBoard", "ViewTasks", "Tasks", null, new { @class = "btn btn-primary" })
+                        </p>
+                    </div>*@
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

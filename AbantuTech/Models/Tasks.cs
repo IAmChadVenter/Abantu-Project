@@ -20,18 +20,24 @@ namespace Abantu_System.Models
 
         [Required(ErrorMessage = "*")]
         [StringLength(50)]
+        [Display(Name ="Task Name")]
         public string Name { get; set; }
 
         [Required(ErrorMessage = "*")]
         [StringLength(200)]
         public string Description { get; set; }
 
+        //[Display(Name = "Commitee Name")]
+        public string CName { get; set; }
+
+
         [Required(ErrorMessage = "*")]
         public DateTime StartDate { get; set; }
 
         [Required(ErrorMessage = "*")]
+        [DataType(DataType.Date)]
         public DateTime EndDate { get; set; }
-
+      
         public status status { get; set; }
         //Navigational Properties
         public int Committee_ID { get; set; }

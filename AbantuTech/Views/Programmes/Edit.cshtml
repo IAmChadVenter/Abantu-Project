@@ -2,14 +2,22 @@
 
 @{
     ViewBag.Title = "Edit";
+    Layout = "~/Views/Shared/_Layout2.cshtml";
 }
-
+<style>
+    img {
+        display: block;
+        margin: auto;
+    }
+</style>
+<img src="~/Content/Template/images/5.jpg" height="110" width=110" />
+<h1><p align="center">Programmes</p></h1>
 <h2>Edit</h2>
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
     <ol class="breadcrumb">
-        <li>@Html.ActionLink("Task", "Index")</li>
+        <li>@Html.ActionLink("Programees", "Index")</li>
         <li>@Html.ActionLink("All", "Index")</li>
         <li class="active">@ViewBag.Title</li>
     </ol>
@@ -58,6 +66,4 @@
             @Html.ActionLink("Back to List", "Index")
         </div>
 
-        @section Scripts {
-            @Scripts.Render("~/bundles/jqueryval")
-        }
+      

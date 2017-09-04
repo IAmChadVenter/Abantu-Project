@@ -1,166 +1,59 @@
 ﻿@model IEnumerable<Abantu_System.Models.Tasks>
-@Styles.Render("~/Content/kanbanc.css")
-
+@using Abantu_System.Models;
 @{
     ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout2.cshtml";
 }
-
-<h2>Tasks</h2>
-
+<style>
+    img {
+        display: block;
+        margin: auto;
+    }
+</style>
+<img src="~/Content/Template/images/5.jpg" height="110" width=110" />
+<h1><p align="center">Tasks</p></h1>
+<h3>List of tasks assigned to committees</h3>
 <p>
     @Html.ActionLink("Create New", "Create")
 </p>
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.Committee.Committee_Name)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Name)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Description)
-        </th>
-        <th>
-            Start Date
-        </th>
-        <th>
-            End Date
-        </th>
-        <th>
-            Status
-        </th>
-        <th></th>
-    </tr>
+<div style="font-family:Arial">
+    
+    <ul>
+        @foreach (Tasks task in Model)
+        {
+            <li>
+                @Html.ActionLink(task.Name, "Details", new { id = task.ID })
+            </li>
+            <dv>
+                @Html.ActionLink("Remove", "Delete", new { id = task.ID }, new { @class = "btn btn-primary" })
+            </dv>
+        }
+    </ul>
+</div>
+@*<h2>View committee members assigned to tasks </h2>
+    <div class="container">
+        <h2>Members:</h2>
+        <br/>
+        <ul class="list-group">
+            <li class="list-group-item"<b>Assignee: </b>@Model.FirstName @Model.Surname</li>
+            <li class="list-group-item"><b>Task Assigned: </b>@Model.Name</li>
+            <li class="list-group-item"><b>Committee Name: </b>@Model.Committee_ID</li>
+            <li class="list-group-item"><b>Date start: </b>@Model.StartDate</li>
+            <li class="list-group-item"><b>Date Due: </b>@Model.EndDate</li>
+        </ul>
+        <br/>
+        @foreach (var i in Model.status)
+        {
+            <li class="list-group-item"<b>Assignee: </b>@Model.FirstName @Model.Surname</li>
+            <li class="list-group-item"><b>Task Assigned: </b>@Model.Name</li>
+            <li class="list-group-item"><b>Committee Name: </b>@Model.Committee_ID</li>
+            <li class="list-group-item"><b>Date start: </b>@Model.StartDate</li>
+            <li class="list-group-item"><b>Date Due: </b>@Model.EndDate</li>
+        }
 
-    @foreach (var item in Model)
-    {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Committee.Committee_Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Description)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.StartDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.EndDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.status)
-            </td>
-            <td>
-                @Html.ActionLink("Edit", "Edit", new { id = item.ID }) |
-                @Html.ActionLink("Details", "Details", new { id = item.ID }) |
-                @Html.ActionLink("Delete", "Delete", new { id = item.ID })
-            </td>
-        </tr>
-    }
-
-</table>
-
-<div class="container-fluid">
-    <div id="sortableKanbanBoards" class="row">
-        <!--sütun başlangıç-->
-        <div class="panel panel-primary kanban-col">
-            <div class="panel-heading">
-                TODO
-                <i class="fa fa-2x fa-plus-circle pull-right"></i>
-            </div>
-            <div class="panel-body">
-                <div id="TODO" class="kanban-centered">
-                    @foreach (var i in Model)
-                    {
-                        if (Convert.ToString(i.status) == "TODO")
-                        {
-                            <article class="kanban-entry grab" id="item1" draggable="true">
-                                <div class="kanban-entry-inner">
-                                    <div class="kanban-label">
-                                        <h2><a href="#">@Html.DisplayFor(modeli => i.Committee.Committee_Name)</a> <span>Created a task</span> @Html.DisplayFor(modeli => i.Name)</h2>
-                                        <p>@Html.DisplayFor(modeli => i.Description)</p>
-                                    </div>
-                                </div>
-                            </article>
-                        }
-                    }
-                </div>
-            </div>
-        </div>
-        <!--sütun bitiş-->
-        <!--sütun başlangıç-->
-        <div class="panel panel-primary kanban-col">
-            <div class="panel-heading">
-                DOING
-                <i class="fa fa-2x fa-plus-circle pull-right"></i>
-            </div>
-            <div class="panel-body">
-                <div id="DOING" class="kanban-centered">
-                    @foreach (var i in Model)
-                    {
-                        if (Convert.ToString(i.status) == "Doing")
-                        {
-                            <article class="kanban-entry grab" id="item1" draggable="true">
-                                <div class="kanban-entry-inner">
-                                    <div class="kanban-label">
-                                        <h2><a href="#">@Html.DisplayFor(modeli => i.Committee.Committee_Name)</a> <span>Created a task</span> @Html.DisplayFor(modeli => i.Name)</h2>
-                                        <p>@Html.DisplayFor(modeli => i.Description)</p>
-                                    </div>
-                                </div>
-                            </article>
-                        }
-                    }
-
-                </div>
-            </div>
-
-        </div>
-        <!--sütun bitiş-->
-        <!--sütun başlangıç-->
-        <div class="panel panel-primary kanban-col">
-            <div class="panel-heading">
-                DONE
-                <i class="fa fa-2x fa-plus-circle pull-right"></i>
-            </div>
-            <div class="panel-body">
-                <div id="DONE" class="kanban-centered">
-                    @foreach (var i in Model)
-                    {
-                        if (Convert.ToString(i.status) == "Done")
-                        {
-                            <article class="kanban-entry grab" id="item1" draggable="true">
-                                <div class="kanban-entry-inner">
-                                    <div class="kanban-label">
-                                        <h2><a href="#">@Html.DisplayFor(modeli => i.Committee.Committee_Name)</a> <span>Created a task</span> @Html.DisplayFor(modeli => i.Name)</h2>
-                                        <p>@Html.DisplayFor(modeli => i.Description)</p>
-                                    </div>
-                                </div>
-                            </article>
-                        }
-                    }
-
-                </div>
-            </div>
-        </div>
-        <!--sütun bitiş-->
-
-    </div>
+    </div>*@
+<div>
+    @Html.ActionLink("Begin your task", "ViewTasks")
 </div>
 
-<!-- Static Modal -->
-<div class="modal modal-static fade" id="processing-modal" role="dialog" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-body">
-                <div class="text-center">
-                    <i class="fa fa-refresh fa-5x fa-spin"></i>
-                    <h4>Processing...</h4>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+

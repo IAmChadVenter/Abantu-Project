@@ -2,8 +2,16 @@
 
 @{
     ViewBag.Title = "Edit";
+    Layout = "~/Views/Shared/_Layout2.cshtml";
 }
-
+<style>
+    img {
+        display: block;
+        margin: auto;
+    }
+</style>
+<img src="~/Content/Template/images/5.jpg" height="110" width="110" />
+<h1><p align="center">Committees</p></h1>
 <h2>Edit</h2>
 
 @using (Html.BeginForm())
@@ -46,8 +54,4 @@
             @Html.ActionLink("Cancel", "Index", null, new { @class = "btn btn-default" })
         </div>
     </div>
-}
-
-@section Scripts {
-    @Scripts.Render("~/bundles/jqueryval")
 }

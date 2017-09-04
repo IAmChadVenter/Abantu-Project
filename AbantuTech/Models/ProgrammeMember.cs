@@ -17,10 +17,9 @@ namespace Abantu_System.Models
         public int Member_ID { get; set; }
         //Association class
         public virtual AbantuMember Member { get; set; }
-
+        //Association class
         public int Programme_ID { get; set; }
         public virtual Programme Programme { get; set; }
-        //Association class
-
+        
     }
 }

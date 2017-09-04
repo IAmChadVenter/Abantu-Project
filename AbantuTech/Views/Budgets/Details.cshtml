@@ -2,8 +2,10 @@
 
 @{
     ViewBag.Title = "Details";
+    Layout = "~/Views/Shared/_Layout2.cshtml";
 }
 
+<h1><p align="center">Budgets</p></h1>
 <h2>Details</h2>
 
 <div>
@@ -80,17 +82,16 @@
     @Html.ActionLink("Back to List", "Index") |
     @Html.ActionLink("Delete", "Delete", new { id = Model.Budget_ID })
 </p>
-<h2>Budget Expense Statistics</h2>
-<table>
-    <tr>
-        <th>
-            Budget Expenses
-        </th>
-    </tr>
-    <tr>
-        <td>
-            @{ int count = Model.Expenses.Count();
-                @count }
-        </td>
-    </tr>
-</table>
+@using (Html.BeginForm("SubmitAction", "Budgets", FormMethod.Post))
+{
+    <p>
+        Email:<br />
+        <input type="text" value="Enter Email" name="TxtEmail" style="width:50%" />
+        <br />
+        <br />
+        <br />
+        <input type="submit" name="BtnConvert" value="Create Report and Email" class="mybutton" />
+        &nbsp;&nbsp;
+        <span style="color: red">@ViewData["Message"]</span>
+    </p>
+}

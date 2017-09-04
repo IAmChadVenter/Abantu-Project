@@ -9,6 +9,9 @@ using System.Web.Mvc;
 using AbantuTech.Models;
 using Abantu_System.Models;
 using PagedList;
+using SelectPdf;
+using System.Net.Mail;
+using System.IO;
 
 namespace AbantuTech.Controllers
 {
@@ -153,6 +156,20 @@ namespace AbantuTech.Controllers
             return RedirectToAction("Index");
         }
 
+        public ActionResult Report(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            Budget budget = db.Budgets.Find(id);
+            if (budget == null)
+            {
+                return HttpNotFound();
+            }
+            return View(budget);
+        }
+
         protected override void Dispose(bool disposing)
         {
             if (disposing)
@@ -160,6 +177,85 @@ namespace AbantuTech.Controllers
                 db.Dispose();
             }
             base.Dispose(disposing);
+        }
+        
+
+        [HttpPost]
+        public ActionResult SubmitAction(FormCollection collection)
+        {
+
+            // instantiate a html to pdf converter object
+            HtmlToPdf converter = new HtmlToPdf();
+
+            try
+            {
+                // create a new pdf document converting an url
+                PdfDocument doc = converter.ConvertUrl("http://localhost:49965/Budgets/Report/1");
+
+                // create memory stream to save PDF
+                MemoryStream pdfStream = new MemoryStream();
+
+                // save pdf document into a MemoryStream
+                doc.Save(pdfStream);
+
+                // reset stream position
+                pdfStream.Position = 0;
+
+                // create email message
+                MailMessage message = new MailMessage();
+                message.From = new MailAddress("abantusystem@gmail.com");
+                message.To.Add(new MailAddress(collection["TxtEmail"]));
+                message.Subject = "Abantu System - Budget Report";
+                message.Body = "This email should have attached the PDF Budget Report ";
+                message.Attachments.Add(new Attachment(pdfStream, "Document.pdf"));
+
+                // close pdf document
+                doc.Close();
+
+                ViewData["Message"] = "Email sent";
+
+                using (var smtp = new SmtpClient())
+                {
+                    var credential = new NetworkCredential
+                    {
+                        UserName = "abantusystem@gmail.com",  // replace with valid value
+                        Password = "Abantu2017"  // replace with valid value
+                    };
+                    smtp.Credentials = credential;
+                    smtp.Host = "smtp.gmail.com";
+                    smtp.Port = 587;
+                    smtp.EnableSsl = true;
+                    smtp.Send(message);
+                }
+
+            }
+            catch (Exception ex)
+            {
+                ViewData["Message"] = "An error occurred: " + ex.Message;
+            }
+
+
+            // read parameters from the webpage
+
+            string url = collection["TxtUrl"];
+
+
+            // instantiate a html to pdf converter object
+            HtmlToPdf converter1 = new HtmlToPdf();
+
+            // create a new pdf document converting an url
+            PdfDocument doc1 = converter1.ConvertUrl("http://localhost:49965/Budgets/Report/1");
+
+            // save pdf document
+            byte[] pdf = doc1.Save();
+
+            // close pdf document
+            doc1.Close();
+
+            // return resulted pdf document
+            FileResult fileResult = new FileContentResult(pdf, "application/pdf");
+            fileResult.FileDownloadName = "Document.pdf";
+            return fileResult;
         }
     }
 }

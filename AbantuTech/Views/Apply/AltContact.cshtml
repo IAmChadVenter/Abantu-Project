@@ -2,9 +2,17 @@
 
 @{
     ViewBag.Title = "AltContact";
+    Layout = "~/Views/Shared/_Layout2.cshtml";
 }
-
-<h2>Emergiency Contact</h2>
+<style>
+    img {
+        display: block;
+        margin: auto;
+    }
+</style>
+<img src="~/Content/Template/images/5.jpg" height="110" width="110" />
+<h1><p align="center">Apply</p></h1>
+<h2>Emergency Contact</h2>
 
 
 @using (Html.BeginForm()) 
@@ -17,22 +25,15 @@
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         <div class="form-group">
             @Html.LabelFor(model => model.name, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.name, new { htmlAttributes = new { @class = "form-control" } })
+            <div class="col-md-5">
+                @Html.EditorFor(model => model.name, new { htmlAttributes = new { @class = "form-control", @placeholder = "Enter full name" } })
                 @Html.ValidationMessageFor(model => model.name, "", new { @class = "text-danger" })
             </div>
         </div>
 
-        @*<div class="form-group">
-            @Html.LabelFor(model => model.relationship, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.relationship, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.relationship, "", new { @class = "text-danger" })
-            </div>
-        </div>*@
         <div class="form-group">
             @Html.LabelFor(model => model.relationship, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
+            <div class="col-md-5">
                 @{
                     List<SelectListItem> types = new List<SelectListItem>();
                     types.Add(new SelectListItem { Text = "Brother", Value = "Brother" });
@@ -40,6 +41,7 @@
                     types.Add(new SelectListItem { Text = "Mother", Value = "Mother" });
                     types.Add(new SelectListItem { Text = "Father", Value = "Father" });
                     types.Add(new SelectListItem { Text = "Guardian", Value = "Guardian" });
+                    types.Add(new SelectListItem { Text = "Spouse", Value = "Spouse" });
                 }
                 @Html.DropDownListFor(model => model.relationship, types, "Select...", new { @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.relationship, "", new { @class = "text-danger" })
@@ -48,22 +50,22 @@
 
         <div class="form-group">
             @Html.LabelFor(model => model.homePhone, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.homePhone, new { htmlAttributes = new { @class = "form-control" } })
+            <div class="col-md-5">
+                @Html.EditorFor(model => model.homePhone, new { htmlAttributes = new { @class = "form-control", @placeholder = "Enter home phone number" } })
                 @Html.ValidationMessageFor(model => model.homePhone, "", new { @class = "text-danger" })
             </div>
         </div>
 
         <div class="form-group">
             @Html.LabelFor(model => model.alternativePhone, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.alternativePhone, new { htmlAttributes = new { @class = "form-control" } })
+            <div class="col-md-5">
+                @Html.EditorFor(model => model.alternativePhone, new { htmlAttributes = new { @class = "form-control",@placeholder = "Enter alternative phone number" } })
                 @Html.ValidationMessageFor(model => model.alternativePhone, "", new { @class = "text-danger" })
             </div>
         </div>
 
         <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
+            <div class="col-md-offset-2 col-md-5">
                 <input type="submit" value="Finish" class="btn btn-default" />
             </div>
         </div>
@@ -74,6 +76,3 @@
     @Html.ActionLink("Back to List", "Index")
 </div>
 
-@section Scripts {
-    @Scripts.Render("~/bundles/jqueryval")
-}

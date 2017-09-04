@@ -2,9 +2,18 @@
 
 @{
     ViewBag.Title = "Create";
+    Layout = "~/Views/Shared/_Layout2.cshtml";
 }
 <link href="~/Content/JQueryIU/jquery-ui.min.css" rel="stylesheet" />
 <link href="~/Content/JQueryIU/jquery-ui.theme.min.css" rel="stylesheet" />
+<style>
+    img {
+        display: block;
+        margin: auto;
+    }
+</style>
+<img src="~/Content/Template/images/5.jpg" height="110" width="110" />
+<h1><p align="center">Meetings</p></h1>
 <h2>Create</h2>
 
 
@@ -25,31 +34,58 @@
             <div class="form-horizontal">
                 <div class="form-group">
                     @Html.LabelFor(model => model.Date, htmlAttributes: new { @class = "control-label col-md-2" })
-                    <div class="col-md-10">
-                        @Html.EditorFor(model => model.Date, new { htmlAttributes = new { @class = "form-control", type = "date" } })
+                    <div class="col-md-5">
+                        @Html.EditorFor(model => model.Date, new { htmlAttributes = new { @class = "form-control"} })
                         @Html.ValidationMessageFor(model => model.Date, "", new { @class = "text-danger" })
                     </div>
                 </div>
+                    @*<div class="form-group">*@
+                        @*@Html.LabelFor(model => model.Date, new { @class = "control-label col-md-2" })
+                        <div class="col-md-4">
+                            @Html.EditorFor(model => model.Date, "{0:d}", new { @class = "form-control", TextMode = "date", id = "AppointmentDateTime", @readonly = "readonly", @placeholder = "Select date..." })
+                            @Html.ValidationMessageFor(model => model.Date)
+                        </div>
+                    </div>*@
 
                 <div class="form-group">
                     @Html.LabelFor(model => model.Start_Time, htmlAttributes: new { @class = "control-label col-md-2" })
-                    <div class="col-md-10">
-                        @Html.EditorFor(model => model.Start_Time, new { htmlAttributes = new { @class = "form-control" } })
+                    <div class="col-md-5">
+                        @Html.EditorFor(model => model.Start_Time, new { htmlAttributes =new { @placeholder = "hh:mm:ss" } })
                         @Html.ValidationMessageFor(model => model.Start_Time, "", new { @class = "text-danger" })
                     </div>
                 </div>
 
                 <div class="form-group">
                     @Html.LabelFor(model => model.End_Time, htmlAttributes: new { @class = "control-label col-md-2" })
-                    <div class="col-md-10">
-                        @Html.EditorFor(model => model.End_Time, new { htmlAttributes = new { @class = "form-control" } })
+                    <div class="col-md-5">
+                        @Html.EditorFor(model => model.Start_Time, new { htmlAttributes = new { @placeholder = "hh:mm:ss" } })
                         @Html.ValidationMessageFor(model => model.End_Time, "", new { @class = "text-danger" })
                     </div>
                 </div>
 
                 <div class="form-group">
                     @Html.LabelFor(model => model.Location, htmlAttributes: new { @class = "control-label col-md-2" })
-                    <div class="col-md-10">
+                    <div class="col-md-5">
+                        <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?key=AIzaSyDYt9as2cjmqUnGKD5POvx0xegcT_z40tw&libraries=places"></script>
+                        <script type="text/javascript">
+                    google.maps.event.addDomListener(window,
+                        'load',
+                        function () {
+                            var places = new google.maps.places.Autocomplete(document.getElementById('Location'));
+                            google.maps.event.addListener(places,
+                                'place_changed',
+                                function () {
+                                    var place = places.getPlace();
+                                    var address = place.formatted_address;
+                                    var latitude = place.geometry.location.lat();
+                                    var longitude = place.geometry.location.lng();
+                                    var mesg = "Address: " + address;
+                                    mesg += "\nLatitude: " + latitude;
+                                    mesg += "\nLongitude: " + longitude;
+
+                                });
+                        });
+                        </script>
                         @Html.EditorFor(model => model.Location, new { htmlAttributes = new { @class = "form-control", @placeholder = "Enter location" } })
                         @Html.ValidationMessageFor(model => model.Location, "", new { @class = "text-danger" })
                     </div>
@@ -57,7 +93,7 @@
 
                 <div class="form-group">
                     @Html.LabelFor(model => model.Purpose, htmlAttributes: new { @class = "control-label col-md-2" })
-                    <div class="col-md-10">
+                    <div class="col-md-5">
                         @Html.EditorFor(model => model.Purpose, new { htmlAttributes = new { @class = "form-control", @placeholder = "Enter purpose" } })
                         @Html.ValidationMessageFor(model => model.Purpose, "", new { @class = "text-danger" })
                     </div>
@@ -65,7 +101,7 @@
 
                 <div class="form-group">
                     @Html.LabelFor(model => model.Committee_ID, "Committee_ID", htmlAttributes: new { @class = "control-label col-md-2" })
-                    <div class="col-md-10">
+                    <div class="col-md-5">
                         @Html.DropDownList("Committee_ID", null, htmlAttributes: new { @class = "form-control" })
                         @Html.ValidationMessageFor(model => model.Committee_ID, "", new { @class = "text-danger" })
                     </div>
@@ -80,13 +116,8 @@
                     </div>
                 </div>
 }
-
-@section Scripts {
-    @Scripts.Render("~/bundles/jqueryval")
-}
-
-@*<script src="~/Scripts/jquery-ui.min.js"></script>
+<script src="~/Scripts/jquery-ui.min.js"></script>
 <script>
     $('#Date').datepicker();
 </script>
-}*@
+

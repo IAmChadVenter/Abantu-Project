@@ -15,7 +15,7 @@ namespace AbantuTech.Helpers
     public class LocalEmailHelpers : ILocalEmailHelpers
     {
         private readonly ApplicationDbContext _db = new ApplicationDbContext();
-
+        SendGridKey _key = new SendGridKey();
         public Committee getCommitee(int? committeID)
         {
             var committe = _db.Committtes
@@ -47,7 +47,7 @@ namespace AbantuTech.Helpers
         public string BroadcastEmail(int? CommitteID, int MeetingID, string subject)
         {
             List<EmailAddress> emails = getEmailAddressMembers(CommitteID);
-            var client = new SendGridClient("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");
+            var client = new SendGridClient("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");
             var from = new EmailAddress("no-reply@abantutech.com", "Abantu Tech");
 
             var htmlContent = MeetingMessage(MeetingID);

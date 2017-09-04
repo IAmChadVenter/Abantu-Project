@@ -2,8 +2,17 @@
 
 @{
     ViewBag.Title = "Details";
+    Layout = "~/Views/Shared/_Layout2.cshtml";
 }
 
+<style>
+    img {
+        display: block;
+        margin: auto;
+    }
+</style>
+<img src="~/Content/Template/images/5.jpg" height="110" width="110" />
+<h1><p align="center">Events</p></h1>
 <h2>Details</h2>
 
 <div>
@@ -11,43 +20,48 @@
     <hr />
     <dl class="dl-horizontal">
         <dt>
-            @Html.DisplayNameFor(model => model.Name)
+            Programme Name
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.programme.Name)
+        </dd>
+        <dt>
+            Event Name
         </dt>
 
         <dd>
             @Html.DisplayFor(model => model.Name)
         </dd>
-
         <dt>
-            @Html.DisplayNameFor(model => model.Description)
+            Description
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.Description)
+            @Html.DisplayFor(model => model.text)
         </dd>
 
+        <dt>
+            Start Date
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.start_date)
+        </dd>
+
+        <dt>
+            End Date
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.end_date)
+        </dd>
         <dt>
             @Html.DisplayNameFor(model => model.Venue)
         </dt>
 
         <dd>
             @Html.DisplayFor(model => model.Venue)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.Start_Time)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Start_Time)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.Finish_Time)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Finish_Time)
         </dd>
 
     </dl>

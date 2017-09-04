@@ -22,6 +22,24 @@ namespace AbantuTech.Controllers
         }
 
         // GET: Committees/Details/5
+        public ActionResult MemberIndex(int id)
+        {
+            //List<AbantuMember> member = db.Members.ToList();
+            //AbantuMember mCom = new AbantuMember();
+
+            //List<AbantuMember> mComList = member.Select(x => new AbantuMember
+            //{ FirstName = x.FirstName,
+            //  Surname = x.Surname,
+            //  Committee_ID = x.Committee_ID,
+            //  CommitteeName = x.CommitteeName }).ToList();
+
+            var committes = db.Committtes.Include(m => m.Members)
+                .FirstOrDefault(m => m.Committee_ID == id);
+
+            return View(committes);
+
+        }
+
         public ActionResult Details(int? id)
         {
             if (id == null)

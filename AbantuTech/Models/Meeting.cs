@@ -24,11 +24,13 @@ namespace Abantu_System.Models
         //public List<string> Agenda { get; set; } //List of items to be discussed in  the meeting
 
         //[Required(ErrorMessage = "*")]
+        [DataType(DataType.Date)]
         public DateTime Date { get; set; }
 
-
+        [DataType(DataType.Time)]
         [DisplayName("Start Time ")]
         public string Start_Time { get; set; }
+        [DataType(DataType.Time)]
         [DisplayName("End Time ")]
         public string End_Time { get; set; }
         public string Location { get; set; }

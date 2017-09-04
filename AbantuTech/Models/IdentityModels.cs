@@ -30,6 +30,7 @@ namespace AbantuTech.Models
         {
             return new ApplicationDbContext();
         }
+        public DbSet<DonationAmount> DonationAmount { get; set; }
         public DbSet<AbantuMember> Members { get; set; }
 
         public DbSet<Branch> Branches { get; set; }
@@ -44,11 +45,21 @@ namespace AbantuTech.Models
 
         public DbSet<Programme> Programmes { get; set; }
 
+        public DbSet<EventMembers > EventMembers { get; set; }
         public DbSet<ProgrammeMember> ProgrammeMembers { get; set; }
 
         public DbSet<Meeting> Meetings { get; set; }
 
         public DbSet<BudgetExpenses> BudgetExpenses { get; set; }
         public DbSet<EmergencyContact> Contacts { get; set; }
+        public DbSet<UserTable> UserTables { get; set; }
+        public DbSet<Notification> Notifications { get; set; }
+
+        public DbSet<Support> Supports { get; set; }
+        public DbSet<FileDetail> FileDetails { get; set; }
+        public DbSet<Forum> Fora { get; set; }
+
+        public System.Data.Entity.DbSet<AbantuTech.Models.File> Files { get; set; }
+        public DbSet<ApplicationForm> Applications { get; set; }
     }
 }

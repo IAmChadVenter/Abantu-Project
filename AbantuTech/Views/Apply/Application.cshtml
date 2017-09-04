@@ -2,9 +2,24 @@
 
 @{
     ViewBag.Title = "Application";
+    Layout = "~/Views/Shared/_Layout2.cshtml";
 }
 
 <div class="container">
+    @{ 
+        if (TempData["Message"] != null)
+        {
+            <div class="alert alert-success">@TempData["Message"]</div>
+        }
+    }
+    <style>
+        img {
+            display: block;
+            margin: auto;
+        }
+    </style>
+    <img src="~/Content/Template/images/5.jpg" height="110" width="110" />
+    <h1><p align="center">Apply</p></h1>
     <h2>Application by @Model.FirstName @Model.Surname</h2>
     <hr/>
 
@@ -37,7 +52,9 @@
             <li class="list-group-item"><b>Home Phone :</b> @item.homePhone</li>
         </ul>
     }
-    
+    <div>
+        @Html.ActionLink("Back to Home","Index","Home")
+    </div>
 </div>
 @if (Request.IsAuthenticated)
 {

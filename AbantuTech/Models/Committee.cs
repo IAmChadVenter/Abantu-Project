@@ -17,11 +17,14 @@ namespace Abantu_System.Models
 
         [Required(ErrorMessage = "*")]
         [MaxLength(50)]
-        public string Committee_Name { get; set; }
         [DisplayName("Committee Name")]
+        public string Committee_Name { get; set; }
+
 
         [Required(ErrorMessage = "*")]
         [MaxLength(200)]
+        [DisplayName("Description")]
+
         public string Description { get; set; }
 
         public ICollection <AbantuMember> Members { get; set; }
