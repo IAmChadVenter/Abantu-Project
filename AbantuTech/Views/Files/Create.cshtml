@@ -1,0 +1,52 @@
+﻿@model AbantuTech.Models.File
+
+@{
+    ViewBag.Title = "Create";
+    Layout = "~/Views/Shared/_Layout2.cshtml";
+
+}
+
+@{
+    ViewBag.Title = "Create";
+}
+<style>
+    img {
+        display: block;
+        margin: auto;
+    }
+</style>
+<img src="~/Content/Template/images/5.jpg" height="110" width=110" />
+<h1><p align="center">Files</p></h1>
+<h2>Create</h2>
+
+@using (Html.BeginForm("Create", "Files", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    if (TempData["Message"] != null)
+    {
+        <div class="alert alert-success">
+            @TempData["Message"]
+        </div>
+    }
+    if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger">
+            @TempData["Error"]
+        </div>
+    }
+    @Html.AntiForgeryToken()
+    <fieldset>
+        <legend><b>Upload File:</b></legend>
+        <div class="form-group">
+            <p><input type="file" id="file" name="file" /></p>
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Upload" class="btn btn-default" />
+            </div>
+        </div>
+    </fieldset>
+}
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

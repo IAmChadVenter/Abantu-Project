@@ -1,0 +1,122 @@
+﻿@model Abantu_System.Models.Budget
+
+<link href="~/Content/JQueryIU/chart.css" rel="stylesheet" type="text/css" />
+
+@{
+    Layout = "";
+}
+@{
+    ViewBag.Title = "Report";
+}
+
+<h1><p align="center">Report</p></h1>
+
+<div>
+    <h4>Budget Report</h4>
+    <hr />
+    <table style="width:25%; text-align:left ">
+        <tr>
+            <th style="text-align:left ">Programme Name</th>
+            <td valign="top">
+                @Html.DisplayFor(model => model.Programme.Name)
+            </td>
+        </tr>
+        <tr>
+            <th style="text-align:left ">Budget Name</th>
+            <td valign="top">
+                @Html.DisplayFor(model => model.Name)
+            </td>
+        </tr>
+        <tr>
+            <th style="text-align:left ">@Html.DisplayNameFor(model => model.Amount)</th>
+            <td valign="top">
+                @Html.DisplayFor(model => model.Amount)
+            </td>
+        </tr>
+        <tr>
+            <th style="text-align:left ">Budget Expenses</th>
+            <td>
+                <table style="width:100%;">
+                    <tr>
+                        <th style="text-align: left;">Name</th>
+                        <th style="text-align: left;">Amount</th>
+                    </tr>
+                    @foreach (var item in Model.Expenses)
+                    {
+                        <tr>
+                            <td style="text-align: left;">@Html.DisplayFor(modelItem => item.ExpenseName)</td>
+                            <td style="text-align: left;">@Html.DisplayFor(modelItem => item.Amount)</td>
+                        </tr>
+                    }
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <th style="text-align:left ">Total Expenses</th>
+            @{ double A = Model.Expenses.Sum(v => v.Amount);}
+            <td valign="top">R @A,00</td>
+        </tr>
+        <tr>
+            <th style="text-align:left ">Total Budget Left</th>
+            <td valign="top">R @(Model.Amount - Model.Expenses.Sum(v => v.Amount)),00</td>
+        </tr>
+    </table>
+</div>
+<h2 style="width:30%">Budget Expense Statistics</h2>
+<table width="30%">
+    <tr>
+        <th>
+            Budget Expenses
+        </th>
+        <th>
+            % of Budget Used
+        </th>
+        <th>
+            % of Budget Left
+        </th>
+    </tr>
+    <tr>
+        <td style="text-align:center">
+            @{ int count = Model.Expenses.Count();
+                @count }
+        </td>
+        <td style="text-align:center">
+            <div>@((Model.Expenses.Sum(v => v.Amount) / Model.Amount) * 100)%</div>
+        </td>
+        <td style="text-align:center">
+            <div>@(100 - ((Model.Expenses.Sum(v => v.Amount) / Model.Amount) * 100))%</div>
+        </td>
+    </tr>
+</table>
+
+<div class="container">
+    <div class="row" style="margin-top:30px; ">
+        <div class="col-md-12">
+            <h2 style="padding-left:380px">Expense % Info</h2>
+            <small class="ash" style="padding-left:340px">Shows what % of the Budget each expense consists of</small><br>
+            <dl style="display: flex; background-color: white; flex-direction: column; width: 100%; max-width: 700px; position: relative; padding: 20px;">
+                <dt style="align-self: flex-start; width: 100%; font-weight: 700; display: block; text-align: center; font-size: 1.2em; font-weight: 700; margin-bottom: 20px; margin-left: 130px;">
+                    Budget Expenses %
+                </dt>
+
+                @foreach (var tem in Model.Expenses)
+                {
+                    <dd class="percentage percentage-@(tem.Amount /(Model.Amount) * 100)">
+                        <span style="font-weight: 600;
+  display: flex;
+  align-items: center;
+  height: 40px;
+  width: 150px;
+  background-color: white;
+  position: absolute;
+  left: 0;
+  justify-content: flex-end">Expense @tem.ExpenseName:@((tem.Amount) / Model.Amount * 100)%</span>
+</dd>
+                }
+            </dl>
+
+
+        </div>
+    </div>
+</div>
+

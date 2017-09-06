@@ -1,0 +1,47 @@
+﻿<!-- banner -->
+<script src="~/Scripts/jquery-3.1.1.js"></script>
+<div class="w3ls_banner_section">
+    <div class="container">
+        @using (Html.BeginForm("PayFast","Home",FormMethod.Get))
+        {
+            <div class="row">
+                <div class="col-lg-4"></div>
+                <div class="col-lg-4">
+                    <p>
+                        <div class="input-group">
+                            <div class="input-group-btn">
+                                <button type="submit" class="btn btn-success">Make a Donation</button>
+                            </div>
+                            @Html.TextBox("Amount", null, new { @class = "form-control", @required = "required", @type = "number", @placeholder = "Enter amount.." })
+                        </div>
+                    </p>
+                </div>
+                <div class="col-lg-4"></div>
+            </div>
+        }
+       
+     
+        <h2>Positively Transforms africa through <span>Technology</span></h2>
+        <p> Sobantu-Technologies</p>
+
+        <div class="wthree-counter-agile">
+            <!--timer-->
+            <section class="examples">
+                <div class="clearfix"></div>
+            </section>
+
+            <!--//timer-->
+
+        </div>
+
+        <div class="agileits_more">
+            <ul>
+                <li><a href="#" data-toggle="modal" data-target="#myModal4" class="w3ls_banner_more hvr-icon-hang scroll ">For the largest Pan-African youth organization in Africa</a></li>
+                <li><a href="#" class="hvr-icon-hang" data-toggle="modal" data-target="#myModal">focusing on YMCA Madagascars,YMCA S.A</a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+<script src="~/Scripts/bootstrap-notify.min.js"></script>
+<script src="~/Scripts/notifs.tasks.js"></script>
+<!-- //banner -->

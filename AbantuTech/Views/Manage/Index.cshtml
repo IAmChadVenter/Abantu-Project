@@ -1,0 +1,134 @@
+﻿@model AbantuTech.Models.IndexViewModel
+@{
+    ViewBag.Title = "Manage Account";
+}
+<style>
+    img {
+        display: block;
+        margin: auto;
+    }
+</style>
+<img src="~/Content/Template/images/5.jpg" height="110" width=110" />
+<h2 style="text-align:center;">@ViewBag.Title.</h2>
+
+<p class="text-success">@ViewBag.StatusMessage</p>
+<div style="display:block;margin:0 auto;">
+    <h4>Change your account settings</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>Password:</dt>
+        <dd>
+            [
+            @if (Model.HasPassword)
+            {
+                @Html.ActionLink("Change your password", "ChangePassword")
+            }
+            else
+            {
+                @Html.ActionLink("Create", "SetPassword")
+            }
+            ]
+        </dd>
+        <dt>External Logins:</dt>
+        <dd>
+            @Model.Logins.Count [
+            @Html.ActionLink("Manage", "ManageLogins") ]
+        </dd>
+        @*
+            Phone Numbers can used as a second factor of verification in a two-factor authentication system.
+
+             See <a href="http://go.microsoft.com/fwlink/?LinkId=403804">this article</a>
+                for details on setting up this ASP.NET application to support two-factor authentication using SMS.
+
+             Uncomment the following block after you have set up two-factor authentication
+        *@
+        @*
+            <dt>Phone Number:</dt>
+            <dd>
+                @(Model.PhoneNumber ?? "None")
+                @if (Model.PhoneNumber != null)
+                {
+                    <br />
+                    <text>[&nbsp;&nbsp;@Html.ActionLink("Change", "AddPhoneNumber")&nbsp;&nbsp;]</text>
+                    using (Html.BeginForm("RemovePhoneNumber", "Manage", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        <text>[<input type="submit" value="Remove" class="btn-link" />]</text>
+                    }
+                }
+                else
+                {
+                    <text>[&nbsp;&nbsp;@Html.ActionLink("Add", "AddPhoneNumber")
+                }
+            </dd>
+        *@
+        @*<dt>Two-Factor Authentication:</dt>
+            <dd>
+                <p>
+                    There are no two-factor authentication providers configured. See <a href="http://go.microsoft.com/fwlink/?LinkId=403804">this article</a>
+                    for details on setting up this ASP.NET application to support two-factor authentication.
+                </p>*@
+        @*@if (Model.TwoFactor)
+            {
+                using (Html.BeginForm("DisableTwoFactorAuthentication", "Manage", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                {
+                    @Html.AntiForgeryToken()
+                    <text>Enabled
+                    <input type="submit" value="Disable" class="btn btn-link" />
+                    </text>
+                }
+            }
+            else
+            {
+                using (Html.BeginForm("EnableTwoFactorAuthentication", "Manage", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                {
+                    @Html.AntiForgeryToken()
+                    <text>Disabled
+                    <input type="submit" value="Enable" class="btn btn-link" />
+                    </text>
+                }
+            }*@
+        </dd>
+        <dt>Profile Status:</dt>
+        <dd>
+
+            <p>Once you have requested profile deactivation/reactivation, your profile page status does not change until Admin has completed the final step of the process</p>
+            @if (Model.isProfileActive)
+            {
+                <h4><b>Profile is active</b></h4>
+                if (Model.isDeactRequested == false)
+                {
+                    @Html.ActionLink("Request Deactivation", "RequestDeact")
+                }
+                else
+                {
+                    if (Model.isDeactApproved == false)
+                    {
+                        using (Html.BeginForm("CancelDeact", "Manage", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                        {
+                            <text>Cancel Deactivation: <input type="submit" value="Cancel" class="btn btn-primary" /></text>
+                        }
+                    }
+                }
+            }
+            else
+            {
+                <h4><b>Profile is not active</b></h4>
+                if (Model.isReactRequested == false)
+                {
+                    @Html.ActionLink("Request Reactivation", "RequestReact")
+                }
+                else
+                {
+                    if (Model.isReactApproved == false)
+                    {
+                        using (Html.BeginForm("CancelReact", "Manage", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                        {
+                            <text>Cancel Reactivation: <input type="submit" value="Cancel" class="btn btn-primary" /></text>
+                        }
+                    }
+                }
+            }
+        </dd>
+    </dl>
+</div>

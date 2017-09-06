@@ -1,0 +1,24 @@
+﻿@*largeCustoModal*@
+<link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+<div class="modal fade udModal" id="upLoadFileDetails" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document" style="">
+        <div class="modal-content">
+            <div class="modal-header">
+                File uploaded
+                <button type="button" class="close" onclick="closefileModal()" aria-label="Close"><span aria-hidden="true">×</span></button>
+            </div>
+            <div class="modal-body">
+                <table class="table table-striped" id="fileListTable">
+                    <thead>
+                        <tr>
+                            <th style="width:400px;">File Name</th>
+                            <th style="width:100px;">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+                <button class="btn btn-custom" onclick="closefileModal()">Close</button>
+            </div>
+        </div>
+    </div>
+</div>

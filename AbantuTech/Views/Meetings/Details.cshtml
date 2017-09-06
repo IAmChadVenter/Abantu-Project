@@ -1,0 +1,74 @@
+﻿@model Abantu_System.Models.Meeting
+
+@{
+    ViewBag.Title = "Details";
+    Layout = "~/Views/Shared/_Layout2.cshtml";
+}
+<style>
+    img {
+        display: block;
+        margin: auto;
+    }
+</style>
+<img src="~/Content/Template/images/5.jpg" height="110" width=110" />
+<h1><p align="center">Meetings</p></h1>
+<h2>Details</h2>
+
+<div>
+    <h4>Meeting</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Committee.Committee_Name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Committee.Committee_Name)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Date)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Date)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Start_Time)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Start_Time)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.End_Time)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.End_Time)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Location)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Location)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Purpose)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Purpose)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.Meeting_ID }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

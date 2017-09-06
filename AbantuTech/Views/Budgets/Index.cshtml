@@ -1,0 +1,67 @@
+﻿@*@model IEnumerable<Abantu_System.Models.Budget>*@
+@model PagedList.IPagedList<Abantu_System.Models.Budget>
+@using PagedList.Mvc;
+<link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
+
+@{
+    ViewBag.Title = "Budgets";
+    Layout = "~/Views/Shared/_Layout2.cshtml";
+}
+
+<h1><p align="center">Budgets</p></h1>
+
+<p>
+    @Html.ActionLink("Create New", "Create", null, new { @class = "btn btn-default" })
+    @Html.ActionLink("Expenses", "Index", "BudgetExpenses", null, new { @class = "btn btn-default" })
+</p>
+@using (Html.BeginForm("Index", "Budgets", FormMethod.Get))
+{
+    <table>
+        <tr>
+            <td style="padding-right:10px;">Find by budget name: </td>
+            <td style="padding-bottom:8px;">@Html.TextBox("SearchString", null, new { @class = "form-control" })</td>
+            <td style="padding-left:10px; padding-bottom:8px"><input type="submit" value="Search" /></td>
+        </tr>
+
+    </table>
+}
+<table class="table">
+    <tr>
+        <th>
+            Programme name
+        </th>
+        <th>
+            Budget Name
+        </th>
+        <th>
+            Amount
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Programme.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Amount)
+            </td>
+            <td>
+
+                @Html.ActionLink("Details", "Details", new { id = item.Budget_ID })
+
+            </td>
+        </tr>
+    }
+
+</table>
+<br />
+Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
+
+@Html.PagedListPager(Model, page => Url.Action("Index",
+    new { page, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter }))

@@ -1,0 +1,32 @@
+﻿@model HelpDeskIntegration.Models.Jira.Comment
+<div class="form-horizontal">
+    <div class="form-group">
+        <label class="col-md-2 control-label"></label>
+        <div class="col-md-10">
+            <div class="">
+                <h4>Comment History </h4>
+                <div id="comments-list">
+                    <div>
+                        <div class="comment-main-level">
+                            <!-- Contenedor del Comentario -->
+
+                            @foreach (var commentData in Model.comments)
+                            {
+                                <div class="comment-box">
+                                    <div class="comment-content">
+                                        @commentData.body
+                                        <span class="date sub-text"><br /> @commentData.created </span>
+                                    </div>
+                                </div>
+                            }
+                            @if (Model.comments != null && Model.comments.Count == 0)
+                            {
+                                <div>No comments exists!</div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

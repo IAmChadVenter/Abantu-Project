@@ -1,0 +1,67 @@
+﻿@model Abantu_System.Models.AbantuMember
+
+@{
+    ViewBag.Title = "Application";
+    Layout = "~/Views/Shared/_Layout2.cshtml";
+}
+
+<div class="container">
+    @{ 
+        if (TempData["Message"] != null)
+        {
+            <div class="alert alert-success">@TempData["Message"]</div>
+        }
+    }
+    <style>
+        img {
+            display: block;
+            margin: auto;
+        }
+    </style>
+    <img src="~/Content/Template/images/5.jpg" height="110" width="110" />
+    <h1><p align="center">Apply</p></h1>
+    <h2>Application by @Model.FirstName @Model.Surname</h2>
+    <hr/>
+
+    <h3 class="list-group-item-heading">Applicant Personal Details</h3>
+    <br />
+    <ul class="list-group">
+        <li class="list-group-item"><b>Full Name :</b> @Model.FirstName @Model.Surname</li>
+        <li class="list-group-item"><b>Date of Birth :</b> @Model.DateOfBirth.ToLongDateString()</li>
+        <li class="list-group-item"><b>Gender :</b> @Model.Gender</li>
+    </ul>
+    <br />
+
+    <h3 class="list-group-item-heading">Address And Contact Details</h3>
+    <br />
+    <ul class="list-group">
+        <li class="list-group-item"><b>Mobile Number :</b> @Model.PhoneNumber</li>
+        <li class="list-group-item"><b>Email Address :</b> @Model.Email</li>
+        <li class="list-group-item"><b>Physical Address :</b> @Model.City @Model.Province @Model.ZipCode</li>
+    </ul>
+    <br />
+
+    @foreach (var item in Model.Contacts)
+    {
+        <h3 class="list-group-item-heading">Alternative Contact</h3>
+        <br />
+        <ul class="list-group">
+            <li class="list-group-item"><b>Full Name :</b> @item.name</li>
+            <li class="list-group-item"><b>Relationship :</b> @item.relationship</li>
+            <li class="list-group-item"><b>Mobile Phone :</b> @item.alternativePhone</li>
+            <li class="list-group-item"><b>Home Phone :</b> @item.homePhone</li>
+        </ul>
+    }
+    <div>
+        @Html.ActionLink("Back to Home","Index","Home")
+    </div>
+</div>
+@if (Request.IsAuthenticated)
+{
+    <p>
+        @Html.ActionLink("Accept Application", "AcceptApplication", new { id = Model.Member_ID }, new { @class = "btn btn-primary" }) |
+        @Html.ActionLink("Reject Application", "RejectApplication", new { id = Model.Member_ID }, new { @class = "btn btn-danger" }) |
+        @Html.ActionLink("Back to List", "AllApplications", null, new { @class = "btn btn-primary" })
+    </p>
+}
+

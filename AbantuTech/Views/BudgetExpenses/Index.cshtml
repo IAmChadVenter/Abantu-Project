@@ -1,0 +1,72 @@
+﻿@*@model IEnumerable<Abantu_System.Models.BudgetExpenses>*@
+@model PagedList.IPagedList<Abantu_System.Models.BudgetExpenses>
+@using PagedList.Mvc;
+@{
+    ViewBag.Title = "Budget Expenses";
+    Layout = "~/Views/Shared/_Layout2.cshtml";
+}
+
+<img src="~/Content/Template/images/5.jpg" height="110" width=110" />
+<h1><p align="center">BUDGET EXPENSES</p></h1>
+
+
+<p>
+    @Html.ActionLink("Create New", "Create", null, new { @class = "btn btn-default" })
+    @Html.ActionLink("Budgets", "Index", "Budgets", null, new { @class = "btn btn-default" })
+</p>
+@using (Html.BeginForm("Index", "BudgetExpenses", FormMethod.Get))
+{
+    <table>
+        <tr>
+            <td style="padding-right:10px;">Find by expense name: </td>
+            <td style="padding-bottom:8px;">@Html.TextBox("SearchString", null, new { @class = "form-control" })</td>
+            <td style="padding-left:10px; padding-bottom:8px"><input type="submit" value="Search" /></td>
+        </tr>
+
+    </table>
+}
+
+<table class="table">
+    <tr>
+        <th>
+            Expense Name
+        </th>
+        <th>
+            Amount
+        </th>
+
+        <th>
+            Budget Name
+        </th>
+
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+
+            <td>
+                @Html.DisplayFor(modelItem => item.ExpenseName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Amount)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Budget.Name)
+            </td>
+
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { id = item.ExpenseName }) |
+                @Html.ActionLink("Details", "Details", new { id = item.ExpenseName }) |
+                @Html.ActionLink("Delete", "Delete", new { id = item.ExpenseName })
+            </td>
+        </tr>
+    }
+
+</table>
+<br />
+Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
+
+@Html.PagedListPager(Model, page => Url.Action("Index",
+    new { page, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter }))

@@ -1,0 +1,37 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout2.cshtml";
+}
+<style>
+    img {
+        display: block;
+        margin: auto;
+    }
+</style>
+<img src="~/Content/Template/images/5.jpg" height="110" width="110" />
+<h1><p align="center">YMCA Calendar</p></h1>
+
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>DHXScheduler initialization sample</title>
+    <style>
+        body {
+            background-color: #eee;
+        }
+    </style>
+</head>
+<body>
+    <div style="height:700px;width:900px;margin:0 auto">
+        @Html.Raw(Model.Render())
+    </div>
+    @Html.ActionLink("Back to List", "AdminMenu", null, new { @class = "btn btn-primary" })
+</body>
+</html>
+
+
+

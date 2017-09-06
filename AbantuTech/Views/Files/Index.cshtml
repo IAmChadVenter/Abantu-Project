@@ -1,0 +1,47 @@
+﻿@model IEnumerable<AbantuTech.Models.File>
+
+@{
+    ViewBag.Title = "Index";
+
+    Layout = "~/Views/Shared/_Layout2.cshtml";
+}
+<style>
+    img {
+        display: block;
+        margin: auto;
+    }
+</style>
+<img src="~/Content/Template/images/5.jpg" height="110" width=110" />
+<h1><p align="center">Files</p></h1>
+<h2>Index</h2>
+
+<p>
+@Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.FileName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.FileType)
+        </th>
+        <th></th>
+    </tr>
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.FileName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FileType)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { id = item.FileId }) |
+                @*@Html.ActionLink("Download", "Download", new { id = item.FileId }) |*@
+                @Html.ActionLink("Delete", "Delete", new { id = item.FileId })
+            </td>
+        </tr>
+    }
+</table>
