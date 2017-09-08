@@ -1,0 +1,100 @@
+﻿@model IEnumerable<AbantuTech.Models.EventMembers>
+@using AbantuTech.Models;
+@{
+    Layout = "";
+}
+@{
+    ViewBag.Title = "Event Report";
+}
+@{ 
+    ApplicationDbContext db = new ApplicationDbContext();
+    var e = db.Events;
+}
+
+<style>
+    img {
+        display: block;
+        margin: auto;
+    }
+</style>
+<img src="~/Content/Template/images/5.jpg" height="110" width="110" />
+<h1><p align="center">Event Report</p></h1>
+
+<h2>Event Details</h2>
+<table width="50%" class="table">
+    <tr>
+        <th align="left">
+            Name
+        </th>
+        <th align="left">
+            Description
+        </th>
+        <th align="left">
+            Venue
+        </th>
+        <th align="left">
+            Start Date
+        </th>
+        <th align="left">
+            End Date
+        </th>
+
+        <th></th>
+    </tr>
+
+    @foreach (var item in @e)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.text)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Venue)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.start_date)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.end_date)
+            </td>
+        </tr>
+    }
+    </table>
+    <br />
+    <br />
+
+    <div><h2>Event Attendies</h2></div>
+
+    <table width="40%" class="table">
+        <tr>
+            <th align="left">
+                @Html.DisplayName("Event Name")
+            </th>
+            <th align="left">
+                @Html.DisplayName("First Name")
+            </th>
+            <th align="left">
+                @Html.DisplayName("Last Name")
+            </th>
+            <th></th>
+        </tr>
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Event.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.AbantuMember.FirstName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.AbantuMember.Surname)
+                </td>
+            </tr>
+        }
+
+    </table>

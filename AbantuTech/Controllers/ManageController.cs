@@ -10,6 +10,9 @@ using AbantuTech.Models;
 using Abantu_System.Models;
 using AbantuTech.Helpers;
 using Microsoft.AspNet.Identity.EntityFramework;
+using System.Net;
+using System.Data;
+using System.Data.Entity;
 
 namespace AbantuTech.Controllers
 {
@@ -609,5 +612,42 @@ namespace AbantuTech.Controllers
             return View();
         }
 
+        private ApplicationDbContext p = new ApplicationDbContext();
+        public ActionResult BudgetReport(int? id)
+        {
+
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            Budget budget = p.Budgets.Find(id);
+            if (budget == null)
+            {
+                return HttpNotFound();
+            }
+            return View(budget);
+        }
+        public ActionResult report()
+        {
+            return View();
+        }
+        public ActionResult DonReport(int? id)
+        {
+            return View(p.DonationAmount.ToList());
+        }
+
+        public ActionResult eventReport(int id)
+        {
+            var @event = p.Events.FirstOrDefault(p => p.Event_ID == id);
+            if (@event != null)
+            {
+                var eventMember = p.EventMembers
+                    .Include(p => p.AbantuMember)
+                    .Where(x => x.Event_ID == @event.Event_ID)
+                    .ToList();
+                return View(eventMember);
+            }
+            return View();
+        }
     }
 }

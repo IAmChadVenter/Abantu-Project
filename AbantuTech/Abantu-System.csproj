@@ -1573,6 +1573,10 @@
     <Content Include="Views\HelpDesk\AllTicketView.cshtml" />
     <Content Include="Views\Events\PastEvents.cshtml" />
     <Content Include="Views\Events\photoGallery.cshtml" />
+    <Content Include="Views\Manage\report.cshtml" />
+    <Content Include="Views\Manage\BudgetReport.cshtml" />
+    <Content Include="Views\Manage\DonReport.cshtml" />
+    <Content Include="Views\Manage\eventReport.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
