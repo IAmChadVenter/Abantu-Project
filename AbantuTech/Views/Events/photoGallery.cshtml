@@ -1,0 +1,97 @@
+﻿model AbantuTech.Models.PagedList<AbantuTech.Models.EventPhoto>
+
+    @{
+        ViewBag.Title = "photoGallery";
+        Layout = "~/Views/Shared/_Layout2.cshtml";
+    }
+
+    <h2>Image Gallery </h2>
+
+    @using (Html.BeginForm("photoGallery", null, FormMethod.Get))
+    {
+        <div class="row">
+            <div class="col-sm-8">
+                <div class="input-group">
+                    <input type="text"
+                           name="filter"
+                           value="@ViewBag.filter"
+                           class="form-control"
+                           style="display: inline"
+                           placeholder="Search" />
+                    <span class="input-group-btn">
+                        <button class="btn btn-default" type="submit">Go</button>
+                    </span>
+                </div>
+            </div>
+            <div class="pull-right col-lg-1">
+                <a class="btn btn-success" data-modal="" href="/home/create" id="btnCreate">
+                    <span class="glyphicon glyphicon-plus"></span>
+                </a>
+            </div>
+        </div>
+
+
+    <!-- The Bootstrap Image Gallery lightbox, should be a child element of the document body -->
+        <div id="blueimp-gallery" class="blueimp-gallery blueimp-gallery-controls">
+            <!-- The container for the modal slides -->
+            <div class="slides"></div>
+            <!-- Controls for the borderless lightbox -->
+            <h3 class="title"></h3>
+            <a class="prev">‹</a>
+            <a class="next">›</a>
+            <a class="close">×</a>
+            <a class="play-pause"></a>
+            <ol class="indicator"></ol>
+            <!-- The modal dialog, which will be used to wrap the lightbox content -->
+            <div class="modal fade">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" aria-hidden="true">&times;</button>
+                            <h4 class="modal-title"></h4>
+                        </div>
+                        <div class="modal-body next" style="max-height: 500px; min-height: 400px;"></div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default pull-left prev">
+                                <i class="glyphicon glyphicon-chevron-left"></i>
+                                Previous
+                            </button>
+                            <button type="button" class="btn btn-primary next">
+                                Next
+                                <i class="glyphicon glyphicon-chevron-right"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div style="margin-top: 17px;">
+            <div id="links">
+                @foreach (var item in Model.Content)
+                {
+                    <a href="@item.ImagePath" title="@item.Description" data-gallery>
+                        <img src="@item.ThumbPath" alt="@item.Description" class="img-rounded" style="margin-bottom:7px;" />
+                    </a>
+                }
+            </div>
+        </div>
+
+        <div>
+            @{
+                var grid = new WebGrid(
+                            canPage: true,
+                            rowsPerPage: Model.PageSize,
+                            canSort: true,
+                            ajaxUpdateContainerId: "grid");
+
+                grid.Bind(Model.Content, rowCount: Model.TotalRecords, autoSortAndPage: false);
+                grid.Pager(WebGridPagerModes.All);
+
+                @grid.GetHtml(htmlAttributes: new { id = "grid" },
+            fillEmptyRows: false,
+            mode: WebGridPagerModes.All,
+            columns: grid.Columns());
+            }
+        </div>
+                }

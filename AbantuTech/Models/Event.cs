@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AbantuTech.Models;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
@@ -37,6 +38,8 @@ namespace Abantu_System.Models
 
         public int Programme_ID { get; set; }
         public virtual Programme programme { get; set; }
+
+        public ICollection<EventPhoto> Photos { get; set; }
 
         //public int Programme_ID { get; set; }
         //public virtual Programme Programme { get; set; }

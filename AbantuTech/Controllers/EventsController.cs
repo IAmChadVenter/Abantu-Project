@@ -11,6 +11,8 @@ using Abantu_System.Models;
 using System.Net.Mail;
 using SelectPdf;
 using System.IO;
+using System.Drawing;
+using System.Threading.Tasks;
 
 namespace AbantuTech.Controllers
 {
@@ -88,6 +90,7 @@ namespace AbantuTech.Controllers
 
                     catch (Exception ex)
                     {
+                        Console.WriteLine(ex.Message);
                     }
                 }
 
@@ -142,6 +145,7 @@ namespace AbantuTech.Controllers
 
                 catch (Exception ex)
                 {
+                    Console.WriteLine(ex.Message);
                 }
             }
 
@@ -208,6 +212,7 @@ namespace AbantuTech.Controllers
 
                 catch (Exception ex)
                 {
+                    Console.WriteLine(ex.Message);
                 }
             }
 
@@ -277,46 +282,107 @@ namespace AbantuTech.Controllers
         [HttpPost]
         public ActionResult PastEvents()
         {
-            return View(db.Events.Where(x => x.end_date < DateTime.Today).ToList());
+            var pastEvent = db.Events.Include(m => m.Photos).Where(x => x.end_date <= DateTime.Today).ToList();
+            return View(pastEvent);
         }
-        public ActionResult Gallery(int eventid, string filter = null, int page = 1, int pageSize = 20)
+        [HttpPost]
+        public ActionResult searchPastEvents(string Name)
         {
+            var pastEvents = db.Events.Include(m => m.Photos)
+                .Where(m => m.Name.Equals(Name));
+            return View(pastEvents);
+        }
+        [HttpGet]
+        public async Task<ActionResult> photoGallery(int id, string filter = null, int page = 1, int pageSize = 20)
+        {
+            var @event = db.Events.FirstOrDefault(x => x.Event_ID == id);
+            if (@event != null)
+            {
+                var records = new PagedList<EventPhoto>();
+                ViewBag.filter = filter;
 
-            var records = new PagedList<EventPhoto>();
+                records.Content = db.Photos
+                            .Where(x => filter == null || (x.Description.Contains(filter)))
+                            .OrderByDescending(x => x.PhotoId)
+                            .Skip((page - 1) * pageSize)
+                            .Take(pageSize)
+                            .ToList();
 
-            ViewBag.filter = filter;
+                // Count
+                records.TotalRecords = await db.Photos
+                                .Where(x => filter == null || (x.Description.Contains(filter))).CountAsync();
 
+                records.CurrentPage = page;
+                records.PageSize = pageSize;
 
+                return View(records);
+            }
+            return View();
+        }
+        [HttpGet]
+        public ActionResult PhotoUpload()
+        {
+            var ephoto = new EventPhoto();
+            return View(ephoto);
+        }
+        [HttpPost]
+        public ActionResult PhotoUpload(EventPhoto photo, IEnumerable<HttpPostedFileBase> files)
+        {
+            if (!ModelState.IsValid)
+                return View(photo);
+            if (files.Count() == 0 || files.FirstOrDefault() == null)
+            {
+                ViewBag.Error = "Please select images";
+                return View(photo);
+            }
+            var evt = db.Events.FirstOrDefault(x => x.Event_ID == photo.eventid);
+            var model = new EventPhoto();
+            foreach (var file in files)
+            {
+                if (file.ContentLength == 0) continue;
+                model.Description = photo.Description;
+                var filename = Guid.NewGuid().ToString();
+                var extension = Path.GetExtension(file.FileName).ToLower();
 
-            records.Content = db.Photos
+                using (var img = Image.FromStream(file.InputStream))
+                {
+                    model.ThumbPath = String.Format("/" + evt.Name + "/GalleryImages/thumbs/{0}{1}", filename, extension);
+                    model.ImagePath = String.Format("/" + evt.Name + "/GalleryImages/{0}{1}", filename, extension);
 
-                        .Where(x => filter == null || (x.Description.Contains(filter)))
+                    SaveToFolder(img, filename, extension, new Size(100, 100), model.ThumbPath);
 
-                        .OrderByDescending(x => x.PhotoId)
-                        .Skip((page - 1) * pageSize)
+                    SaveToFolder(img, filename, extension, new Size(600, 600), model.ImagePath);
+                }
+                model.CreatedOn = DateTime.Now;
+                db.Photos.Add(model);
+                db.SaveChanges();
+            }
+            return RedirectToAction("photoGallery");
+        }
+        public Size NewImageSize(Size imageSize, Size newSize)
+        {
+            Size finalSize;
+            double tempval;
+            if (imageSize.Height > newSize.Height || imageSize.Width > newSize.Width)
+            {
+                if (imageSize.Height > imageSize.Width)
+                    tempval = newSize.Height / (imageSize.Height * 1);
+                else
+                    tempval = newSize.Width / (imageSize.Width * 1);
 
-                        .Take(pageSize)
-
-                        .ToList();
-
-
-
-            // Count
-
-            records.TotalRecords = db.Photos
-
-                           .Where(x => filter == null || (x.Description.Contains(filter))).Count();
-
-
-
-            records.CurrentPage = page;
-
-            records.PageSize = pageSize;
-
-
-
-            return View(records);
-
+                finalSize = new Size((int)(tempval * imageSize.Width), (int)(tempval * imageSize.Height));
+            }
+            else
+                finalSize = imageSize;
+            return finalSize;
+        }
+        private void SaveToFolder(Image img, string fileName, string extension, Size newSize, string pathToSave)
+        {
+            Size imgSize = NewImageSize(img.Size, newSize);
+            using (Image newImg = new Bitmap(img, imgSize.Width, imgSize.Height))
+            {
+                newImg.Save(Server.MapPath(pathToSave), img.RawFormat);
+            }
         }
 
 
