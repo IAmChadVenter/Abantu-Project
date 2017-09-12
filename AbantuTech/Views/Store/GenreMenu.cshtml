@@ -1,0 +1,11 @@
+﻿@model IEnumerable<AbantuTech.Models.Genre>
+
+<ul style="float:left">
+    @foreach (var genre in Model)
+    {
+        <li>@Html.ActionLink(genre.Name, 
+                "Browse", "Store", 
+                new { Genre = genre.Name }, null)
+        </li>
+    }
+</ul>

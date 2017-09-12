@@ -18,18 +18,9 @@ namespace AbantuTech.Controllers
     public class BudgetsController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();
-
-        // GET: Budgets
-        //public ActionResult Index()
-        //{
-        //    var budgets = db.Budgets.Include(b => b.Event).Include(b => b.Programme);
-        //    return View(budgets.ToList());
-        //}
+        
         public ActionResult Index(string searchString, string sortOrder, string currentFilter, int? page)
         {
-            //var budgetExpenses = db.BudgetExpenses.Include(b => b.Budget);
-            //var budgetExpenses = db.BudgetExpenses.OrderBy(b => b.Budget_ID);
-            //return View(budgetExpenses.ToList());
             ViewBag.CurrentSort = sortOrder;
             var we = from s in db.Budgets
                      select s;
@@ -54,7 +45,6 @@ namespace AbantuTech.Controllers
             int pageSize = 8;
             int pageNumber = (page ?? 1);
             return View(we.ToPagedList(pageNumber, pageSize));
-            //return View(we.ToList());
         }
         // GET: Budgets/Details/5
         public ActionResult Details(int? id)

@@ -16,6 +16,8 @@ namespace AbantuTech.Models
         public int Event_ID { get; set; }
         public Event Event { get; set; }
         public int Member_ID { get; set; }
+        public string email_ { get; set; }
+
         public AbantuMember AbantuMember { get; set; }
     }
 }

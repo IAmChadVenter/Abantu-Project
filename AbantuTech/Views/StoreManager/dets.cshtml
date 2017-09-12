@@ -1,0 +1,81 @@
+﻿@model IEnumerable<AbantuTech.Models.OrderDetail>
+
+@{
+    ViewBag.Title = "Order Details";
+    ViewBag.Title = "Details"; Layout = "~/Views/Shared/_Layout2.cshtml";
+
+}
+<style>
+    .but{
+        font-size:25px;
+    }
+</style>
+<h2>Order Details</h2>
+@using (Html.BeginForm("dets", "StoreManager", FormMethod.Get))
+{
+    <table>
+        <tr>
+            <td style="padding-right:10px;">Find by Order owners Name: </td>
+            <td style="padding-bottom:8px;">@Html.TextBox("SearchString", null, new { @class = "form-control" })</td>
+            <td style="padding-left:10px; padding-bottom:8px"><input type="submit" value="Search" /></td>
+        </tr>
+
+    </table>
+}
+<p class="button" style="font-size:17px">@Html.ActionLink("Back To Manage Store", "Index", new { @class = "but" }) 
+</p>
+<table class="table">
+    <tr>
+        <th>
+Order ID        </th>
+        <th>
+Item        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Quantity)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.UnitPrice)
+        </th>
+        <th>Order Owner</th>
+        <th>Order Date</th>
+        <th>Order has been sent</th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.OrderId)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Album.Title)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Quantity)
+        </td>
+        <td>
+         R   @Html.DisplayFor(modelItem => item.UnitPrice)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Order.FirstName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Order.OrderDate)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.isSent)
+        </td>
+        <td>
+            @Html.ActionLink("Confirm Sent", "detsEdit", new { id = item.OrderDetailId }) 
+        </td>
+    </tr>
+}
+
+</table>
+
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />

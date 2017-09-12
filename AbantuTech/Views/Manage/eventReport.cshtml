@@ -6,7 +6,7 @@
 @{
     ViewBag.Title = "Event Report";
 }
-@{ 
+@{
     ApplicationDbContext db = new ApplicationDbContext();
     var e = db.Events;
 }
@@ -62,39 +62,45 @@
             </td>
         </tr>
     }
-    </table>
-    <br />
-    <br />
+</table>
+<br />
+<br />
 
-    <div><h2>Event Attendies</h2></div>
+<div><h2>Event Attendies</h2></div>
 
-    <table width="40%" class="table">
+<table width="40%" class="table">
+    <tr>
+        <th align="left">
+            @Html.DisplayName("Event Name")
+        </th>
+        <th align="left">
+            @Html.DisplayName("First Name")
+        </th>
+        <th align="left">
+            @Html.DisplayName("Last Name")
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
         <tr>
-            <th align="left">
-                @Html.DisplayName("Event Name")
-            </th>
-            <th align="left">
-                @Html.DisplayName("First Name")
-            </th>
-            <th align="left">
-                @Html.DisplayName("Last Name")
-            </th>
-            <th></th>
+            <td>
+                @Html.DisplayFor(modelItem => item.Event.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.AbantuMember.FirstName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.AbantuMember.Surname)
+            </td>
         </tr>
+    }
 
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Event.Name)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.AbantuMember.FirstName)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.AbantuMember.Surname)
-                </td>
-            </tr>
-        }
+</table>
+<br /><br /><br />
+@using (Html.BeginForm("SubmitAction", "Manage", FormMethod.Post))
+{
 
-    </table>
+    <input type="submit" name="BtnConvert" value="Save Report" class="mybutton" />
+}

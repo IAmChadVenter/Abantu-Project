@@ -253,12 +253,14 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Controllers\AccountCController.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\ApplyController.cs" />
     <Compile Include="Controllers\BranchesController.cs" />
     <Compile Include="Controllers\BudgetExpensesController.cs" />
     <Compile Include="Controllers\BudgetsController.cs" />
     <Compile Include="Controllers\CalendarController.cs" />
+    <Compile Include="Controllers\CheckoutController.cs" />
     <Compile Include="Controllers\CommitteesController.cs" />
     <Compile Include="Controllers\DonationAmountsController.cs" />
     <Compile Include="Controllers\EventsController.cs" />
@@ -271,6 +273,9 @@
     <Compile Include="Controllers\ProfileController.cs" />
     <Compile Include="Controllers\ProgrammesController.cs" />
     <Compile Include="Controllers\RolesController.cs" />
+    <Compile Include="Controllers\ShoppingCartController.cs" />
+    <Compile Include="Controllers\StoreController.cs" />
+    <Compile Include="Controllers\StoreManagerController.cs" />
     <Compile Include="Controllers\SupportController.cs" />
     <Compile Include="Controllers\TasksController.cs" />
     <Compile Include="Global.asax.cs">
@@ -287,10 +292,14 @@
     <Compile Include="Helpers\SendGridKey.cs" />
     <Compile Include="Helpers\TicketData.cs" />
     <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Models\AccountModels.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
+    <Compile Include="Models\Album.cs" />
+    <Compile Include="Models\Artist.cs" />
     <Compile Include="Models\Branch.cs" />
     <Compile Include="Models\Budget.cs" />
     <Compile Include="Models\BudgetExpenses.cs" />
+    <Compile Include="Models\Cart.cs" />
     <Compile Include="Models\Committee.cs" />
     <Compile Include="Models\DonationAmount.cs" />
     <Compile Include="Models\EmergencyContact.cs" />
@@ -300,17 +309,21 @@
     <Compile Include="Models\File.cs" />
     <Compile Include="Models\FileDetail.cs" />
     <Compile Include="Models\Forum.cs" />
+    <Compile Include="Models\Genre.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Models\Meeting.cs" />
     <Compile Include="Models\AbantuMember.cs" />
     <Compile Include="Models\Notification.cs" />
+    <Compile Include="Models\Order.cs" />
+    <Compile Include="Models\OrderDetail.cs" />
     <Compile Include="Models\PagedList.cs" />
     <Compile Include="Models\PriorityType.cs" />
     <Compile Include="Models\Programme.cs" />
     <Compile Include="Models\ProgrammeMember.cs" />
     <Compile Include="Models\RolesLogic.cs" />
     <Compile Include="Models\RolesView.cs" />
+    <Compile Include="Models\ShoppingCart.cs" />
     <Compile Include="Models\Support.cs" />
     <Compile Include="Models\Tasks.cs" />
     <Compile Include="Models\Ticket.cs" />
@@ -325,6 +338,8 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
     <Compile Include="Controllers\AboutController.cs" />
+    <Compile Include="ViewModel\ShoppingCartRemoveViewModel.cs" />
+    <Compile Include="ViewModel\ShoppingCartViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="bin\AbantuTech.dll" />
@@ -428,6 +443,10 @@
     <Content Include="Content\fullcalendar.print.css" />
     <Content Include="Content\fullcalendar.print.min.css" />
     <Content Include="Content\images\profile\Chad_Venter.png" />
+    <Content Include="Content\images\Store\car.png" />
+    <Content Include="Content\images\Store\shirt-b.jpg" />
+    <Content Include="Content\images\Store\shirt-bl.jpg" />
+    <Content Include="Content\images\Store\shirt-g.jpg" />
     <Content Include="Content\JQueryIU\chart.css" />
     <Content Include="Content\JQueryIU\jquery-ui.min.css" />
     <Content Include="Content\JQueryIU\jquery-ui.theme.min.css" />
@@ -1577,6 +1596,30 @@
     <Content Include="Views\Manage\BudgetReport.cshtml" />
     <Content Include="Views\Manage\DonReport.cshtml" />
     <Content Include="Views\Manage\eventReport.cshtml" />
+    <Content Include="Views\AccountC\ChangePassword.cshtml" />
+    <Content Include="Views\AccountC\ChangePasswordSuccess.cshtml" />
+    <Content Include="Views\AccountC\LogOn.cshtml" />
+    <Content Include="Views\AccountC\Register.cshtml" />
+    <Content Include="Views\Checkout\AddressAndPayment.cshtml" />
+    <Content Include="Views\Checkout\Complete.cshtml" />
+    <Content Include="Views\ShoppingCart\CartSummary.cshtml" />
+    <Content Include="Views\ShoppingCart\Index.cshtml" />
+    <Content Include="Views\Store\Browse.cshtml" />
+    <Content Include="Views\Store\Details.cshtml" />
+    <Content Include="Views\Store\GenreMenu.cshtml" />
+    <Content Include="Views\Store\Index.cshtml" />
+    <Content Include="Views\StoreManager\Create.cshtml" />
+    <Content Include="Views\StoreManager\Delete.cshtml" />
+    <Content Include="Views\StoreManager\Details.cshtml" />
+    <Content Include="Views\StoreManager\Edit.cshtml" />
+    <Content Include="Views\StoreManager\Index.cshtml" />
+    <Content Include="Views\Home\Cart.cshtml" />
+    <Content Include="Views\Shared\_Layout3.cshtml" />
+    <Content Include="Views\Shared\_LoginPartial1.cshtml" />
+    <Content Include="Views\StoreManager\Artist.cshtml" />
+    <Content Include="Views\StoreManager\category.cshtml" />
+    <Content Include="Views\StoreManager\dets.cshtml" />
+    <Content Include="Views\StoreManager\detsEdit.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
