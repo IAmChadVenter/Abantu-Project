@@ -88,7 +88,7 @@ namespace AbantuTech.Controllers
                     message.IsBodyHtml = true;
                     message.Body = "Congratulations " + @order.FirstName + " " + @order.LastName + " on your purchase! <br /><br />" + 
                                     "Your Order Total is R " + @order.Total + " <br /><br />"
-                                    + "You're details are as follows: <br/>"
+                                    + "Your details are as follows: <br/>"
                                     + "Email:  " + @order.Email + "<br/>"
                                     + "Country: " + @order.Country + "<br/>"
                                     + "Address: " + @order.Address + "<br />"
