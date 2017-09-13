@@ -146,10 +146,6 @@
       <HintPath>..\packages\PagedList.Mvc.4.5.0.0\lib\net40\PagedList.Mvc.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Select.HtmlToPdf, Version=17.1.0.0, Culture=neutral, PublicKeyToken=e0ae9f6e27a97018, processorArchitecture=MSIL">
-      <HintPath>..\packages\Select.HtmlToPdf.17.1.0\lib\net40\Select.HtmlToPdf.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="SendGrid, Version=9.8.0.0, Culture=neutral, PublicKeyToken=4f047e93159395ca, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Sendgrid.9.9.0\lib\net452\SendGrid.dll</HintPath>
@@ -270,6 +266,7 @@
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\MeetingsController.cs" />
     <Compile Include="Controllers\MembersController.cs" />
+    <Compile Include="Controllers\NewslettersController.cs" />
     <Compile Include="Controllers\ProfileController.cs" />
     <Compile Include="Controllers\ProgrammesController.cs" />
     <Compile Include="Controllers\RolesController.cs" />
@@ -314,6 +311,7 @@
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Models\Meeting.cs" />
     <Compile Include="Models\AbantuMember.cs" />
+    <Compile Include="Models\Newsletter.cs" />
     <Compile Include="Models\Notification.cs" />
     <Compile Include="Models\Order.cs" />
     <Compile Include="Models\OrderDetail.cs" />
@@ -1620,6 +1618,13 @@
     <Content Include="Views\StoreManager\category.cshtml" />
     <Content Include="Views\StoreManager\dets.cshtml" />
     <Content Include="Views\StoreManager\detsEdit.cshtml" />
+    <Content Include="Views\Newsletters\Create.cshtml" />
+    <Content Include="Views\Newsletters\Delete.cshtml" />
+    <Content Include="Views\Newsletters\subed.cshtml" />
+    <Content Include="Views\Newsletters\UnSubed.cshtml" />
+    <Content Include="Views\Newsletters\News.cshtml" />
+    <Content Include="Views\Newsletters\UnSubedNull.cshtml" />
+    <Content Include="Views\Newsletters\sentConfirm.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

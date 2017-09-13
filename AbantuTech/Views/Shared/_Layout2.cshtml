@@ -107,7 +107,7 @@
     <div class="container body-content">
         @RenderBody()
         <hr />
-        <footer style="width:90%">
+        <footer style="width:100%">
             <table width="90%">
                 <tr>
                     <th>
@@ -123,6 +123,9 @@
                     <th>
                         Address:
                     </th>
+                    <th>
+                        Subscribe to our Newsletter
+                    </th>
                 </tr>
                 <tr>
                     <td>
@@ -136,6 +139,17 @@
                     </td>
                     <td>
                         <p><i class="fa fa-map-marker" aria-hidden="true"></i>&nbsp;Sobantu Technologies (Pty) Ltd <br />&nbsp;&nbsp; PO Box 194<br />&nbsp;&nbsp; Durban<br /> &nbsp;&nbsp;4000</p>
+                    </td>
+                    <td>
+                        <div class="ftr-address">
+                            <div class="ftr-text">
+                                <p>@Html.ActionLink("Subscribe to our Newsletter", "Create", "Newsletters")</p>
+                            </div>
+                            <div>
+                                <p>@Html.ActionLink("Or Unsubscribe", "Delete", "Newsletters")</p>
+                            </div>
+                            <div class="clearfix"> </div>
+                        </div>
                     </td>
                 </tr>
             </table>

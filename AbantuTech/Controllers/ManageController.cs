@@ -11,7 +11,7 @@ using Microsoft.AspNet.Identity.EntityFramework;
 using System.Net;
 using System.Data;
 using System.Data.Entity;
-using SelectPdf;
+//using SelectPdf;
 
 namespace AbantuTech.Controllers
 {
@@ -654,26 +654,26 @@ namespace AbantuTech.Controllers
             }
             return View();
         }        
-        public ActionResult SubmitAction(int? id)
-        {
-            // instantiate a html to pdf converter object
-            HtmlToPdf converter1 = new HtmlToPdf();
+        //public ActionResult SubmitAction(int? id)
+        //{
+        //    // instantiate a html to pdf converter object
+        //    HtmlToPdf converter1 = new HtmlToPdf();
 
-            var i = HttpContext.Request.UrlReferrer.ToString();
-            // create a new pdf document converting an url
-            PdfDocument doc1 = converter1.ConvertUrl(i);
+        //    var i = HttpContext.Request.UrlReferrer.ToString();
+        //    // create a new pdf document converting an url
+        //    PdfDocument doc1 = converter1.ConvertUrl(i);
 
-            // save pdf document
-            byte[] pdf = doc1.Save();
+        //    // save pdf document
+        //    byte[] pdf = doc1.Save();
 
-            // close pdf document
-            doc1.Close();
+        //    // close pdf document
+        //    doc1.Close();
 
-            // return resulted pdf document
-            FileResult fileResult = new FileContentResult(pdf, "application/pdf");
-            fileResult.FileDownloadName = "Document.pdf";
-            return fileResult;
-        }
+        //    // return resulted pdf document
+        //    FileResult fileResult = new FileContentResult(pdf, "application/pdf");
+        //    fileResult.FileDownloadName = "Document.pdf";
+        //    return fileResult;
+        //}
 
     }
 }

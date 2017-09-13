@@ -1,0 +1,48 @@
+﻿@model AbantuTech.Models.Newsletter
+
+@{
+    ViewBag.Title = "Unsibscribe";
+    Layout = "~/Views/Shared/_Layout2.cshtml";
+
+}
+<style>
+    img {
+        display: block;
+        margin: auto;
+    }
+</style>
+<img src="~/Content/Template/images/5.jpg" height="110" width=110" />
+<h2>Unsibscribe</h2>
+
+<h3>Are you sure you want to Unsubscribe to the Newsletter?</h3>
+<div>
+    <h4></h4>
+    <hr />
+    <p>Email Address:</p>
+    @using (Html.BeginForm()) {
+        @Html.AntiForgeryToken()
+
+
+        <div class="form-actions no-color">
+            <form action='@Url.Action("Delete", "NewslettersController")' method='post'>
+
+                @Html.TextBox("id")<br /><br />
+                <input type='submit' value="Unsubscribe" class="btn btn-default"/>
+
+
+            </form>
+        </div>
+    }
+</div>
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
