@@ -15,6 +15,7 @@ namespace Abantu_System.Models
         public Guid ID { get; set; }
 
         public int Member_ID { get; set; }
+        public string email_ { get; set; }
         //Association class
         public virtual AbantuMember Member { get; set; }
         //Association class

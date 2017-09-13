@@ -1,0 +1,28 @@
+﻿@model AbantuTech.Models.Genre
+ 
+@{
+    ViewBag.Title = "Browse ";
+        Layout = "~/Views/Shared/_Layout3.cshtml";
+    }
+ 
+<div class="genre">
+    <h2><em>@Model.Name</em></h2>
+ 
+    <ul id="album-list">
+        @foreach (var album in Model.Albums)
+        {
+            <li>                
+                 <a style="text-decoration:none" href="@Url.Action("Details", new { id = album.AlbumId })">    
+                                 <img alt="@album.Title" src="@album.AlbumArtUrl" />         
+                     <span style="font-size:20px">&nbsp;&nbsp; @album.Title</span> <span style="font-size:20px"> - </span> <span style="font-size:16px;">R @album.Price</span>
+                     </a>         
+                <br />
+                <hr />
+                <br />
+            </li>
+        }
+    </ul>
+</div>
+<br />
+<br /><br />
+<br />

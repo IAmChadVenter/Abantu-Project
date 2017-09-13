@@ -1,0 +1,136 @@
+﻿@model AbantuTech.ViewModel.ShoppingCartViewModel
+@{
+    ViewBag.Title = "Shopping Cart";
+        Layout = "~/Views/Shared/_Layout3.cshtml";
+    
+}
+<script src="/Scripts/jquery-1.4.4.min.js" type="text/javascript"></script>
+<script type="text/javascript">
+    $(function () {
+        // Document.ready -> link up remove event handler
+        $(".RemoveLink").click(function () {
+            // Get the id from the link
+            var recordToDelete = $(this).attr("data-id");
+
+            if (recordToDelete != '') {
+
+                // Perform the ajax post
+                $.post("/ShoppingCart/RemoveFromCart", { "id": recordToDelete },
+                    function (data) {
+                        // Successful requests get here
+                        // Update the page elements
+                        if (data.ItemCount == 0) {
+                            $('#row-' + data.DeleteId).fadeOut('slow');
+                        } else {
+                            $('#item-count-' + data.DeleteId).text(data.ItemCount);
+                        }
+
+                        $('#cart-total').text(data.CartTotal);
+                        $('#update-message').text(data.Message);
+                        $('#cart-status').text('Cart (' + data.CartCount + ')');
+                    });
+            }
+        });
+
+    });
+
+
+    function handleUpdate() {
+        // Load and deserialize the returned JSON data
+        var json = context.get_data();
+        var data = Sys.Serialization.JavaScriptSerializer.deserialize(json);
+
+        // Update the page elements
+        if (data.ItemCount == 0) {
+            $('#row-' + data.DeleteId).fadeOut('slow');
+        } else {
+            $('#item-count-' + data.DeleteId).text(data.ItemCount);
+        }
+
+        $('#cart-total').text(data.CartTotal);
+        $('#update-message').text(data.Message);
+        $('#cart-status').text('Cart (' + data.CartCount + ')');
+    }
+</script>
+
+<style>
+    .button {
+        background-color: white; /* Green */
+        border: none;
+        color: white;
+        padding: 10px 32px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        margin: 2px 2px;
+        -webkit-transition-duration: 0.4s; /* Safari */
+        transition-duration: 0.4s;
+        cursor: pointer;
+    }
+
+    .button1 {
+        background-color: black;
+        color: white;
+    }
+
+        .button1:hover {
+            background-color: darkgray;
+            color: white;
+        }
+</style>
+
+
+<h3>
+    <em>Review</em> your cart:
+</h3>
+<p class="button">
+    <a class="button button1" href="/Checkout/AddressAndPayment">Checkout &gt;&gt;</a> &nbsp; &nbsp; <a class="button button1" href="/Store/Index">Keep Shopping &gt;&gt;</a>
+</p>
+<div id="update-message">
+</div>
+<table width="60%">
+    <tr>
+        <th style="font-size:17px">
+            Album Name
+        </th>
+        <th style="font-size:17px">
+            Price (each)
+        </th>
+        <th style="font-size:17px">
+            Quantity
+        </th>
+        <th></th>
+    </tr>
+    @foreach (var item in Model.CartItems)
+    {
+        <tr id="row-@item.RecordId">
+            <td style="font-size:17px">
+                @Html.ActionLink(item.Album.Title, "Details", "Store", new { id = item.AlbumId }, null)
+            </td>
+            <td style="font-size:17px">
+               R @item.Album.Price
+            </td>
+            <td id="item-count-@item.RecordId" style="font-size:17px">
+                @item.Count
+            </td>
+            <td style="font-size:17px">
+                <a href="#" class="RemoveLink" data-id="@item.RecordId">Remove from cart</a>
+            </td>
+        </tr>
+    }
+    <tr><td style="color:white">fvfvb</td></tr>
+    <tr>
+        <td style="font-size:20px">
+            Total
+        </td>
+        <td id="cart-total" style="font-size:20px">
+           R @Model.CartTotal
+        </td>
+    </tr>
+</table>
+<br />
+<br />
+<br />
+<br />
+<br />

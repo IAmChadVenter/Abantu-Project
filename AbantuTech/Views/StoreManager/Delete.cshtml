@@ -1,0 +1,22 @@
+﻿@model AbantuTech.Models.Album
+
+@{
+    ViewBag.Title = "Delete"; Layout = "~/Views/Shared/_Layout2.cshtml";
+
+}
+
+<h2>Delete Confirmation</h2>
+
+<p>Are you sure you want to delete the Item titled 
+   <strong>@Model.Title</strong>?
+</p>
+
+@using (Html.BeginForm()) {
+    <p>
+        <input type="submit" value="Delete" />
+    </p>
+    <p>
+        @Html.ActionLink("Back to List", "Index")
+    </p>
+
+}

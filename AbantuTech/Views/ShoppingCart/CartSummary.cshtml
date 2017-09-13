@@ -1,0 +1,9 @@
+﻿@{
+    ViewBag.Title = "Store";
+    Layout = "~/Views/Shared/_Layout2.cshtml";
+}
+
+@Html.ActionLink("Cart (" + ViewData["CartCount"] + ")",
+    "Index",
+    "ShoppingCart",
+    new { id = "cart-status" })

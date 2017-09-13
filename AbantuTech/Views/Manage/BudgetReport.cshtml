@@ -124,4 +124,9 @@
         </div>
     </div>
 </div>
-
+<br /><br /><br />
+@using (Html.BeginForm("SubmitAction", "Manage", FormMethod.Post))
+{
+    
+        <input type="submit" name="BtnConvert" value="Save Report" class="mybutton" />
+}

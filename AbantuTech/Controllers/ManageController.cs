@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
@@ -8,11 +7,11 @@ using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using AbantuTech.Models;
 using Abantu_System.Models;
-using AbantuTech.Helpers;
 using Microsoft.AspNet.Identity.EntityFramework;
 using System.Net;
 using System.Data;
 using System.Data.Entity;
+using SelectPdf;
 
 namespace AbantuTech.Controllers
 {
@@ -612,7 +611,15 @@ namespace AbantuTech.Controllers
             return View();
         }
 
+
+
+
         private ApplicationDbContext p = new ApplicationDbContext();
+        
+        public ActionResult report()
+        {
+            return View();
+        }
         public ActionResult BudgetReport(int? id)
         {
 
@@ -625,12 +632,10 @@ namespace AbantuTech.Controllers
             {
                 return HttpNotFound();
             }
+            var i = System.Web.HttpContext.Current.Request.Url.PathAndQuery;
             return View(budget);
         }
-        public ActionResult report()
-        {
-            return View();
-        }
+        
         public ActionResult DonReport(int? id)
         {
             return View(p.DonationAmount.ToList());
@@ -648,6 +653,27 @@ namespace AbantuTech.Controllers
                 return View(eventMember);
             }
             return View();
+        }        
+        public ActionResult SubmitAction(int? id)
+        {
+            // instantiate a html to pdf converter object
+            HtmlToPdf converter1 = new HtmlToPdf();
+
+            var i = HttpContext.Request.UrlReferrer.ToString();
+            // create a new pdf document converting an url
+            PdfDocument doc1 = converter1.ConvertUrl(i);
+
+            // save pdf document
+            byte[] pdf = doc1.Save();
+
+            // close pdf document
+            doc1.Close();
+
+            // return resulted pdf document
+            FileResult fileResult = new FileContentResult(pdf, "application/pdf");
+            fileResult.FileDownloadName = "Document.pdf";
+            return fileResult;
         }
+
     }
 }

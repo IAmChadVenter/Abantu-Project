@@ -82,16 +82,3 @@
     @Html.ActionLink("Back to List", "Index") |
     @Html.ActionLink("Delete", "Delete", new { id = Model.Budget_ID })
 </p>
-@using (Html.BeginForm("SubmitAction", "Budgets", FormMethod.Post))
-{
-    <p>
-        Email:<br />
-        <input type="text" value="Enter Email" name="TxtEmail" style="width:50%" />
-        <br />
-        <br />
-        <br />
-        <input type="submit" name="BtnConvert" value="Create Report and Email" class="mybutton" />
-        &nbsp;&nbsp;
-        <span style="color: red">@ViewData["Message"]</span>
-    </p>
-}
