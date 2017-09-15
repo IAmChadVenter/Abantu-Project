@@ -402,20 +402,32 @@ namespace AbantuTech.Controllers
             }
         }
         [HttpGet]
-        public ActionResult EventTeam()
-        {
-            return View();
-        }
         public ActionResult EventTeam(int id)
+        {
+            var eo = new EventOrganizers()
+            {
+                eventId = id
+            };
+            return View(eo);
+        }
+        [HttpPost]
+        public async Task<ActionResult> EventTeam(EventOrganizers org, int id)
         {
             if (ModelState.IsValid)
             {
-                var @event = db.Events.FirstOrDefault(x => x.Event_ID == id);
-                var organizer = db.Organizers.FirstOrDefault(x => x.eventId == @event.Event_ID);
-                if (@event != null && organizer != null)
+                var @event = await db.Events.FirstOrDefaultAsync(x => x.Event_ID == id);
+                if (@event != null)
                 {
-                    var team = _events.getTeam(organizer.eventTeamId);
+                    var team = _events.getTeam(org.eventTeamId);
                     return View(team);
+                }
+                else
+                {
+                    var eo = new EventOrganizers
+                    {
+                        eventId = @event.Event_ID
+                    };
+                    return View(eo);
                 }
             }
             return View();
@@ -433,7 +445,7 @@ namespace AbantuTech.Controllers
         public ActionResult addToEventTeam(ProgrammeMember member)
         {
             var organizer = db.Organizers.FirstOrDefault(x => x.eventTeamId == member.organizers.eventTeamId);
-            var members = getProgrammeMembers(organizer.Events.Event_ID);
+            var members = getProgrammeMembers(organizer.eventId);
             if(members!=null)
             {
                 _events.addToTeam(organizer);
@@ -451,7 +463,7 @@ namespace AbantuTech.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult AssignTask(EventOrganizer organizer, int id)
+        public ActionResult AssignTask(EventOrganizers organizer, int id)
         {
             if (ModelState.IsValid)
             {

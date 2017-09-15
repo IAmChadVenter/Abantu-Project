@@ -61,7 +61,7 @@
                 @Html.ActionLink("Details", "Details", new { id = item.Event_ID }) |
                 @Html.ActionLink("Delete", "Delete", new { id = item.Event_ID })
             </td>
-            @if (!User.IsInRole("Admin"))
+            @if (User.IsInRole("Admin"))
             {
                 <td>
                     <div class="btn btn-success attend-event" data-href="/events/AttendEvent/@item.Event_ID">Attend Event</div>

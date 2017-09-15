@@ -15,11 +15,11 @@ namespace AbantuTech.Helpers
     public class EventImplementation : IEventMethods
     {
         private readonly ApplicationDbContext _context = new ApplicationDbContext();
-        public void addToTeam(EventOrganizer organizer)
+        public void addToTeam(EventOrganizers organizer)
         {
             if(organizer!=null)
             {
-                var m = getPMembers(organizer.eventId.GetValueOrDefault());
+                var m = getPMembers(organizer.events.Event_ID);
                 if (m != null)
                 {
                     var mem = m.FirstOrDefault(x => x.eventTeamId == organizer.eventTeamId);
@@ -36,7 +36,7 @@ namespace AbantuTech.Helpers
                 }
             }
         }
-        public void assignTask(EventOrganizer organizer, int id)
+        public void assignTask(EventOrganizers organizer, int id)
         {
             ProgrammeMember member = viewTeamMember(id);
             if(member!=null)
@@ -56,12 +56,9 @@ namespace AbantuTech.Helpers
             {
                 header = "Greetings " + member.Member.FirstName + " " + member.Member.Surname + "<br/><br/>";
 
-                if (member.organizers.eventTask != null)
-                {
-                    body = "You have been added to an event organizing team for the " + member.organizers.Events.Name + " event. <br/><br/>"
+                    body = "You have been added to an event organizing team for the " + member.organizers.events.Name + " event. <br/><br/>"
                         + "Your task for this event is " + member.organizers.eventTask + ", We are grateful for your help. Thank you ! <br/><br/>"
-                        + "The date of this event is " + member.organizers.Events.start_date + ".<br/><br/>";
-                }
+                        + "The date of this event is " + member.organizers.events.start_date + ".<br/><br/>";
             }
 
             string footer = "Kind Regards <br/> Abantu Tech";
@@ -71,12 +68,15 @@ namespace AbantuTech.Helpers
         public IEnumerable<ProgrammeMember> getPMembers(int id)
         {
             var @event = _context.Events.FirstOrDefault(x => x.Event_ID == id);
-            var pmembers = _context.ProgrammeMembers.Where(x => x.Programme_ID == @event.Programme_ID).ToList();
-            return pmembers;
-              
+            if (@event != null)
+            {
+                var pmembers = _context.ProgrammeMembers.Where(x => x.Programme_ID == @event.Programme_ID).ToList();
+                return pmembers;
+            }
+            return null;
         }
 
-        public EventOrganizer getTeam(int id)
+        public EventOrganizers getTeam(int id)
         {
             var eventTeam = _context.Organizers.Include(x=>x.pmember).FirstOrDefault(x=>x.eventTeamId==id);
             return eventTeam;

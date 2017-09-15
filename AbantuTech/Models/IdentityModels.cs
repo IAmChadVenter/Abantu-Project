@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Abantu_System.Models;
+using AbantuTech.Models;
 
 namespace AbantuTech.Models
 {
@@ -62,6 +63,6 @@ namespace AbantuTech.Models
         public System.Data.Entity.DbSet<AbantuTech.Models.File> Files { get; set; }
         public DbSet<ApplicationForm> Applications { get; set; }
         public DbSet<EventPhoto> Photos { get; set; }
-        public DbSet<EventOrganizer> Organizers { get; set; }
+        public DbSet<EventOrganizers> Organizers { get; set; }
     }
 }

@@ -22,7 +22,7 @@ namespace Abantu_System.Models
         public int Programme_ID { get; set; }
         public virtual Programme Programme { get; set; }
         public int? eventTeamId { get; set; }
-        public virtual EventOrganizer organizers { get; set; }
+        public virtual EventOrganizers organizers { get; set; }
         
     }
 }

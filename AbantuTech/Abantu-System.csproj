@@ -276,6 +276,7 @@
     <Compile Include="Helpers\IRepository.cs" />
     <Compile Include="Helpers\LocalEmailHelpers.cs" />
     <Compile Include="Helpers\SendGridKey.cs" />
+    <Compile Include="Models\EventOrganizers.cs" />
     <Compile Include="Models\TicketCommentViewModel.cs" />
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -288,7 +289,6 @@
     <Compile Include="Models\EmergencyContact.cs" />
     <Compile Include="Models\Event.cs" />
     <Compile Include="Models\EventMembers.cs" />
-    <Compile Include="Models\EventOrganizer.cs" />
     <Compile Include="Models\EventPhoto.cs" />
     <Compile Include="Models\File.cs" />
     <Compile Include="Models\FileDetail.cs" />
@@ -1594,9 +1594,8 @@
     <Content Include="Views\HelpDesk\CreateTicket.cshtml" />
     <Content Include="Views\Events\PastEvents.cshtml" />
     <Content Include="Views\Events\photoGallery.cshtml" />
-    <Content Include="Views\Events\EventTeam.cshtml" />
     <Content Include="Views\Events\getProgrammeMembers.cshtml" />
-    <Content Include="Views\Events\AssignTask.cshtml" />
+    <Content Include="Views\Events\EventTeam.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -11,9 +11,9 @@ namespace AbantuTech.Helpers
     public interface IEventMethods
     {
         IEnumerable<ProgrammeMember> getPMembers(int id);
-        void addToTeam(EventOrganizer organizer);
-        EventOrganizer getTeam(int id);
-        void assignTask(EventOrganizer organizer, int id);
+        void addToTeam(EventOrganizers organizer);
+        EventOrganizers getTeam(int id);
+        void assignTask(EventOrganizers organizer, int id);
         ProgrammeMember viewTeamMember(int id);
         string issueAnEmail(string subject, int id);
         string emailMessage(int memberID);

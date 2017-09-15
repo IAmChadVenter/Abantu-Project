@@ -1,4 +1,4 @@
-﻿model AbantuTech.Models.PagedList<AbantuTech.Models.EventPhoto>
+﻿@model AbantuTech.Models.PagedList<AbantuTech.Models.EventPhoto>
 
     @{
         ViewBag.Title = "photoGallery";
@@ -24,7 +24,7 @@
                 </div>
             </div>
             <div class="pull-right col-lg-1">
-                <a class="btn btn-success" data-modal="" href="/home/create" id="btnCreate">
+                <a class="btn btn-success" data-modal="" href="/Events/PhotoUpload" id="btnCreate">
                     <span class="glyphicon glyphicon-plus"></span>
                 </a>
             </div>
