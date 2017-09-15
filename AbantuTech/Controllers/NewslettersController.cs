@@ -9,6 +9,7 @@ using System.Web.Mvc;
 using AbantuTech.Models;
 using System.Net.Mail;
 using Abantu_System.Models;
+using System.IO;
 
 namespace AbantuTech.Controllers
 {
@@ -107,11 +108,13 @@ namespace AbantuTech.Controllers
             else return View();
         
         }
+
+        
         public ActionResult News()
         {
             return View();
         }
-
+        
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult News(string subj, string body)
@@ -128,9 +131,9 @@ namespace AbantuTech.Controllers
                             message.To.Add(new MailAddress(item.Email));
                             message.Subject = subj;
                             message.IsBodyHtml = true;
-                            message.Body =body;
+                            message.Body = "<table width='100%' align='center'><tr><th><img src='http://www.africaymca.org/wp-content/uploads/2014/09/AAYMCA-logo.png' /></th></tr><tr><th style='font-family:Garamond; font-size:40px'>YMCA Newsletter</th></tr><tr><th>"+ subj + "</th></tr></table>" + "<br /><div style='font-size:20px; text-align:center'>" + body + "</div><br /><br />" + "<hr style='border: 0; height: 1px; background-image: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0)) ' /><table width='100%' align='center' valign='middle' style='background-color:white'><tr><th>Connect With Us:</th></tr><tr><th ><a href='https://twitter.com/'><img src='https://cdn3.iconfinder.com/data/icons/free-social-icons/67/twitter_circle_color-256.png' height='35' width='35'/></a>&nbsp;&nbsp;<a href='https://facebook.com/'><img src='http://www.old.ittf.com/media/16wttc/subscription/images/facebook.png' height='35' width='35' /></a>&nbsp;&nbsp;<a href='https://youtube.com/'><img src='https://cdn1.iconfinder.com/data/icons/logotypes/32/youtube-512.png' height='35' width='35' /></a>&nbsp;&nbsp;<a href='https://instagram.com/'><img src='https://cdn3.iconfinder.com/data/icons/free-social-icons/67/instagram_circle_color-512.png' height='35' width='35' /></a></th></tr></table>" + "<br>" + "<hr style='border: 0; height: 1px; background-image: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0)) ' /><table width='100%' align='center' valign='middle'><tr><th><a>Contact Us</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a>Unsubscribe</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a>Login</a><th></tr><tr><td align='center'>Mailing Address: Sobantu Technologies (Pty) Ltd, PO Box 194, Durban, 4000</td></tr></table>";
 
-                            using (var smtp = new SmtpClient())
+                        using (var smtp = new SmtpClient())
                             {
                                 var credential = new NetworkCredential
                                 {
