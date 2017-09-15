@@ -1,0 +1,45 @@
+﻿@model IEnumerable<Abantu_System.Models.ProgrammeMember>
+
+@{
+    ViewBag.Title = "getProgrammeMembers";
+    Layout = "~/Views/Shared/_Layout2.cshtml";
+}
+
+<h2 style="text-align:center;">Programme Members</h2>
+
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayName("Programme Name")
+        </th>
+        <th>
+            @Html.DisplayName("Member First Name")
+        </th>
+        <th>
+            @Html.DisplayName("Member Surname")
+        </th>
+        <th></th>
+    </tr>
+    
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Programme.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Member.FirstName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Member.Surname)
+                </td>
+                @if(User.IsInRole("Admin"))
+                {
+                    <td>
+                        @Html.ActionLink("Add to event team", "addToEventTeam", new { id = item.eventTeamId },new { @class = "btn btn-success" })
+                    </td>
+                }
+            </tr>
+        }
+    
+</table>

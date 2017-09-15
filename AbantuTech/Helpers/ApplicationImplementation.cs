@@ -154,7 +154,7 @@ namespace AbantuTech.Helpers
                 }
                 else
                 {
-                    body = "We regret to inform you that your application to join AbantuTech has been rejected. <br/><br/>";
+                    body = "We regret to inform you that your application to join Abantu Tech has been rejected. <br/><br/>";
                 }
             }
            

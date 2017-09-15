@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AbantuTech.Models;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -20,6 +21,8 @@ namespace Abantu_System.Models
         //Association class
         public int Programme_ID { get; set; }
         public virtual Programme Programme { get; set; }
+        public int? eventTeamId { get; set; }
+        public virtual EventOrganizer organizers { get; set; }
         
     }
 }

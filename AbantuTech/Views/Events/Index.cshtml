@@ -71,6 +71,12 @@
                     @Html.ActionLink("View", "EventAttendance", new { id = item.Event_ID }, new { @class = "btn btn-success" })
 
                 </td>
+                <td>
+                    @Html.ActionLink("View Programme Members", "getProgrammeMembers", new { id = item.Event_ID}, new { @class ="btn btn-success"})
+                </td>
+                <td>
+                    @Html.ActionLink("View Event Organizer Team", "EventTeam", new { id = item.Event_ID }, new { @class = "btn btn-success" })
+                </td>
             }
         </tr>
     }

@@ -1,4 +1,5 @@
 ﻿using Abantu_System.Models;
+using Microsoft.AspNet.Identity.EntityFramework;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -9,19 +10,17 @@ using System.Web;
 
 namespace AbantuTech.Models
 {
-    public class Ticket
+    public class EventOrganizer
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Required]
-        public int TicketId { get; set; }
+        public int eventTeamId { get; set; }
         [Required]
-        public string TicketDescription { get; set; }
-        [Required]
-        public string CreatedBy { get; set; }
-        [Required]
-        public DateTime CreatedOn { get; set; }
-        public int? memberId { get; set; }
-        public AbantuMember members { get; set; }
+        public string eventTask { get; set; }
+        public int? eventId { get; set; }
+        public virtual Event Events { get; set; }
+        public virtual ICollection<ProgrammeMember> pmember { get; set; }
+
     }
 }

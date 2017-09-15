@@ -13,12 +13,26 @@ using SelectPdf;
 using System.IO;
 using System.Drawing;
 using System.Threading.Tasks;
+using Microsoft.AspNet.Identity.EntityFramework;
+using Microsoft.AspNet.Identity;
+using Microsoft.Ajax.Utilities;
+using AbantuTech.Helpers;
 
 namespace AbantuTech.Controllers
 {
     public class EventsController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();
+        UserManager<ApplicationUser> UserManger = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(new ApplicationDbContext()));
+        RoleManager<IdentityRole> roleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(new ApplicationDbContext()));
+        private IEventMethods _events;
+
+        public EventsController():this(new EventImplementation())
+        { }
+        public EventsController(IEventMethods _event)
+        {
+            this._events = _event;
+        }
 
         // GET: Events
         public ActionResult Index()
@@ -282,7 +296,7 @@ namespace AbantuTech.Controllers
         [HttpPost]
         public ActionResult PastEvents()
         {
-            var pastEvent = db.Events.Include(m => m.Photos).Where(x => x.end_date <= DateTime.Today).ToList();
+            var pastEvent = db.Events.Include(p=>p.programme).Where(x => x.end_date <= DateTime.Today).ToList();
             return View(pastEvent);
         }
         [HttpPost]
@@ -336,26 +350,29 @@ namespace AbantuTech.Controllers
                 return View(photo);
             }
             var evt = db.Events.FirstOrDefault(x => x.Event_ID == photo.eventid);
-            var model = new EventPhoto();
-            foreach (var file in files)
+            if (evt != null)
             {
-                if (file.ContentLength == 0) continue;
-                model.Description = photo.Description;
-                var filename = Guid.NewGuid().ToString();
-                var extension = Path.GetExtension(file.FileName).ToLower();
-
-                using (var img = Image.FromStream(file.InputStream))
+                var model = new EventPhoto();
+                foreach (var file in files)
                 {
-                    model.ThumbPath = String.Format("/" + evt.Name + "/GalleryImages/thumbs/{0}{1}", filename, extension);
-                    model.ImagePath = String.Format("/" + evt.Name + "/GalleryImages/{0}{1}", filename, extension);
+                    if (file.ContentLength == 0) continue;
+                    model.Description = photo.Description;
+                    var filename = Guid.NewGuid().ToString();
+                    var extension = Path.GetExtension(file.FileName).ToLower();
 
-                    SaveToFolder(img, filename, extension, new Size(100, 100), model.ThumbPath);
+                    using (var img = Image.FromStream(file.InputStream))
+                    {
+                        model.ThumbPath = String.Format("/" + evt.Name + "/GalleryImages/thumbs/{0}{1}", filename, extension);
+                        model.ImagePath = String.Format("/" + evt.Name + "/GalleryImages/{0}{1}", filename, extension);
 
-                    SaveToFolder(img, filename, extension, new Size(600, 600), model.ImagePath);
+                        SaveToFolder(img, filename, extension, new Size(100, 100), model.ThumbPath);
+
+                        SaveToFolder(img, filename, extension, new Size(600, 600), model.ImagePath);
+                    }
+                    model.CreatedOn = DateTime.Now;
+                    db.Photos.Add(model);
+                    db.SaveChanges();
                 }
-                model.CreatedOn = DateTime.Now;
-                db.Photos.Add(model);
-                db.SaveChanges();
             }
             return RedirectToAction("photoGallery");
         }
@@ -384,8 +401,69 @@ namespace AbantuTech.Controllers
                 newImg.Save(Server.MapPath(pathToSave), img.RawFormat);
             }
         }
-
-
+        [HttpGet]
+        public ActionResult EventTeam()
+        {
+            return View();
+        }
+        public ActionResult EventTeam(int id)
+        {
+            if (ModelState.IsValid)
+            {
+                var @event = db.Events.FirstOrDefault(x => x.Event_ID == id);
+                var organizer = db.Organizers.FirstOrDefault(x => x.eventId == @event.Event_ID);
+                if (@event != null && organizer != null)
+                {
+                    var team = _events.getTeam(organizer.eventTeamId);
+                    return View(team);
+                }
+            }
+            return View();
+        }
+        [HttpPost]
+        public ActionResult getProgrammeMembers(int id)
+        {
+            if (ModelState.IsValid)
+            {
+                var progmembers = _events.getPMembers(id);
+                return View(progmembers);
+            }
+            return View();
+        }
+        public ActionResult addToEventTeam(ProgrammeMember member)
+        {
+            var organizer = db.Organizers.FirstOrDefault(x => x.eventTeamId == member.organizers.eventTeamId);
+            var members = getProgrammeMembers(organizer.Events.Event_ID);
+            if(members!=null)
+            {
+                _events.addToTeam(organizer);
+            }
+            return RedirectToAction("AssignTask", new { id = member.eventTeamId });
+        }
+        public ActionResult AssignTask(int? id)
+        {
+            var member = db.Organizers.Include(c=>c.pmember).FirstOrDefault(x=>x.eventTeamId==id);
+            if(member==null)
+            {
+                return HttpNotFound();
+            }
+            return View(member);
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult AssignTask(EventOrganizer organizer, int id)
+        {
+            if (ModelState.IsValid)
+            {
+                _events.assignTask(organizer, id);
+                RedirectToAction("EventTeam", new { id = organizer.eventTeamId });
+            }
+            else
+            {
+                return View(organizer);
+            }
+            return View();
+        }
         protected override void Dispose(bool disposing)
         {
             if (disposing)

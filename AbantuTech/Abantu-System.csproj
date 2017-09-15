@@ -1,7 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.7\build\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props" Condition="Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.7\build\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" />
-  <Import Project="..\packages\Microsoft.Net.Compilers.2.3.2\build\Microsoft.Net.Compilers.props" Condition="Exists('..\packages\Microsoft.Net.Compilers.2.3.2\build\Microsoft.Net.Compilers.props')" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -76,15 +74,6 @@
     <Reference Include="Google.Apis.PlatformServices, Version=1.29.1.0, Culture=neutral, PublicKeyToken=4b01fa6e34db77ab, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Google.Apis.1.29.1\lib\net45\Google.Apis.PlatformServices.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="HelpDeskIntegration, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\HelpDeskMVC.1.1.6\lib\net45\HelpDeskIntegration.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Microsoft.CodeDom.Providers.DotNetCompilerPlatform, Version=1.0.7.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.7\lib\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
@@ -264,6 +253,7 @@
     <Compile Include="Controllers\EventsController.cs" />
     <Compile Include="Controllers\FilesController.cs" />
     <Compile Include="Controllers\ForumController.cs" />
+    <Compile Include="Controllers\HelpController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\MeetingsController.cs" />
@@ -278,24 +268,27 @@
     </Compile>
     <Compile Include="Helpers\ApplicationImplementation.cs" />
     <Compile Include="Helpers\DeactImplementation.cs" />
+    <Compile Include="Helpers\EventImplementation.cs" />
     <Compile Include="Helpers\IApplication.cs" />
+    <Compile Include="Helpers\IEventMethods.cs" />
     <Compile Include="Helpers\ILocalEmailHelpers.cs" />
     <Compile Include="Helpers\IProfileDeactivation.cs" />
     <Compile Include="Helpers\IRepository.cs" />
-    <Compile Include="Helpers\ITicketData.cs" />
     <Compile Include="Helpers\LocalEmailHelpers.cs" />
     <Compile Include="Helpers\SendGridKey.cs" />
-    <Compile Include="Helpers\TicketData.cs" />
+    <Compile Include="Models\TicketCommentViewModel.cs" />
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\Branch.cs" />
     <Compile Include="Models\Budget.cs" />
     <Compile Include="Models\BudgetExpenses.cs" />
+    <Compile Include="Models\Comment.cs" />
     <Compile Include="Models\Committee.cs" />
     <Compile Include="Models\DonationAmount.cs" />
     <Compile Include="Models\EmergencyContact.cs" />
     <Compile Include="Models\Event.cs" />
     <Compile Include="Models\EventMembers.cs" />
+    <Compile Include="Models\EventOrganizer.cs" />
     <Compile Include="Models\EventPhoto.cs" />
     <Compile Include="Models\File.cs" />
     <Compile Include="Models\FileDetail.cs" />
@@ -347,6 +340,7 @@
     <Content Include="bin\Google.Apis.PlatformServices.pdb" />
     <Content Include="bin\Google.Apis.PlatformServices.xml" />
     <Content Include="bin\Google.Apis.xml" />
+    <Content Include="bin\HelpDeskIntegration.dll" />
     <Content Include="bin\Microsoft.AspNet.Identity.Core.dll" />
     <Content Include="bin\Microsoft.AspNet.Identity.Core.xml" />
     <Content Include="bin\Microsoft.AspNet.Identity.EntityFramework.dll" />
@@ -382,12 +376,42 @@
     <Content Include="bin\PagedList.Mvc.xml" />
     <Content Include="bin\PagedList.xml" />
     <Content Include="bin\roslyn\csc.exe" />
+    <Content Include="bin\roslyn\csi.exe" />
     <Content Include="bin\roslyn\Microsoft.Build.Tasks.CodeAnalysis.dll" />
     <Content Include="bin\roslyn\Microsoft.CodeAnalysis.CSharp.dll" />
+    <Content Include="bin\roslyn\Microsoft.CodeAnalysis.CSharp.Scripting.dll" />
     <Content Include="bin\roslyn\Microsoft.CodeAnalysis.dll" />
+    <Content Include="bin\roslyn\Microsoft.CodeAnalysis.Scripting.dll" />
     <Content Include="bin\roslyn\Microsoft.CodeAnalysis.VisualBasic.dll" />
+    <Content Include="bin\roslyn\Microsoft.DiaSymReader.Native.amd64.dll" />
+    <Content Include="bin\roslyn\Microsoft.DiaSymReader.Native.x86.dll" />
+    <Content Include="bin\roslyn\Microsoft.Win32.Primitives.dll" />
+    <Content Include="bin\roslyn\System.AppContext.dll" />
     <Content Include="bin\roslyn\System.Collections.Immutable.dll" />
+    <Content Include="bin\roslyn\System.Console.dll" />
+    <Content Include="bin\roslyn\System.Diagnostics.FileVersionInfo.dll" />
+    <Content Include="bin\roslyn\System.Diagnostics.Process.dll" />
+    <Content Include="bin\roslyn\System.Diagnostics.StackTrace.dll" />
+    <Content Include="bin\roslyn\System.IO.Compression.dll" />
+    <Content Include="bin\roslyn\System.IO.FileSystem.dll" />
+    <Content Include="bin\roslyn\System.IO.FileSystem.DriveInfo.dll" />
+    <Content Include="bin\roslyn\System.IO.FileSystem.Primitives.dll" />
+    <Content Include="bin\roslyn\System.IO.Pipes.dll" />
     <Content Include="bin\roslyn\System.Reflection.Metadata.dll" />
+    <Content Include="bin\roslyn\System.Security.AccessControl.dll" />
+    <Content Include="bin\roslyn\System.Security.Claims.dll" />
+    <Content Include="bin\roslyn\System.Security.Cryptography.Algorithms.dll" />
+    <Content Include="bin\roslyn\System.Security.Cryptography.Encoding.dll" />
+    <Content Include="bin\roslyn\System.Security.Cryptography.Primitives.dll" />
+    <Content Include="bin\roslyn\System.Security.Cryptography.X509Certificates.dll" />
+    <Content Include="bin\roslyn\System.Security.Principal.Windows.dll" />
+    <Content Include="bin\roslyn\System.Text.Encoding.CodePages.dll" />
+    <Content Include="bin\roslyn\System.Threading.Thread.dll" />
+    <Content Include="bin\roslyn\System.ValueTuple.dll" />
+    <Content Include="bin\roslyn\System.Xml.ReaderWriter.dll" />
+    <Content Include="bin\roslyn\System.Xml.XmlDocument.dll" />
+    <Content Include="bin\roslyn\System.Xml.XPath.dll" />
+    <Content Include="bin\roslyn\System.Xml.XPath.XDocument.dll" />
     <Content Include="bin\roslyn\vbc.exe" />
     <Content Include="bin\roslyn\VBCSCompiler.exe" />
     <Content Include="bin\Select.HtmlToPdf.dll" />
@@ -422,7 +446,6 @@
     <Content Include="Content\bootstrap-theme.css" />
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
-    <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\fullcalendar.css" />
     <Content Include="Content\fullcalendar.min.css" />
     <Content Include="Content\fullcalendar.print.css" />
@@ -433,7 +456,6 @@
     <Content Include="Content\JQueryIU\jquery-ui.theme.min.css" />
     <Content Include="Content\kanban.css" />
     <Content Include="Content\PagedList.css" />
-    <Content Include="Content\SimpleCommentHistory.css" />
     <Content Include="Content\Site.css" />
     <Content Include="Content\solar.css" />
     <Content Include="Content\Template\css\bootstrap.css" />
@@ -500,6 +522,7 @@
     <Content Include="obj\Debug\AbantuTech.csproj.FileListAbsolute.txt" />
     <Content Include="obj\Debug\AbantuTech.dll" />
     <Content Include="obj\Debug\AbantuTech.pdb" />
+    <Content Include="obj\Debug\TempPE\App_GlobalResources.ResourceDefault.Designer.cs.dll" />
     <Content Include="obj\Release\Abantu-System.csproj.GenerateResource.Cache" />
     <Content Include="obj\Release\Abantu-System.csprojResolveAssemblyReference.cache" />
     <Content Include="obj\Release\CSAutoParameterize\original\Views\Web.config" />
@@ -647,7 +670,6 @@
     <Content Include="bin\roslyn\Microsoft.CSharp.Core.targets" />
     <Content Include="bin\roslyn\Microsoft.VisualBasic.Core.targets" />
     <Content Include="bin\roslyn\VBCSCompiler.exe.config" />
-    <Content Include="bin\Select.Html.dep" />
     <Content Include="obj\Debug\Abantu-System.csprojResolveAssemblyReference.cache" />
     <Content Include="obj\Debug\AbantuTech.csproj.GenerateResource.Cache" />
     <Content Include="obj\Debug\AbantuTech.csprojResolveAssemblyReference.cache" />
@@ -657,10 +679,17 @@
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
     <Content Include="fonts\glyphicons-halflings-regular.ttf" />
     <Content Include="fonts\glyphicons-halflings-regular.eot" />
-    <Content Include="Content\bootstrap.min.css.map" />
     <Content Include="Content\bootstrap.css.map" />
     <Content Include="Content\bootstrap-theme.min.css.map" />
     <Content Include="Content\bootstrap-theme.css.map" />
+    <Content Include="bin\roslyn\csc.exe.config" />
+    <Content Include="bin\roslyn\csc.rsp" />
+    <Content Include="bin\roslyn\csi.exe.config" />
+    <Content Include="bin\roslyn\csi.rsp" />
+    <Content Include="bin\roslyn\vbc.exe.config" />
+    <Content Include="bin\roslyn\vbc.rsp" />
+    <Content Include="obj\Debug\DesignTimeResolveAssemblyReferences.cache" />
+    <Content Include="bin\Select.Html.dep" />
     <None Include="obj\Debug\__TestProfilesForFilePreview__\abantu-system - Web Deploy.pubxml" />
     <None Include="Properties\PublishProfiles\abantu-system - FTP %284%29.pubxml" />
     <None Include="Properties\PublishProfiles\abantu-system - FTP.pubxml" />
@@ -1431,11 +1460,8 @@
     <Content Include="Scripts\dhtmlxScheduler\respond.matchmedia.addListener.min.js" />
     <Content Include="Scripts\dhtmlxScheduler\respond.min.js" />
     <Content Include="Scripts\dhtmlxScheduler\SignalR.js" />
-    <Content Include="Scripts\jquery-1.10.2.js" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
-    <Content Include="Scripts\jquery.validate.js" />
     <Content Include="Scripts\jquery.validate.min.js" />
-    <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
     <Content Include="Scripts\moment-with-locales.js" />
     <Content Include="Scripts\moment-with-locales.min.js" />
@@ -1561,30 +1587,28 @@
     <Content Include="Views\Manage\Index.cshtml" />
     <Content Include="Views\Manage\InternMenu.cshtml" />
     <Content Include="Views\Manage\ManageLogins.cshtml" />
-    <Content Include="Views\Manage\RequestDeact.cshtml" />
     <Content Include="Views\Manage\SetPassword.cshtml" />
     <Content Include="Views\Manage\VerifyPhoneNumber.cshtml" />
     <Content Include="Views\Manage\VolunteerMenu.cshtml" />
-    <Content Include="Views\HelpDesk\_UploadedFileDetalis.cshtml" />
-    <Content Include="Views\HelpDesk\TicketDetails.cshtml" />
-    <Content Include="Views\HelpDesk\GetIssueComment.cshtml" />
     <Content Include="Views\HelpDesk\EditTicketView.cshtml" />
     <Content Include="Views\HelpDesk\CreateTicket.cshtml" />
-    <Content Include="Views\HelpDesk\AllTicketView.cshtml" />
     <Content Include="Views\Events\PastEvents.cshtml" />
     <Content Include="Views\Events\photoGallery.cshtml" />
+    <Content Include="Views\Events\EventTeam.cshtml" />
+    <Content Include="Views\Events\getProgrammeMembers.cshtml" />
+    <Content Include="Views\Events\AssignTask.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="bin\reports\170606.105809.1592.pex\dg\" />
     <Folder Include="bin\reports\170606.105809.1592.pex\fix\out\" />
     <Folder Include="bin\reports\170606.105809.1592.pex\tests\" />
-    <Folder Include="obj\Debug\TempPE\" />
     <Folder Include="obj\Debug\__testMsDeployConnection__\" />
     <Folder Include="obj\Release\Database\" />
     <Folder Include="obj\Release\ProfileTransformWebConfig\transformed\Views\" />
     <Folder Include="obj\Release\TempPE\" />
     <Folder Include="obj\Release\TransformWebConfig\transformed\Views\" />
+    <Folder Include="Views\Help\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
@@ -1628,13 +1652,6 @@
       </FlavorProperties>
     </VisualStudio>
   </ProjectExtensions>
-  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
-    <PropertyGroup>
-      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
-    </PropertyGroup>
-    <Error Condition="!Exists('..\packages\Microsoft.Net.Compilers.2.3.2\build\Microsoft.Net.Compilers.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.Net.Compilers.2.3.2\build\Microsoft.Net.Compilers.props'))" />
-    <Error Condition="!Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.7\build\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.7\build\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props'))" />
-  </Target>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

@@ -45,7 +45,7 @@ namespace AbantuTech.Models
 
         public DbSet<Programme> Programmes { get; set; }
 
-        public DbSet<EventMembers > EventMembers { get; set; }
+        public DbSet<EventMembers> EventMembers { get; set; }
         public DbSet<ProgrammeMember> ProgrammeMembers { get; set; }
 
         public DbSet<Meeting> Meetings { get; set; }
@@ -62,5 +62,6 @@ namespace AbantuTech.Models
         public System.Data.Entity.DbSet<AbantuTech.Models.File> Files { get; set; }
         public DbSet<ApplicationForm> Applications { get; set; }
         public DbSet<EventPhoto> Photos { get; set; }
+        public DbSet<EventOrganizer> Organizers { get; set; }
     }
 }

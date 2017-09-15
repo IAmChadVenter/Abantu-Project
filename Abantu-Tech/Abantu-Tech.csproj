@@ -51,10 +51,6 @@
       <HintPath>..\packages\Google.Apis.1.29.1\lib\net45\Google.Apis.PlatformServices.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="HelpDeskIntegration, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\HelpDeskMVC.1.1.6\lib\net45\HelpDeskIntegration.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="Microsoft.CodeDom.Providers.DotNetCompilerPlatform, Version=1.0.7.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.7\lib\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll</HintPath>
       <Private>True</Private>
@@ -66,6 +62,10 @@
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Select.HtmlToPdf">
+      <HintPath>..\packages\Select.HtmlToPdf.17.1.0\lib\net40\Select.HtmlToPdf.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
@@ -117,28 +117,13 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
-    <None Include="Content\bootstrap.min.css.map" />
     <None Include="packages.config" />
-    <None Include="Views\HelpDesk\AllTicketView.cshtml" />
-    <None Include="Views\HelpDesk\CreateTicket.cshtml" />
-    <None Include="Views\HelpDesk\EditTicketView.cshtml" />
-    <None Include="Views\HelpDesk\GetIssueComment.cshtml" />
-    <None Include="Views\HelpDesk\TicketDetails.cshtml" />
-    <None Include="Views\HelpDesk\_UploadedFileDetalis.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\AbantuTech\Abantu-System.csproj">
       <Project>{57df01de-1ccb-441f-a613-eb7206d414de}</Project>
       <Name>Abantu-System</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Content\bootstrap.min.css" />
-    <Content Include="Content\SimpleCommentHistory.css" />
-    <Content Include="Scripts\bootstrap.js" />
-    <Content Include="Scripts\jquery-1.10.2.js" />
-    <Content Include="Scripts\jquery.validate.js" />
-    <Content Include="Scripts\jquery.validate.unobtrusive.js" />
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
