@@ -8,9 +8,8 @@ namespace AbantuTech.Models
 {
     public enum FileType
     {
-
-        Pdf
-
+        Pdf,
+        png
     }
     public class File
     {

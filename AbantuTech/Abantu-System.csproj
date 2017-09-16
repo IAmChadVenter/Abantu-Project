@@ -1622,6 +1622,7 @@
     <Folder Include="bin\reports\170606.105809.1592.pex\dg\" />
     <Folder Include="bin\reports\170606.105809.1592.pex\fix\out\" />
     <Folder Include="bin\reports\170606.105809.1592.pex\tests\" />
+    <Folder Include="Content\helpdeskfiles\" />
     <Folder Include="obj\Debug\__testMsDeployConnection__\" />
     <Folder Include="obj\Release\Database\" />
     <Folder Include="obj\Release\ProfileTransformWebConfig\transformed\Views\" />

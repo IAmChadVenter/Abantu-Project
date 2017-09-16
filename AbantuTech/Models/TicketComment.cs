@@ -10,6 +10,6 @@ namespace AbantuTech.Models
         public int comID { get; set; }
         public string Comment { get; set; }
         public int? tId { get; set; }
-        public 
+        public HelpTicket HelpTicket { get; set; }
     }
 }
