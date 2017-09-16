@@ -259,6 +259,7 @@
     <Compile Include="Controllers\ForumController.cs" />
     <Compile Include="Controllers\HelpCategoriesController.cs" />
     <Compile Include="Controllers\HelpController.cs" />
+    <Compile Include="Controllers\HelpTicketsController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\MeetingsController.cs" />
@@ -284,6 +285,7 @@
     <Compile Include="Models\EventOrganizers.cs" />
     <Compile Include="Models\HelpCategory.cs" />
     <Compile Include="Models\HelpTicket.cs" />
+    <Compile Include="Models\TicketComment.cs" />
     <Compile Include="Models\TicketCommentViewModel.cs" />
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -1625,6 +1627,7 @@
     <Folder Include="obj\Release\ProfileTransformWebConfig\transformed\Views\" />
     <Folder Include="obj\Release\TempPE\" />
     <Folder Include="obj\Release\TransformWebConfig\transformed\Views\" />
+    <Folder Include="Views\HelpTickets\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />

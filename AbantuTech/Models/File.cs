@@ -19,6 +19,8 @@ namespace AbantuTech.Models
         public string FileName { get; set; }
         public FileType FileType { get; set; }
         public byte[] Content { get; set; }
+        public int? ticketId { get; set; }
+        public HelpTicket HelpTickets { get; set; }
     }
     public class ApplicationForm
     {

@@ -21,6 +21,6 @@ namespace AbantuTech.Models
         public DateTime tCreatedOn { get; set; }
         public HttpPostedFileBase AddFiles { get; set; }
         public int? cId { get; set; }
-        public HelpCategory Categories { get; set; }
+        public HelpCategory Category { get; set; }
     }
 }
