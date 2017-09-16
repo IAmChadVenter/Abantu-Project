@@ -12,7 +12,6 @@ namespace AbantuTech.Models
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        [Required]
         public int eventTeamId { get; set; }
         public int eventTask { get; set; }
         public int eventId { get; set; }

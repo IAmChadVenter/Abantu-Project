@@ -1,0 +1,34 @@
+﻿@model IEnumerable<AbantuTech.Models.HelpCategory>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout2.cshtml";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.cName)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.cName)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.cID }) |
+            @Html.ActionLink("Details", "Details", new { id=item.cID }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.cID })
+        </td>
+    </tr>
+}
+
+</table>

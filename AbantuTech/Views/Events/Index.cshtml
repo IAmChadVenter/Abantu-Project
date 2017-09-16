@@ -61,7 +61,7 @@
                 @Html.ActionLink("Details", "Details", new { id = item.Event_ID }) |
                 @Html.ActionLink("Delete", "Delete", new { id = item.Event_ID })
             </td>
-            @if (User.IsInRole("Admin"))
+            @if (!User.IsInRole("Admin"))
             {
                 <td>
                     <div class="btn btn-success attend-event" data-href="/events/AttendEvent/@item.Event_ID">Attend Event</div>
@@ -71,8 +71,11 @@
                     @Html.ActionLink("View", "EventAttendance", new { id = item.Event_ID }, new { @class = "btn btn-success" })
 
                 </td>
+            }
+            else
+            { 
                 <td>
-                    @Html.ActionLink("View Programme Members", "getProgrammeMembers", new { id = item.Event_ID}, new { @class ="btn btn-success"})
+                    @Html.ActionLink("View Programme Members", "getProgrammeMembers", new { id = item.Event_ID }, new { @class ="btn btn-success"})
                 </td>
                 <td>
                     @Html.ActionLink("View Event Organizer Team", "EventTeam", new { id = item.Event_ID }, new { @class = "btn btn-success" })

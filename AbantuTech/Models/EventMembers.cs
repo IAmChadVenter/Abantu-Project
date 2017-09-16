@@ -14,6 +14,8 @@ namespace AbantuTech.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int EventMembers_ID { get; set; }
         public int Event_ID { get; set; }
+        public bool attendanceConfirmed { get; set; }
+        public DateTime arrivalTime { get; set; }
         public Event Event { get; set; }
         public int Member_ID { get; set; }
         public AbantuMember AbantuMember { get; set; }

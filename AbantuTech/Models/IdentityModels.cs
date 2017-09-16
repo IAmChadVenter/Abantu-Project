@@ -64,5 +64,7 @@ namespace AbantuTech.Models
         public DbSet<ApplicationForm> Applications { get; set; }
         public DbSet<EventPhoto> Photos { get; set; }
         public DbSet<EventOrganizers> Organizers { get; set; }
+        public DbSet<HelpTicket> HelpTickets { get; set; }
+        public DbSet<HelpCategory> HelpCategories { get; set; }
     }
 }

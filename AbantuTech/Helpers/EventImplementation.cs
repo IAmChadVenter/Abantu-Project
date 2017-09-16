@@ -70,7 +70,7 @@ namespace AbantuTech.Helpers
             var @event = _context.Events.FirstOrDefault(x => x.Event_ID == id);
             if (@event != null)
             {
-                var pmembers = _context.ProgrammeMembers.Where(x => x.Programme_ID == @event.Programme_ID).ToList();
+                var pmembers = _context.ProgrammeMembers.Include(a=>a.Programme).Where(x => x.Programme_ID == @event.Programme_ID).ToList();
                 return pmembers;
             }
             return null;

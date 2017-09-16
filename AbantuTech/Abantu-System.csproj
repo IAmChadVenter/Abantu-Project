@@ -127,6 +127,10 @@
       <HintPath>..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="OsTicket.API, Version=1.0.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\OsTicket.API.1.0.1\lib\net40\OsTicket.API.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="PagedList, Version=1.17.0.0, Culture=neutral, PublicKeyToken=abbb863e9397c5e1, processorArchitecture=MSIL">
       <HintPath>..\packages\PagedList.1.17.0.0\lib\net40\PagedList.dll</HintPath>
       <Private>True</Private>
@@ -253,6 +257,7 @@
     <Compile Include="Controllers\EventsController.cs" />
     <Compile Include="Controllers\FilesController.cs" />
     <Compile Include="Controllers\ForumController.cs" />
+    <Compile Include="Controllers\HelpCategoriesController.cs" />
     <Compile Include="Controllers\HelpController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
@@ -277,13 +282,15 @@
     <Compile Include="Helpers\LocalEmailHelpers.cs" />
     <Compile Include="Helpers\SendGridKey.cs" />
     <Compile Include="Models\EventOrganizers.cs" />
+    <Compile Include="Models\HelpCategory.cs" />
+    <Compile Include="Models\HelpTicket.cs" />
     <Compile Include="Models\TicketCommentViewModel.cs" />
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\Branch.cs" />
     <Compile Include="Models\Budget.cs" />
     <Compile Include="Models\BudgetExpenses.cs" />
-    <Compile Include="Models\Comment.cs" />
+    <Compile Include="Models\Category.cs" />
     <Compile Include="Models\Committee.cs" />
     <Compile Include="Models\DonationAmount.cs" />
     <Compile Include="Models\EmergencyContact.cs" />
@@ -306,7 +313,6 @@
     <Compile Include="Models\RolesView.cs" />
     <Compile Include="Models\Support.cs" />
     <Compile Include="Models\Tasks.cs" />
-    <Compile Include="Models\Ticket.cs" />
     <Compile Include="Models\UserLogic.cs" />
     <Compile Include="Models\UserTable.cs" />
     <Compile Include="obj\Debug\TemporaryGeneratedFile_036C0B5B-1481-4323-8D20-8F5ADCB23D92.cs" />
@@ -1460,6 +1466,13 @@
     <Content Include="Scripts\dhtmlxScheduler\respond.matchmedia.addListener.min.js" />
     <Content Include="Scripts\dhtmlxScheduler\respond.min.js" />
     <Content Include="Scripts\dhtmlxScheduler\SignalR.js" />
+    <None Include="Scripts\jquery-3.2.1-vsdoc.js" />
+    <Content Include="Scripts\jquery-3.2.1.js" />
+    <Content Include="Scripts\jquery-3.2.1.min.js" />
+    <Content Include="Scripts\jquery-3.2.1.slim.js" />
+    <Content Include="Scripts\jquery-3.2.1.slim.min.js" />
+    <Content Include="Scripts\jquery-3.2.1.slim.min.map" />
+    <Content Include="Scripts\jquery-3.2.1.min.map" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
@@ -1594,8 +1607,13 @@
     <Content Include="Views\HelpDesk\CreateTicket.cshtml" />
     <Content Include="Views\Events\PastEvents.cshtml" />
     <Content Include="Views\Events\photoGallery.cshtml" />
-    <Content Include="Views\Events\getProgrammeMembers.cshtml" />
     <Content Include="Views\Events\EventTeam.cshtml" />
+    <Content Include="Views\Events\getProgrammeMembers.cshtml" />
+    <Content Include="Views\HelpCategories\Create.cshtml" />
+    <Content Include="Views\HelpCategories\Delete.cshtml" />
+    <Content Include="Views\HelpCategories\Details.cshtml" />
+    <Content Include="Views\HelpCategories\Edit.cshtml" />
+    <Content Include="Views\HelpCategories\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -1607,7 +1625,6 @@
     <Folder Include="obj\Release\ProfileTransformWebConfig\transformed\Views\" />
     <Folder Include="obj\Release\TempPE\" />
     <Folder Include="obj\Release\TransformWebConfig\transformed\Views\" />
-    <Folder Include="Views\Help\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />

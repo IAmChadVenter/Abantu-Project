@@ -89,7 +89,7 @@ namespace AbantuTech.Controllers
             {
                 return HttpNotFound();
             }
-            ViewBag.Committee_ID = new SelectList(db.Committtes, "Committee_ID", "Name", programme.Committee_ID);
+            ViewBag.Committee_ID = new SelectList(db.Committtes, "Committee_ID", "Committee_Name", programme.Committee_ID);
             return View(programme);
         }
 
@@ -106,7 +106,7 @@ namespace AbantuTech.Controllers
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            ViewBag.Committee_ID = new SelectList(db.Committtes, "Committee_ID", "Name", programme.Committee_ID);
+            ViewBag.Committee_ID = new SelectList(db.Committtes, "Committee_ID", "Committee_Name", programme.Committee_ID);
             return View(programme);
         }
 

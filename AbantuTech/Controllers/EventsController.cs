@@ -437,8 +437,16 @@ namespace AbantuTech.Controllers
         {
             if (ModelState.IsValid)
             {
-                var progmembers = _events.getPMembers(id);
-                return View(progmembers);
+                var pm = _events.getPMembers(id);
+                if (pm != null)
+                {
+                    foreach (var p in pm)
+                    {
+                        List<ProgrammeMember> pmem = new List<ProgrammeMember>();
+                        pmem.Add(p);
+                        return View(pmem.ToList());
+                    }
+                }
             }
             return View();
         }
@@ -475,6 +483,34 @@ namespace AbantuTech.Controllers
                 return View(organizer);
             }
             return View();
+        }
+        public JsonResult AttendanceConfirmed(int id)
+        {
+            var @event = db.Events
+                .FirstOrDefault(x => x.Event_ID == id);
+            var member = db.Members
+                .ToList();
+            if (@event != null && member != null)
+            {
+                foreach (var m in member)
+                {
+                    var attendee = db.EventMembers
+                        .FirstOrDefault(p => p.Member_ID == m.Member_ID
+                        && p.Event_ID == @event.Event_ID && p.attendanceConfirmed == true);
+                    if (attendee != null)
+                    {
+                        return Json(new { message = "Already checked in" });
+                    }
+                    else
+                    {
+                        attendee.attendanceConfirmed = true;
+                        attendee.arrivalTime = DateTime.UtcNow;
+                        db.SaveChanges();
+                    }
+                }
+                return Json(new { success = true }, JsonRequestBehavior.AllowGet);
+            }
+            return Json(new { success = false }, JsonRequestBehavior.AllowGet);
         }
         protected override void Dispose(bool disposing)
         {
