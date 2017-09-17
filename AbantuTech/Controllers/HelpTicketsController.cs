@@ -84,12 +84,11 @@ namespace AbantuTech.Controllers
                         var fileName = Path.GetFileName(file.FileName);
                         var identifier = member.Email;
                         var fileExt = Path.GetExtension(file.FileName);
-                        var fnm = identifier;
                         if (fileExt.ToLower().EndsWith(".pdf"))
                         {
                             var newFile = new Models.File
                             {
-                                FileName = "HelpdeskFile_Uploaded_By_" + identifier,
+                                FileName = "HelpdeskFile_Uploaded_By_" + identifier + ".pdf",
                                 FileType = FileType.Pdf,
                                 HelpTickets = helpTicket,
                                 ticketId = helpTicket.TicketId
@@ -101,6 +100,21 @@ namespace AbantuTech.Controllers
                                 newFile.Content = reader.ReadBytes(file.ContentLength);
                             }
                             db.Files.Add(newFile);
+                        }
+                        else if(fileExt.ToLower().EndsWith(".png") || fileExt.ToLower().EndsWith(".jpg") || fileExt.ToLower().EndsWith(".gif") || fileExt.ToLower().EndsWith(".png"))
+                        {
+                            var newFile1 = new Models.File
+                            {
+                                FileName = "HelpdeskFile_Uploaded_By_" + identifier + ".png",
+                                FileType = FileType.png,
+                                HelpTickets = helpTicket,
+                                ticketId = helpTicket.TicketId
+                            };
+                            using (var reader = new System.IO.BinaryReader(file.InputStream))
+                            {
+                                newFile1.Content = reader.ReadBytes(file.ContentLength);
+                            }
+                            db.Files.Add(newFile1);
                         }
                         db.SaveChanges();
                         return RedirectToAction("Index", new { helpTicket.TicketId, HelpMessages.TicketSuccess });
@@ -122,6 +136,41 @@ namespace AbantuTech.Controllers
                     if(file !=null && file.ContentLength > 0)
                     {
                         var fileName1 = Path.GetFileName(file.FileName);
+                        var identifier1 = emailNonMember;
+                        var fileExt = Path.GetExtension(file.FileName);
+                        if (fileExt.ToLower().EndsWith(".pdf"))
+                        {
+                            var newFile = new Models.File
+                            {
+                                FileName = "HelpdeskFile_Uploaded_By_" + identifier1 + ".pdf",
+                                FileType = FileType.Pdf,
+                                HelpTickets = helpTicket,
+                                ticketId = helpTicket.TicketId
+                            };
+
+
+                            using (var reader = new System.IO.BinaryReader(file.InputStream))
+                            {
+                                newFile.Content = reader.ReadBytes(file.ContentLength);
+                            }
+                            db.Files.Add(newFile);
+                        }
+                        else if (fileExt.ToLower().EndsWith(".png") || fileExt.ToLower().EndsWith(".jpg") || fileExt.ToLower().EndsWith(".gif") || fileExt.ToLower().EndsWith(".png"))
+                        {
+                            var newFile1 = new Models.File
+                            {
+                                FileName = "HelpdeskFile_Uploaded_By_" + identifier1 + ".png",
+                                FileType = FileType.png,
+                                HelpTickets = helpTicket,
+                                ticketId = helpTicket.TicketId
+                            };
+                            using (var reader = new System.IO.BinaryReader(file.InputStream))
+                            {
+                                newFile1.Content = reader.ReadBytes(file.ContentLength);
+                            }
+                            db.Files.Add(newFile1);
+                        }
+
                     }
                     db.SaveChanges();
                     return RedirectToAction("Index", new { HelpMessages.TicketSuccess, id = helpTicket.TicketId});
