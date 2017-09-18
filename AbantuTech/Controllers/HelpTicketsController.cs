@@ -32,13 +32,25 @@ namespace AbantuTech.Controllers
         {
             return View(db.HelpTickets.Include(a => a.Category).ToList());
         }
+        public FileResult viewTicketFiles(int id)
+        {
+            var ticket = db.HelpTickets.Find(id);
+            if (ticket != null)
+            {
+                var files = db.Files.FirstOrDefault(x=>x.ticketId==ticket.TicketId);
+                if(files!=null && files.FileType == FileType.Pdf)
+                {
+                    return File(files.Content, "application/pdf", files.FileName);
+                }
+            }
+        }
         public ActionResult Details(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            HelpTicket helpTicket = db.HelpTickets.Find(id);
+            HelpTicket helpTicket = db.HelpTickets.Include(x=>x.Category).Include(x=>x.Comments).FirstOrDefault(x=>x.TicketId==id);
             if (helpTicket == null)
             {
                 return HttpNotFound();
@@ -107,14 +119,16 @@ namespace AbantuTech.Controllers
                             {
                                 FileName = "HelpdeskFile_Uploaded_By_" + identifier + ".png",
                                 FileType = FileType.png,
-                                HelpTickets = helpTicket,
-                                ticketId = helpTicket.TicketId
+                                ticketId = helpTicket.TicketId,
+                                HelpTickets = helpTicket
+                                
                             };
                             using (var reader = new System.IO.BinaryReader(file.InputStream))
                             {
                                 newFile1.Content = reader.ReadBytes(file.ContentLength);
                             }
                             db.Files.Add(newFile1);
+                            
                         }
                         db.SaveChanges();
                         return RedirectToAction("Index", new { helpTicket.TicketId, HelpMessages.TicketSuccess });
