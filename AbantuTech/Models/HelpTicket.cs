@@ -15,7 +15,9 @@ namespace AbantuTech.Models
         [Required]
         public int TicketId { get; set; }
         public DateTime tCreatedOn { get; set; }
+        public string tCreatedBy { get; set; }
         public int? cId { get; set; }
+        public string Comment { get; set; }
         public HelpCategory Category { get; set; }
         public ICollection<TicketComment> Comments { get; set; }
         public int? memberId { get; set; }

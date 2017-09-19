@@ -698,6 +698,9 @@
     <Content Include="bin\roslyn\vbc.rsp" />
     <Content Include="obj\Debug\DesignTimeResolveAssemblyReferences.cache" />
     <Content Include="bin\Select.Html.dep" />
+    <Content Include="App_Data\Upload\460be331-9249-47f7-bb84-8ae38e114bbf.docx" />
+    <Content Include="App_Data\Upload\46f7eba0-e44c-4ed9-b781-747cb94650ec.docx" />
+    <Content Include="App_Data\Upload\da93bf16-fe1a-477c-ae05-571b168e71ee.PDF" />
     <None Include="obj\Debug\__TestProfilesForFilePreview__\abantu-system - Web Deploy.pubxml" />
     <None Include="Properties\PublishProfiles\abantu-system - FTP %284%29.pubxml" />
     <None Include="Properties\PublishProfiles\abantu-system - FTP.pubxml" />
@@ -1616,9 +1619,10 @@
     <Content Include="Views\HelpCategories\Details.cshtml" />
     <Content Include="Views\HelpCategories\Edit.cshtml" />
     <Content Include="Views\HelpCategories\Index.cshtml" />
+    <Content Include="Views\HelpTickets\Create.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="App_Data\" />
+    <Folder Include="App_Data\Upload\helpticketfiles\" />
     <Folder Include="bin\reports\170606.105809.1592.pex\dg\" />
     <Folder Include="bin\reports\170606.105809.1592.pex\fix\out\" />
     <Folder Include="bin\reports\170606.105809.1592.pex\tests\" />
@@ -1628,7 +1632,6 @@
     <Folder Include="obj\Release\ProfileTransformWebConfig\transformed\Views\" />
     <Folder Include="obj\Release\TempPE\" />
     <Folder Include="obj\Release\TransformWebConfig\transformed\Views\" />
-    <Folder Include="Views\HelpTickets\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />

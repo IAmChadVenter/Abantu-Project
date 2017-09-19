@@ -46,10 +46,15 @@ namespace AbantuTech.Controllers
             return View(helpTicket);
         }
         [HttpGet]
-        public ActionResult Create()
+        public ActionResult Create(FileMessages ? fmessages)
         {
+
             HelpTicket ticket = new HelpTicket();
-            ViewBag.CategoryID = new SelectList(db.HelpCategories, "cID", "cName");
+            ViewBag.cID = new SelectList(db.HelpCategories, "cID", "cName");
+            ViewBag.FileMessage = fmessages == FileMessages.FileUploadSuccess ? "File has successfully been included" :
+                fmessages == FileMessages.FileUploadFailure ? "File has failed to be included" :
+                fmessages == FileMessages.FileError ? "An error occurred while uploading file, try again later" :
+                "";
             return View(ticket);            
         }
         [HttpPost]
@@ -68,8 +73,10 @@ namespace AbantuTech.Controllers
                 if (member != null)
                 {
                     helpTicket.tCreatedOn = DateTime.UtcNow;
+                    helpTicket.tCreatedBy = member.Email;
                     db.HelpTickets.Add(helpTicket);
                     member.Tickets.Add(helpTicket);
+                    comment = helpTicket.Comment;
                     var com = new TicketComment
                     {
                         Comment = comment,
@@ -83,6 +90,7 @@ namespace AbantuTech.Controllers
                     }
                 }
                 db.SaveChanges();
+                ViewBag.cID = new SelectList(db.HelpCategories, "cID", "cName");
                 return RedirectToAction("Index", new { helpTicket.TicketId, HelpMessages.TicketSuccess });
              }
              return RedirectToAction("Index", new { HelpMessages.Error });
@@ -102,6 +110,14 @@ namespace AbantuTech.Controllers
                         var fileExt = Path.GetExtension(file.FileName);
                         if (fileExt.ToLower().EndsWith(".pdf"))
                         {
+                            var filePath = HostingEnvironment.MapPath("~/App_Data/Upload/helpticketfiles/" + email);
+                            var directory = new DirectoryInfo(HostingEnvironment.MapPath("~/App_Data/Upload/helpticketfiles"));
+                            if (directory.Exists == false)
+                            {
+                                directory.Create();
+                            }
+                            ViewBag.FilePath = filePath.ToString();
+                            file.SaveAs(filePath);
                             Models.File newFile = new Models.File
                             {
                                 FileName = fname,
@@ -133,7 +149,7 @@ namespace AbantuTech.Controllers
                     }
                     db.SaveChanges();
                     TempData["Message"] = "File Uploaded";
-                    return View();
+                    return RedirectToAction("Create", new { });
                 }
             }
                 TempData["Error"] = "Failed to upload";
@@ -193,6 +209,12 @@ namespace AbantuTech.Controllers
             TicketSuccess,
             TicketFailure,
             UnrestrictedError
+        }
+        public enum FileMessages
+        {
+            FileUploadSuccess,
+            FileUploadFailure,
+            FileError
         }
         protected override void Dispose(bool disposing)
         {

@@ -1,0 +1,60 @@
+﻿@model AbantuTech.Models.HelpTicket
+@using AbantuTech.Models;
+@using Abantu_System.Models;
+@using Microsoft.AspNet.Identity;
+@using Microsoft.AspNet.Identity.EntityFramework;
+@using System.Data.Entity;
+@using System.Linq;
+
+@{
+    ViewBag.Title = "Create";
+    Layout = "~/Views/Shared/_Layout2.cshtml";
+    ApplicationDbContext db = new ApplicationDbContext();
+    var UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(db));
+    ApplicationUser currentUser = UserManager.FindById(User.Identity.GetUserId());
+    var e = db.Members.Where(m => m.Email == currentUser.Email).FirstOrDefault();
+}
+
+<h2 style="text-align:center;">Welcome @e.Email, to the Abantu-HelpDesk</h2>
+<p class="text-success">@ViewBag.FileMessages</p>
+@using (Html.BeginForm()) 
+{
+    @Html.AntiForgeryToken()
+    
+    <div class="form-horizontal">
+        <h4>Please create an Abantu-HelpTicket</h4>
+        <hr />
+
+        <p>Select an appropriate category that your inquiry is based on</p>
+        <div class="form-group">
+            <label class="control-label col-md-2">Help Category</label>
+            <div class="col-md-10">
+                @Html.DropDownList("cID", null, htmlAttributes: new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.cId, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <p>Explain your inquiry, so that we may obtain a better understanding</p>
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="form-group">
+            @Html.LabelFor(model => model.Comment, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Comment, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Comment, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        @using (Html.BeginForm("helpFileUpload", "HelpTickets", FormMethod.Post, new { enctype = "multipart/form-data" }))
+        {
+
+        }
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Create" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
