@@ -90,7 +90,6 @@ namespace Abantu_System.Models
         public int? Committee_ID { get; set; }
         public Committee Committee { get; set; }
         public ICollection<EmergencyContact> Contacts { get; set; }
-
-
+        public ICollection<HelpTicket> Tickets { get; set; }
     }
 }

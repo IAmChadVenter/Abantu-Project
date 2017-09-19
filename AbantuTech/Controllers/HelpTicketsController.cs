@@ -30,7 +30,7 @@ namespace AbantuTech.Controllers
         }
         public ActionResult allTickets()
         {
-            return View(db.HelpTickets.Include(a => a.Category).ToList());
+            return View(db.HelpTickets.Include(a => a.Category).Include(x=>x.Comments).ToList());
         }
         public ActionResult Details(int? id)
         {
@@ -38,7 +38,7 @@ namespace AbantuTech.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            HelpTicket helpTicket = db.HelpTickets.Include(x=>x.Category).Include(x=>x.Comments).FirstOrDefault(x=>x.TicketId==id);
+            HelpTicket helpTicket = db.HelpTickets.Find(id);
             if (helpTicket == null)
             {
                 return HttpNotFound();
@@ -54,7 +54,7 @@ namespace AbantuTech.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "TicketId,Comment,tCreatedBy,isMember,tCreatedOn,AddFiles")] HelpTicket helpTicket, string emailNonMember, HttpPostedFileBase file, string comment)
+        public ActionResult Create([Bind(Include = "TicketId,Comment,tCreatedOn")] HelpTicket helpTicket, HttpPostedFileBase file, string comment)
         {
             if (!ModelState.IsValid)
             {
@@ -67,10 +67,9 @@ namespace AbantuTech.Controllers
                 var member = db.Members.FirstOrDefault(x => x.Email == email);
                 if (member != null)
                 {
-                    helpTicket.tCreatedBy = member.Email;
                     helpTicket.tCreatedOn = DateTime.UtcNow;
-                    helpTicket.isMember = true;
                     db.HelpTickets.Add(helpTicket);
+                    member.Tickets.Add(helpTicket);
                     var com = new TicketComment
                     {
                         Comment = comment,
@@ -80,11 +79,11 @@ namespace AbantuTech.Controllers
                     helpTicket.Comments.Add(com);
                     if(file!= null && file.ContentLength>0)
                     {
-                        helpFileUpload(file, email, helpTicket);
+                        helpFileUpload(file, member.Email, helpTicket);
                     }
                 }
-                        db.SaveChanges();
-                        return RedirectToAction("Index", new { helpTicket.TicketId, HelpMessages.TicketSuccess });
+                db.SaveChanges();
+                return RedirectToAction("Index", new { helpTicket.TicketId, HelpMessages.TicketSuccess });
              }
              return RedirectToAction("Index", new { HelpMessages.Error });
         }
