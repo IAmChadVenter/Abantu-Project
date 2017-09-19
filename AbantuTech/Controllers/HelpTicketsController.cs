@@ -32,18 +32,6 @@ namespace AbantuTech.Controllers
         {
             return View(db.HelpTickets.Include(a => a.Category).ToList());
         }
-        public FileResult viewTicketFiles(int id)
-        {
-            var ticket = db.HelpTickets.Find(id);
-            if (ticket != null)
-            {
-                var files = db.Files.FirstOrDefault(x=>x.ticketId==ticket.TicketId);
-                if(files!=null && files.FileType == FileType.Pdf)
-                {
-                    return File(files.Content, "application/pdf", files.FileName);
-                }
-            }
-        }
         public ActionResult Details(int? id)
         {
             if (id == null)
@@ -90,93 +78,52 @@ namespace AbantuTech.Controllers
                         tId = helpTicket.TicketId
                     };
                     helpTicket.Comments.Add(com);
-                    if (file != null && file.ContentLength > 0)
+                    if(file!= null && file.ContentLength>0)
                     {
-
-                        var fileName = Path.GetFileName(file.FileName);
-                        var identifier = member.Email;
-                        var fileExt = Path.GetExtension(file.FileName);
-                        if (fileExt.ToLower().EndsWith(".pdf"))
-                        {
-                            var newFile = new Models.File
-                            {
-                                FileName = "HelpdeskFile_Uploaded_By_" + identifier + ".pdf",
-                                FileType = FileType.Pdf,
-                                HelpTickets = helpTicket,
-                                ticketId = helpTicket.TicketId
-                            };
-
-
-                            using (var reader = new System.IO.BinaryReader(file.InputStream))
-                            {
-                                newFile.Content = reader.ReadBytes(file.ContentLength);
-                            }
-                            db.Files.Add(newFile);
-                        }
-                        else if(fileExt.ToLower().EndsWith(".png") || fileExt.ToLower().EndsWith(".jpg") || fileExt.ToLower().EndsWith(".gif") || fileExt.ToLower().EndsWith(".png"))
-                        {
-                            var newFile1 = new Models.File
-                            {
-                                FileName = "HelpdeskFile_Uploaded_By_" + identifier + ".png",
-                                FileType = FileType.png,
-                                ticketId = helpTicket.TicketId,
-                                HelpTickets = helpTicket
-                                
-                            };
-                            using (var reader = new System.IO.BinaryReader(file.InputStream))
-                            {
-                                newFile1.Content = reader.ReadBytes(file.ContentLength);
-                            }
-                            db.Files.Add(newFile1);
-                            
-                        }
-                        db.SaveChanges();
-                        return RedirectToAction("Index", new { helpTicket.TicketId, HelpMessages.TicketSuccess });
+                        helpFileUpload(file, email, helpTicket);
                     }
                 }
-                else
+                        db.SaveChanges();
+                        return RedirectToAction("Index", new { helpTicket.TicketId, HelpMessages.TicketSuccess });
+             }
+             return RedirectToAction("Index", new { HelpMessages.Error });
+        }
+        public ActionResult helpFileUpload(HttpPostedFileBase file, string email, HelpTicket ticket)
+        {
+            email = User.Identity.Name;
+            var fname = System.IO.Path.GetFileName(file.FileName) + email;
+
+            if (ModelState.IsValid)
+            {
+                if (email != null)
                 {
-                    helpTicket.tCreatedBy = emailNonMember;
-                    helpTicket.tCreatedOn = DateTime.UtcNow;
-                    helpTicket.isMember = false;
-                    db.HelpTickets.Add(helpTicket);
-                    var comm = new TicketComment
+
+                    if (file != null && file.ContentLength > 0)
                     {
-                        Comment = comment,
-                        HelpTicket = helpTicket,
-                        tId = helpTicket.TicketId
-                    };
-                    helpTicket.Comments.Add(comm);
-                    if(file !=null && file.ContentLength > 0)
-                    {
-                        var fileName1 = Path.GetFileName(file.FileName);
-                        var identifier1 = emailNonMember;
                         var fileExt = Path.GetExtension(file.FileName);
                         if (fileExt.ToLower().EndsWith(".pdf"))
                         {
-                            var newFile = new Models.File
+                            Models.File newFile = new Models.File
                             {
-                                FileName = "HelpdeskFile_Uploaded_By_" + identifier1 + ".pdf",
+                                FileName = fname,
                                 FileType = FileType.Pdf,
-                                HelpTickets = helpTicket,
-                                ticketId = helpTicket.TicketId
+                                HelpTickets = ticket,
+                                ticketId = ticket.TicketId
                             };
-
-
                             using (var reader = new System.IO.BinaryReader(file.InputStream))
                             {
                                 newFile.Content = reader.ReadBytes(file.ContentLength);
                             }
                             db.Files.Add(newFile);
                         }
-                        else if (fileExt.ToLower().EndsWith(".png") || fileExt.ToLower().EndsWith(".jpg") || fileExt.ToLower().EndsWith(".gif") || fileExt.ToLower().EndsWith(".png"))
+                        else if (fileExt.ToLower().EndsWith(".jpg") || fileExt.ToLower().EndsWith(".png") || fileExt.ToLower().EndsWith(".gif"))
                         {
-                            var newFile1 = new Models.File
+                            Models.File newFile1 = new Models.File
                             {
-                                FileName = "HelpdeskFile_Uploaded_By_" + identifier1 + ".png",
+                                FileName = fname,
                                 FileType = FileType.png,
-                                HelpTickets = helpTicket,
-                                ticketId = helpTicket.TicketId
+                                HelpTickets = ticket,
+                                ticketId = ticket.TicketId
                             };
                             using (var reader = new System.IO.BinaryReader(file.InputStream))
                             {
@@ -184,13 +131,15 @@ namespace AbantuTech.Controllers
                             }
                             db.Files.Add(newFile1);
                         }
-
                     }
                     db.SaveChanges();
-                    return RedirectToAction("Index", new { HelpMessages.TicketSuccess, id = helpTicket.TicketId});
-                }   
+                    TempData["Message"] = "File Uploaded";
+                    return View();
+                }
             }
-            return RedirectToAction("Index", new { HelpMessages.Error });
+                TempData["Error"] = "Failed to upload";
+            return View(file);
+
         }
         public ActionResult Edit(int? id)
         {
