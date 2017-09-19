@@ -30,7 +30,7 @@ namespace AbantuTech.Controllers
         }
         public ActionResult allTickets()
         {
-            return View(db.HelpTickets.Include(a => a.Category).Include(x=>x.Comments).ToList());
+            return View(db.HelpTickets.Include(a => a.Category).Include(x => x.Comments).ToList());
         }
         public ActionResult Details(int? id)
         {
@@ -46,7 +46,7 @@ namespace AbantuTech.Controllers
             return View(helpTicket);
         }
         [HttpGet]
-        public ActionResult Create(FileMessages ? fmessages)
+        public ActionResult Create(FileMessages? fmessages)
         {
 
             HelpTicket ticket = new HelpTicket();
@@ -55,7 +55,7 @@ namespace AbantuTech.Controllers
                 fmessages == FileMessages.FileUploadFailure ? "File has failed to be included" :
                 fmessages == FileMessages.FileError ? "An error occurred while uploading file, try again later" :
                 "";
-            return View(ticket);            
+            return View(ticket);
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -84,21 +84,21 @@ namespace AbantuTech.Controllers
                         tId = helpTicket.TicketId
                     };
                     helpTicket.Comments.Add(com);
-                    if(file!= null && file.ContentLength>0)
+                    if (file != null && file.ContentLength > 0)
                     {
-                        helpFileUpload(file, member.Email, helpTicket);
+                        helpFileUpload(file, member.Email, helpTicket, helpTicket.tCreatedOn);
                     }
                 }
                 db.SaveChanges();
                 ViewBag.cID = new SelectList(db.HelpCategories, "cID", "cName");
                 return RedirectToAction("Index", new { helpTicket.TicketId, HelpMessages.TicketSuccess });
-             }
-             return RedirectToAction("Index", new { HelpMessages.Error });
+            }
+            return RedirectToAction("Index", new { HelpMessages.Error });
         }
-        public ActionResult helpFileUpload(HttpPostedFileBase file, string email, HelpTicket ticket)
+        public ActionResult helpFileUpload(HttpPostedFileBase file, string email, HelpTicket ticket, DateTime created)
         {
             email = User.Identity.Name;
-            var fname = System.IO.Path.GetFileName(file.FileName) + email;
+            var fname = Path.GetFileName(file.FileName) + email;
 
             if (ModelState.IsValid)
             {
@@ -110,51 +110,37 @@ namespace AbantuTech.Controllers
                         var fileExt = Path.GetExtension(file.FileName);
                         if (fileExt.ToLower().EndsWith(".pdf"))
                         {
-                            var filePath = HostingEnvironment.MapPath("~/App_Data/Upload/helpticketfiles/" + email);
-                            var directory = new DirectoryInfo(HostingEnvironment.MapPath("~/App_Data/Upload/helpticketfiles"));
+                            var filePath = HostingEnvironment.MapPath("~/App_Data/Upload/helpticketfiles/" + email + "/" + created + ".pdf");
+                            var directory = new DirectoryInfo(HostingEnvironment.MapPath("~/App_Data/Upload/helpticketfiles/" + email));
                             if (directory.Exists == false)
                             {
                                 directory.Create();
                             }
                             ViewBag.FilePath = filePath.ToString();
                             file.SaveAs(filePath);
-                            Models.File newFile = new Models.File
-                            {
-                                FileName = fname,
-                                FileType = FileType.Pdf,
-                                HelpTickets = ticket,
-                                ticketId = ticket.TicketId
-                            };
-                            using (var reader = new System.IO.BinaryReader(file.InputStream))
-                            {
-                                newFile.Content = reader.ReadBytes(file.ContentLength);
-                            }
-                            db.Files.Add(newFile);
+                            return RedirectToAction("Create", new { FileMessages.FileUploadSuccess });
                         }
                         else if (fileExt.ToLower().EndsWith(".jpg") || fileExt.ToLower().EndsWith(".png") || fileExt.ToLower().EndsWith(".gif"))
                         {
-                            Models.File newFile1 = new Models.File
+                            var filePath = HostingEnvironment.MapPath("~/App_Data/Upload/helpticketfiles/" + email + "/" + created + ".png");
+                            var directory = new DirectoryInfo(HostingEnvironment.MapPath("~/App_Data/Upload/helpticketfiles/" + email));
+                            if (directory.Exists == false)
                             {
-                                FileName = fname,
-                                FileType = FileType.png,
-                                HelpTickets = ticket,
-                                ticketId = ticket.TicketId
-                            };
-                            using (var reader = new System.IO.BinaryReader(file.InputStream))
-                            {
-                                newFile1.Content = reader.ReadBytes(file.ContentLength);
+                                directory.Create();
                             }
-                            db.Files.Add(newFile1);
+                            ViewBag.FilePath = filePath.ToString();
+                            file.SaveAs(filePath);
+                            return RedirectToAction("Create", new { FileMessages.FileUploadSuccess });
+                        }
+                        else
+                        {
+                            return RedirectToAction("Create", new { FileMessages.FileUploadFailure });
                         }
                     }
-                    db.SaveChanges();
-                    TempData["Message"] = "File Uploaded";
-                    return RedirectToAction("Create", new { });
+                    
                 }
             }
-                TempData["Error"] = "Failed to upload";
-            return View(file);
-
+            return RedirectToAction("Create", new { FileMessages.FileError });
         }
         public ActionResult Edit(int? id)
         {
