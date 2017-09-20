@@ -12,11 +12,11 @@
     }
 </style>
 <img src="~/Content/Template/images/5.jpg" height="110" width=110" />
-<h1><p align="center">Files</p></h1>
-<h2>Index</h2>
+<h1><p align="center">Uploaded Application Forms</p></h1>
+
 
 <p>
-@Html.ActionLink("Create New", "Create")
+@*@Html.ActionLink("Create New", "Create")*@
 </p>
 <table class="table">
     <tr>
@@ -38,8 +38,8 @@
                 @Html.DisplayFor(modelItem => item.FileType)
             </td>
             <td>
-                @Html.ActionLink("Edit", "Edit", new { id = item.FileId }) |
-                @*@Html.ActionLink("Download", "Download", new { id = item.FileId }) |*@
+               @* @Html.ActionLink("Edit", "Edit", new { id = item.FileId }) |*@
+                @Html.ActionLink("Download", "Download", new { id = item.FileId }) |
                 @Html.ActionLink("Delete", "Delete", new { id = item.FileId })
             </td>
         </tr>
