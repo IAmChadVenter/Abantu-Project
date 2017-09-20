@@ -13,9 +13,9 @@ namespace AbantuTech.Models
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int eventTeamId { get; set; }
-        public int eventTask { get; set; }
         public int eventId { get; set; }
         public Event events { get; set; }
         public ICollection<ProgrammeMember> pmember { get; set; }
+        public ICollection<EventTaskRole> eventroles { get; set; }
     }
 }

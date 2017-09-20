@@ -254,6 +254,7 @@
     <Compile Include="Controllers\CalendarController.cs" />
     <Compile Include="Controllers\CommitteesController.cs" />
     <Compile Include="Controllers\DonationAmountsController.cs" />
+    <Compile Include="Controllers\EventOrganizersController.cs" />
     <Compile Include="Controllers\EventsController.cs" />
     <Compile Include="Controllers\FilesController.cs" />
     <Compile Include="Controllers\ForumController.cs" />
@@ -283,6 +284,7 @@
     <Compile Include="Helpers\LocalEmailHelpers.cs" />
     <Compile Include="Helpers\SendGridKey.cs" />
     <Compile Include="Models\EventOrganizers.cs" />
+    <Compile Include="Models\EventTaskRole.cs" />
     <Compile Include="Models\HelpCategory.cs" />
     <Compile Include="Models\HelpTicket.cs" />
     <Compile Include="Models\TicketComment.cs" />
@@ -1613,13 +1615,19 @@
     <Content Include="Views\Events\PastEvents.cshtml" />
     <Content Include="Views\Events\photoGallery.cshtml" />
     <Content Include="Views\Events\EventTeam.cshtml" />
-    <Content Include="Views\Events\getProgrammeMembers.cshtml" />
     <Content Include="Views\HelpCategories\Create.cshtml" />
     <Content Include="Views\HelpCategories\Delete.cshtml" />
     <Content Include="Views\HelpCategories\Details.cshtml" />
     <Content Include="Views\HelpCategories\Edit.cshtml" />
     <Content Include="Views\HelpCategories\Index.cshtml" />
     <Content Include="Views\HelpTickets\Create.cshtml" />
+    <Content Include="Views\EventOrganizers\Create.cshtml" />
+    <Content Include="Views\EventOrganizers\Delete.cshtml" />
+    <Content Include="Views\EventOrganizers\Details.cshtml" />
+    <Content Include="Views\EventOrganizers\Edit.cshtml" />
+    <Content Include="Views\EventOrganizers\Index.cshtml" />
+    <Content Include="Views\EventOrganizers\getEvents.cshtml" />
+    <Content Include="Views\EventOrganizers\programmeMemberList.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\Upload\helpticketfiles\" />

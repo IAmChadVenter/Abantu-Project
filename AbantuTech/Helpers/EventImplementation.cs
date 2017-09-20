@@ -41,7 +41,12 @@ namespace AbantuTech.Helpers
             ProgrammeMember member = viewTeamMember(id);
             if(member!=null)
             {
-                member.organizers.eventTask = organizer.eventTask;
+                var roles = getEventRoles();
+                if(roles != null)
+                {
+                    var role = roles.FirstOrDefault(x=>x.)
+                }
+                organizer.eventroles.Add(role);
                 Save();
 
                 issueAnEmail("Event Organizer Team || AbantuTech", member.Member_ID);
@@ -52,17 +57,23 @@ namespace AbantuTech.Helpers
         {
             string header = "", body = "";
             var member = viewTeamMember(id);
+            var task = _context.EventTaskRoles.FirstOrDefault(x => x.eventTeamId == member.eventTeamId);
             if (member != null)
             {
                 header = "Greetings " + member.Member.FirstName + " " + member.Member.Surname + "<br/><br/>";
 
                     body = "You have been added to an event organizing team for the " + member.organizers.events.Name + " event. <br/><br/>"
-                        + "Your task for this event is " + member.organizers.eventTask + ", We are grateful for your help. Thank you ! <br/><br/>"
+                        + "Your task for this event is " + task + ", We are grateful for your help. Thank you ! <br/><br/>"
                         + "The date of this event is " + member.organizers.events.start_date + ".<br/><br/>";
             }
 
             string footer = "Kind Regards <br/> Abantu Tech";
             return header + body + footer;
+        }
+
+        public IEnumerable<EventTaskRole> getEventRoles()
+        {
+            return _context.EventTaskRoles.ToList();
         }
 
         public IEnumerable<ProgrammeMember> getPMembers(int id)

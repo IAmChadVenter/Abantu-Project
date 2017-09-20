@@ -15,6 +15,8 @@ namespace AbantuTech.Helpers
         EventOrganizers getTeam(int id);
         void assignTask(EventOrganizers organizer, int id);
         ProgrammeMember viewTeamMember(int id);
+        IEnumerable<EventTaskRole> getEventRoles(int id);
+        void selectRole(EventTaskRole roles, int id);
         string issueAnEmail(string subject, int id);
         string emailMessage(int memberID);
         void Save();
