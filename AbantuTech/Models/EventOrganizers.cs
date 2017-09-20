@@ -13,6 +13,8 @@ namespace AbantuTech.Models
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int eventTeamId { get; set; }
+        [Required]
+        public string teamName { get; set; }
         public int eventId { get; set; }
         public Event events { get; set; }
         public ICollection<ProgrammeMember> pmember { get; set; }

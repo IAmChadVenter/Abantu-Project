@@ -35,7 +35,10 @@
         <td>
             <div class="btn btn-success add-to-team" data-href="/eventorganizers/AddToTeam/@item.eventTeamId">Add To Team</div>
         </td>
+        <td>
+            @Html.ActionLink("View Team", "viewTeam", new { id = item.eventTeamId })
+        </td>
     </tr>
 }
-
 </table>
+

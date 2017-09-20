@@ -56,8 +56,7 @@ namespace AbantuTech.Controllers
                 eventOrganizers.eventId = @event.Event_ID;
                 db.Organizers.Add(eventOrganizers);
                 db.SaveChanges();
-                ViewBag.eventRoleId = new SelectList(db.EventTaskRoles, "eventRoleId", "eventRoleName");
-                return RedirectToAction("programmeMemberList");
+                return RedirectToAction("programmeMemberList", new { id = eventOrganizers.eventTeamId });
             }
 
             return View(eventOrganizers);
@@ -145,22 +144,22 @@ namespace AbantuTech.Controllers
         [HttpPost]
         public JsonResult AddToTeam(int id)
         {
-            // HttpContext.User.Identity.Name for authorized users
-            var @event = db.Events//to get events from database
-                .FirstOrDefault(x => x.Event_ID == id);//If the id of event matches the one delclared above
+            var @event = db.Events
+                .FirstOrDefault(x => x.Event_ID == id);
             var progmembers = getProgrammeMembers(@event.Event_ID);
             if(@event != null && progmembers != null)
             {
                 var member = progmembers.FirstOrDefault(x => x.Programme_ID == @event.Programme_ID);
                 var team = db.Organizers.FirstOrDefault(x => x.eventId == @event.Event_ID);
+                var count = team.pmember.Count();
                 var teammember = team.pmember.FirstOrDefault(x => x.ID == member.ID);
-                if (teammember != null) //and checks if there is a member in the event database
+                if (teammember != null && count == 5) 
                 {
-                    return Json(new { message = "Member is already in the team" });
+                    return Json(new { message = "Member already in, or team has reached capacity" });
                 }
                 else
                 {
-                    //if ther's no member in the event table, then it is where he's added to the event database
+                    
                     member.eventTeamId = team.eventTeamId;
                     member.organizers = team;
                     team.pmember.Add(member);
@@ -169,6 +168,38 @@ namespace AbantuTech.Controllers
                 return Json(new { success = true }, JsonRequestBehavior.AllowGet);
             }
             return Json(new { success = false }, JsonRequestBehavior.AllowGet);
+        }
+        public ActionResult viewTeam(int id)
+        {
+            var team = db.Organizers.Where(x => x.eventTeamId == id);
+            if (team != null)
+            {
+                foreach (var t in team)
+                {
+                    return View(t.pmember.ToList());
+                }
+            }
+            return View();
+        }
+        public ActionResult AssignTasks()
+        {
+            ViewBag.EventRoleId = new SelectList(db.EventTaskRoles, "EventRoleId", "EventRoleName");
+                
+            return View();
+        }
+        public ActionResult AssignTasks(EventTaskRole roles, int id)
+        {
+            var @event = db.Events.FirstOrDefault(x => x.Event_ID == id);
+            if (ModelState.IsValid)
+            {
+                var team = db.Organizers.FirstOrDefault(x => x.eventId == @event.Event_ID);
+                if(team!=null)
+                {
+                    var member = team.pmember.FirstOrDefault(x => x.eventTeamId == team.eventTeamId);
+                    roles.eventTeamId = team.eventTeamId;
+                    team.eventroles.Add(roles);
+                }
+            }
         }
         protected override void Dispose(bool disposing)
         {
