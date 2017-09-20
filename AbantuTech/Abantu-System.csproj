@@ -1600,7 +1600,6 @@
     <Content Include="Views\AccountC\Register.cshtml" />
     <Content Include="Views\Checkout\AddressAndPayment.cshtml" />
     <Content Include="Views\Checkout\Complete.cshtml" />
-    <Content Include="Views\ShoppingCart\CartSummary.cshtml" />
     <Content Include="Views\ShoppingCart\Index.cshtml" />
     <Content Include="Views\Store\Browse.cshtml" />
     <Content Include="Views\Store\Details.cshtml" />
@@ -1625,6 +1624,7 @@
     <Content Include="Views\Newsletters\News.cshtml" />
     <Content Include="Views\Newsletters\UnSubedNull.cshtml" />
     <Content Include="Views\Newsletters\sentConfirm.cshtml" />
+    <Content Include="Views\ShoppingCart\CartSummary.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

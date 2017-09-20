@@ -88,5 +88,56 @@ namespace AbantuTech.Controllers
 
             return PartialView("CartSummary");
         }
+
+
+        [HttpPost]
+        public ActionResult UpdateCartCount(int id, int cartCount)
+        {
+            ShoppingCartRemoveViewModel results = null;
+            try
+            {
+                // Get the cart 
+                var cart = ShoppingCart.GetCart(this.HttpContext);
+
+                // Get the name of the album to display confirmation 
+                string albumName = storeDB.Carts
+                    .Single(item => item.RecordId == id).Album.Title;
+
+                // Update the cart count 
+                int itemCount = cart.UpdateCartCount(id, cartCount);
+
+                //Prepare messages
+                string msg = "The quantity of " + Server.HtmlEncode(albumName) +
+                        " has been refreshed in your shopping cart.";
+                if (itemCount == 0) msg = Server.HtmlEncode(albumName) +
+                        " has been removed from your shopping cart.";
+                //
+                // Display the confirmation message 
+                results = new ShoppingCartRemoveViewModel
+                {
+                    Message = msg,
+                    CartTotal = cart.GetTotal(),
+                    CartCount = cart.GetCount(),
+                    ItemCount = itemCount,
+                    DeleteId = id
+                };
+            }
+            catch
+            {
+                results = new ShoppingCartRemoveViewModel
+                {
+                    Message = "Error occurred or invalid input...",
+                    CartTotal = -1,
+                    CartCount = -1,
+                    ItemCount = -1,
+                    DeleteId = id
+                };
+            }
+            return Json(results);
+        }
+
+
+
+
     }
 }
