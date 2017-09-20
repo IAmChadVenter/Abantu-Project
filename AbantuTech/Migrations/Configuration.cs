@@ -4,6 +4,7 @@ namespace AbantuTech.Migrations
     using Microsoft.AspNet.Identity.EntityFramework;
     using Models;
     using System;
+    using System.Collections.Generic;
     using System.Data.Entity;
     using System.Data.Entity.Migrations;
     using System.Linq;
@@ -45,6 +46,27 @@ namespace AbantuTech.Migrations
                     UserManager.AddToRole(user.Id, "Admin");
                 }
             }
+            //var genres = new List<Genre> //category
+            //{
+            //    new Genre { Name = "T-Shirts", Description = "T-Shirts" },
+            //    new Genre { Name = "Caps" },
+            //    new Genre { Name = "Pants" },
+            //    new Genre { Name = "Socks" }
+
+            //};
+            //var artists = new List<Artist> //fabric
+            //{
+            //    new Artist { Name = "Suede" },
+            //    new Artist { Name = "Cotton" },
+            //    new Artist { Name = "Polyester" },
+
+            //};
+            //new List<Album> // item
+            //{
+            //    new Album { Title = "Black Tee", Genre = genres.Single(g => g.Name == "T-Shirts"), Price = 80, Artist = artists.Single(a => a.Name == "Cotton"), AlbumArtUrl = "/Content/Images/Store/shirt-b.jpg" },
+            //    new Album { Title = "Blue Tee", Genre = genres.Single(g => g.Name == "T-Shirts"), Price = 80, Artist = artists.Single(a => a.Name == "Cotton"), AlbumArtUrl = "/Content/Images/Store/shirt-bl.jpg" },
+            //    new Album { Title = "Grey Tee", Genre = genres.Single(g => g.Name == "T-Shirts"), Price = 80, Artist = artists.Single(a => a.Name == "Cotton"), AlbumArtUrl = "/Content/Images/Store/shirt-g.jpg" },
+            //}.ForEach(a => context.Albums.Add(a));
         }
     }
 }
