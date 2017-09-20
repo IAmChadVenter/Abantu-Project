@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.ComponentModel;
 
 namespace AbantuTech.Models
 {
@@ -16,7 +18,9 @@ namespace AbantuTech.Models
     {
         public int FileId { get; set; }
         [StringLength(255)]
+        [DisplayName("File Name")]
         public string FileName { get; set; }
+        [DisplayName("File Type")]
         public FileType FileType { get; set; }
         public byte[] Content { get; set; }
     }
