@@ -59,6 +59,7 @@
                                 {
                                     <ul class="nav navbar-nav navbar-right ">
                                         <li>@Html.ActionLink("Intern Menu", "InternMenu", "Manage")</li>
+                                        <li>@Html.ActionLink("Store", "Index", "Store")</li>
 
                                     </ul>
                                 }
@@ -69,12 +70,13 @@
                                 {
                                     <ul class="nav navbar-nav navbar-right ">
                                         <li>@Html.ActionLink("Volunteer Menu", "VolunteerMenu", "Manage")</li>
+                                        <li>@Html.ActionLink("Store", "Index", "Store")</li>
 
                                     </ul>
                                 }
                             </li>
                         </ul>
-                        @Html.Partial("_LoginPartial")
+                        @Html.Partial("_LoginPartial1")
                     }
                     else
                     {
@@ -85,6 +87,8 @@
                             <li>@Html.ActionLink("Contact", "Contact", "Home")</li>
                             <li>@Html.ActionLink("Apply", "Create", "Apply")</li>
                             <li>@Html.ActionLink("Submit", "Create", "Files")</li>
+                            <li>@Html.ActionLink("Store", "Index", "Store")</li>
+
                         </ul>
 
                         @Html.Partial("_LoginPartial1")

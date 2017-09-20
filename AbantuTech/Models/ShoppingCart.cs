@@ -196,5 +196,31 @@ cart => cart.CartId == ShoppingCartId
             }
             storeDB.SaveChanges();
         }
+
+        public int UpdateCartCount(int id, int cartCount)
+        {
+            // Get the cart 
+            var cartItem = storeDB.Carts.Single(
+                cart => cart.CartId == ShoppingCartId
+                && cart.RecordId == id);
+
+            int itemCount = 0;
+
+            if (cartItem != null)
+            {
+                if (cartCount > 0)
+                {
+                    cartItem.Count = cartCount;
+                    itemCount = cartItem.Count;
+                }
+                else
+                {
+                    storeDB.Carts.Remove(cartItem);
+                }
+                // Save changes 
+                storeDB.SaveChanges();
+            }
+            return itemCount;
+        }
     }
 }

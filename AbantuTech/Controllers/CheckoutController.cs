@@ -20,6 +20,10 @@ namespace AbantuTech.Controllers
         {
             return View();
         }
+        public ActionResult AddressAndPayment1()
+        {
+            return View();
+        }
 
         //
         // POST: /Checkout/AddressAndPayment
