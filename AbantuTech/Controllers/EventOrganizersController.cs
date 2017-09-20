@@ -48,7 +48,7 @@ namespace AbantuTech.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "eventTeamId,eventId")] EventOrganizers eventOrganizers, int id)
+        public ActionResult Create([Bind(Include = "eventTeamId,teamName,eventId")] EventOrganizers eventOrganizers, int id)
         {
             var @event = db.Events.FirstOrDefault(x => x.Event_ID == id); 
             if (ModelState.IsValid)
@@ -87,7 +87,7 @@ namespace AbantuTech.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "eventTeamId,eventId")] EventOrganizers eventOrganizers)
+        public ActionResult Edit([Bind(Include = "eventTeamId,teamName,eventId")] EventOrganizers eventOrganizers)
         {
             if (ModelState.IsValid)
             {
@@ -181,13 +181,14 @@ namespace AbantuTech.Controllers
             }
             return View();
         }
-        public ActionResult AssignTasks()
+        [HttpGet]
+        public ActionResult AssignTasks(int id)
         {
-            ViewBag.EventRoleId = new SelectList(db.EventTaskRoles, "EventRoleId", "EventRoleName");
-                
             return View();
         }
-        public ActionResult AssignTasks(EventTaskRole roles, int id)
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult AssignTasks(EventOrganizers organizers, EventTaskRole roles, int id)
         {
             var @event = db.Events.FirstOrDefault(x => x.Event_ID == id);
             if (ModelState.IsValid)
@@ -196,10 +197,16 @@ namespace AbantuTech.Controllers
                 if(team!=null)
                 {
                     var member = team.pmember.FirstOrDefault(x => x.eventTeamId == team.eventTeamId);
-                    roles.eventTeamId = team.eventTeamId;
-                    team.eventroles.Add(roles);
+                    if (member != null)
+                    {
+                        roles.eventTeamId = team.eventTeamId;
+                        team.eventroles.Add(roles);
+                        member.role = roles.eventRoleName;
+                        return RedirectToAction("viewTeam", new { id = roles.eventRoleId });
+                    }
                 }
             }
+            return View(roles);
         }
         protected override void Dispose(bool disposing)
         {

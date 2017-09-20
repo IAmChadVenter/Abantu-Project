@@ -1628,6 +1628,8 @@
     <Content Include="Views\EventOrganizers\Index.cshtml" />
     <Content Include="Views\EventOrganizers\getEvents.cshtml" />
     <Content Include="Views\EventOrganizers\programmeMemberList.cshtml" />
+    <Content Include="Views\EventOrganizers\viewTeam.cshtml" />
+    <Content Include="Views\EventOrganizers\AssignTasks.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\Upload\helpticketfiles\" />
