@@ -33,10 +33,7 @@
             @Html.DisplayFor(modelItem => item.Programme.Name)
         </td>
         <td>
-            <div class="btn btn-success add-to-team" data-href="/eventorganizers/AddToTeam/@item.eventTeamId">Add To Team</div>
-        </td>
-        <td>
-            @Html.ActionLink("View Team", "viewTeam", new { id = item.eventTeamId })
+            @Html.ActionLink("Add To Team","AddToTeam", new { id = item.eventTeamId })
         </td>
     </tr>
 }

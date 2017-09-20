@@ -5,7 +5,7 @@
     Layout = "~/Views/Shared/_Layout2.cshtml";
 }
 
-<h2>Index</h2>
+<h2 style="text-align:center;">All event teams currently running</h2>
 
 <p>
     @Html.ActionLink("Create New", "Create")
@@ -13,20 +13,30 @@
 <table class="table">
     <tr>
         <th>
-            @Html.DisplayNameFor(model => model.eventId)
+            @Html.Display("Team Name")
         </th>
+        <th>
+            @Html.Display("Event Name")
+        </th>
+        <th></th>
         <th></th>
     </tr>
 
 @foreach (var item in Model) {
     <tr>
         <td>
-            @Html.DisplayFor(modelItem => item.eventId)
+            @Html.DisplayFor(modelItem => item.teamName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.events.Name)
         </td>
         <td>
             @Html.ActionLink("Edit", "Edit", new { id=item.eventTeamId }) |
             @Html.ActionLink("Details", "Details", new { id=item.eventTeamId }) |
             @Html.ActionLink("Delete", "Delete", new { id=item.eventTeamId })
+        </td>
+        <td>
+            @Html.ActionLink("View Team","viewTeam", new { id=item.eventTeamId })
         </td>
     </tr>
 }

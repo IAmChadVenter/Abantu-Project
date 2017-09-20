@@ -142,41 +142,38 @@ namespace AbantuTech.Controllers
             return View(@event);
         }
         [HttpPost]
-        public JsonResult AddToTeam(int id)
+        [ValidateAntiForgeryToken]
+        public ActionResult AddToTeam(ProgrammeMember member, int id)
         {
-            var @event = db.Events
-                .FirstOrDefault(x => x.Event_ID == id);
-            var progmembers = getProgrammeMembers(@event.Event_ID);
-            if(@event != null && progmembers != null)
+            if (ModelState.IsValid)
             {
-                var member = progmembers.FirstOrDefault(x => x.Programme_ID == @event.Programme_ID);
-                var team = db.Organizers.FirstOrDefault(x => x.eventId == @event.Event_ID);
-                var count = team.pmember.Count();
-                var teammember = team.pmember.FirstOrDefault(x => x.ID == member.ID);
-                if (teammember != null && count == 5) 
+                var team = db.Organizers.FirstOrDefault(x => x.eventTeamId == id);
+                if (team != null)
                 {
-                    return Json(new { message = "Member already in, or team has reached capacity" });
+                    var teammember = team.pmember.FirstOrDefault(x => x.Member_ID == member.Member_ID && x.organizers.eventTeamId == member.eventTeamId);
+                    if (teammember != null)
+                    {
+                        return View(member);
+                    }
+                    else
+                    {
+                        member.eventTeamId = team.eventTeamId;
+                        member.organizers = team;
+                        team.pmember.Add(member);
+                        return RedirectToAction("AssignTasks", new { id = member.eventTeamId });
+                    }
                 }
-                else
-                {
-                    
-                    member.eventTeamId = team.eventTeamId;
-                    member.organizers = team;
-                    team.pmember.Add(member);
-                    db.SaveChanges();
-                }
-                return Json(new { success = true }, JsonRequestBehavior.AllowGet);
             }
-            return Json(new { success = false }, JsonRequestBehavior.AllowGet);
+            return View();
         }
         public ActionResult viewTeam(int id)
         {
-            var team = db.Organizers.Where(x => x.eventTeamId == id);
-            if (team != null)
+            if (ModelState.IsValid)
             {
-                foreach (var t in team)
+                var team = db.Organizers.Include(x => x.events).Include(x => x.pmember).Where(x => x.eventTeamId == id);
+                if (team != null)
                 {
-                    return View(t.pmember.ToList());
+                    return View(team.ToList());
                 }
             }
             return View();
@@ -188,7 +185,7 @@ namespace AbantuTech.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult AssignTasks(EventOrganizers organizers, EventTaskRole roles, int id)
+        public ActionResult AssignTasks(EventTaskRole roles, int id)
         {
             var @event = db.Events.FirstOrDefault(x => x.Event_ID == id);
             if (ModelState.IsValid)
@@ -202,7 +199,7 @@ namespace AbantuTech.Controllers
                         roles.eventTeamId = team.eventTeamId;
                         team.eventroles.Add(roles);
                         member.role = roles.eventRoleName;
-                        return RedirectToAction("viewTeam", new { id = roles.eventRoleId });
+                        return RedirectToAction("viewTeam", new { id = roles.eventTeamId });
                     }
                 }
             }
