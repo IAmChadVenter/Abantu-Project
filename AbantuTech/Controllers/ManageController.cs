@@ -10,8 +10,11 @@ using Abantu_System.Models;
 using Microsoft.AspNet.Identity.EntityFramework;
 using System.Net;
 using System.Data;
-using System.Data.Entity;
-//using SelectPdf;
+using System.Data.Entity;using System.IO;
+using iTextSharp.text;
+using iTextSharp.text.pdf;
+using iTextSharp.tool.xml;
+using iTextSharp.text.html.simpleparser;
 
 namespace AbantuTech.Controllers
 {
@@ -644,36 +647,31 @@ namespace AbantuTech.Controllers
         public ActionResult eventReport(int id)
         {
             var @event = p.Events.FirstOrDefault(p => p.Event_ID == id);
-            if (@event != null)
+            //if (@event != null)
+            //{
+            //    var eventMember = p.EventMembers
+            //        .Include(p => p.AbantuMember)
+            //        .Where(x => x.Event_ID == @event.Event_ID)
+            //        .ToList();
+            //    return View(eventMember);
+            //}
+            return View(@event);
+        }
+        [HttpPost]
+        [ValidateInput(false)]
+        public FileResult Export(string GridHtml)
+        {
+            using (MemoryStream stream = new System.IO.MemoryStream())
             {
-                var eventMember = p.EventMembers
-                    .Include(p => p.AbantuMember)
-                    .Where(x => x.Event_ID == @event.Event_ID)
-                    .ToList();
-                return View(eventMember);
+                StringReader sr = new StringReader(GridHtml);
+                Document pdfDoc = new Document(PageSize.A4, 10f, 10f, 100f, 0f);
+                PdfWriter writer = PdfWriter.GetInstance(pdfDoc, stream);
+                pdfDoc.Open();
+                XMLWorkerHelper.GetInstance().ParseXHtml(writer, pdfDoc, sr);
+                pdfDoc.Close();
+                return File(stream.ToArray(), "application/pdf", "Report.pdf");
             }
-            return View();
-        }        
-        //public ActionResult SubmitAction(int? id)
-        //{
-        //    // instantiate a html to pdf converter object
-        //    HtmlToPdf converter1 = new HtmlToPdf();
-
-        //    var i = HttpContext.Request.UrlReferrer.ToString();
-        //    // create a new pdf document converting an url
-        //    PdfDocument doc1 = converter1.ConvertUrl(i);
-
-        //    // save pdf document
-        //    byte[] pdf = doc1.Save();
-
-        //    // close pdf document
-        //    doc1.Close();
-
-        //    // return resulted pdf document
-        //    FileResult fileResult = new FileContentResult(pdf, "application/pdf");
-        //    fileResult.FileDownloadName = "Document.pdf";
-        //    return fileResult;
-        //}
-
+        }
+        
     }
 }

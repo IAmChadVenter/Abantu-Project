@@ -267,6 +267,8 @@ namespace AbantuTech.Controllers
                         Event_ID = @event.Event_ID,
                         Member_ID = member.Member_ID,
                         email_ = member.Email,
+                        Name = member.FirstName,
+                        LName = member.Surname,
                         AbantuMember = member,
                         Event = @event
 
