@@ -1,0 +1,34 @@
+﻿@model IndexViewModel
+@using Abantu_System.Models;
+@using AbantuTech.Models;
+@using Microsoft.AspNet.Identity;
+@using Microsoft.AspNet.Identity.EntityFramework;
+
+@{
+    ViewBag.Title = "RequestDeact";
+    Layout = "~/Views/Shared/_Layout2.cshtml";
+}
+<h2 style="text-align:center;">Request Deactivation of Profile</h2>
+<hr />
+@using (Html.BeginForm("RequestDeact", "Manage", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+{
+    @Html.AntiForgeryToken()
+    <h4 style="text-align:center;">Request Profile Page Deactivation</h4>
+    <hr />
+    @Html.ValidationSummary("", new { @class = "text-danger" })
+    <p style="text-align:center;"><b>Hi there !! We would much appreciate it, if you would provide a short reason as to why you are requesting such an action</b></p>
+    <br /><br />
+    <div class="form-group">
+        @Html.Label("Deactivation Reason", new { @class = "col-md-2 control-label" })
+        <div class="col-md-10">
+            @Html.HiddenFor(m => m.isProfileActive)
+            @Html.TextBox("DeactReason", null, new { @class = "form-control" })
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="submit" class="btn btn-default" value="Submit Request" />
+
+        </div>
+    </div>
+}

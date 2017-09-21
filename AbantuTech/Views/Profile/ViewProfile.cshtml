@@ -75,8 +75,8 @@
     {
         foreach(var i in eventmember)
         {
-            Event memeberEvent = db.Events.FirstOrDefault(x => x.Event_ID == i.Event_ID);
-            upcomeEvents.Add(memeberEvent);
+            Event memberEvent = db.Events.FirstOrDefault(x => x.Event_ID == i.Event_ID);
+            upcomeEvents.Add(memberEvent);
             //upcomeEvents = db.Events.Where(x => i.Event.Event_ID == x.Event_ID).ToList();
         }
 

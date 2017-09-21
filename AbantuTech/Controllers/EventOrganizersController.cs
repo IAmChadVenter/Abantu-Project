@@ -8,6 +8,8 @@ using System.Web;
 using System.Web.Mvc;
 using AbantuTech.Models;
 using Abantu_System.Models;
+using SendGrid.Helpers.Mail;
+using System.Net.Mail;
 
 namespace AbantuTech.Controllers
 {
@@ -128,13 +130,16 @@ namespace AbantuTech.Controllers
             var @event = db.Events.FirstOrDefault(x => x.Event_ID == id);
             if (@event != null)
             {
-                var pmembers = db.ProgrammeMembers.Include(a => a.Programme).Where(x => x.Programme_ID == @event.Programme_ID).ToList();
+                var pmembers = db.ProgrammeMembers.Include(a => a.Programme).Where(x => x.Programme_ID == @event.Programme_ID && x.role == null).ToList();
                 return pmembers;
             }
             return null;
         }
-        public ActionResult programmeMemberList(Event @event)
+        public ActionResult programmeMemberList(Event @event, TeamMessages message)
         {
+            ViewBag.StatusMessage =
+                message == TeamMessages.TeamMemberLimit ? "Team has reached the limit"
+                : "";
             if(ModelState.IsValid)
             {
                 return View(getProgrammeMembers(@event.Event_ID));
@@ -157,10 +162,18 @@ namespace AbantuTech.Controllers
                     }
                     else
                     {
-                        member.eventTeamId = team.eventTeamId;
-                        member.organizers = team;
-                        team.pmember.Add(member);
-                        return RedirectToAction("AssignTasks", new { id = member.eventTeamId });
+                        if (team.pmember.Count < 5)
+                        {
+                            member.eventTeamId = team.eventTeamId;
+                            member.organizers = team;
+                            team.pmember.Add(member);
+                            return RedirectToAction("AssignTasks", new { id = member.eventTeamId });
+                        }
+                        else
+                        {
+                            return RedirectToAction("programmeMemberList", new { TeamMessages.TeamMemberLimit });
+                        } 
+
                     }
                 }
             }
@@ -191,20 +204,46 @@ namespace AbantuTech.Controllers
             if (ModelState.IsValid)
             {
                 var team = db.Organizers.FirstOrDefault(x => x.eventId == @event.Event_ID);
-                if(team!=null)
+                if (team != null)
                 {
-                    var member = team.pmember.FirstOrDefault(x => x.eventTeamId == team.eventTeamId);
+                    var member = team.pmember.FirstOrDefault(a=>a.eventTeamId==team.eventTeamId && a.role == null);
                     if (member != null)
                     {
                         roles.eventTeamId = team.eventTeamId;
                         team.eventroles.Add(roles);
                         member.role = roles.eventRoleName;
-                        return RedirectToAction("viewTeam", new { id = roles.eventTeamId });
+                        MailMessage message = new MailMessage();
+                        message.From = new MailAddress("abantusystem@gmail.com");
+                        message.To.Add(new MailAddress(member.Member.Email));
+                        message.Subject = "Event Team for " + @event.Name;
+                        message.Body = "You have been chosen to be a part of " + team.teamName + ".<br/><br/>"
+                                    + "It is an event organizing team for the " + @event.Name + " event. <br/><br/>"
+                                    + "You have been assigned the " + member.role + " task, We appreciate your help.";
+
+                        using (var smtp = new SmtpClient())
+                        {
+                            var credential = new NetworkCredential
+                            {
+                                UserName = "abantusystem@gmail.com",  // replace with valid value
+                                Password = "Abantu2017"  // replace with valid value
+                            };
+                            smtp.Credentials = credential;
+                            smtp.Host = "smtp.gmail.com";
+                            smtp.Port = 587;
+                            smtp.EnableSsl = true;
+                            smtp.Send(message);
+                        }
+                        return RedirectToAction("programmeMemberList", new { id = roles.eventTeamId });
+                    }
+                    else
+                    {
+
                     }
                 }
             }
             return View(roles);
         }
+        
         protected override void Dispose(bool disposing)
         {
             if (disposing)
@@ -213,5 +252,12 @@ namespace AbantuTech.Controllers
             }
             base.Dispose(disposing);
         }
+        public enum TeamMessages
+        {
+            TeamMemberLimit,
+            TeamMemberExist,
+            AlreadyHasTask
+        }
+
     }
 }

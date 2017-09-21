@@ -43,6 +43,7 @@
                 @Html.ValidationMessageFor(model => model.Comment, "", new { @class = "text-danger" })
             </div>
         </div>
+        <p>If you wish to include a file in your inquiry, please feel free</p>
         @using (Html.BeginForm("helpFileUpload", "HelpTickets", FormMethod.Post, new { enctype = "multipart/form-data" }))
         {
             <div class="btn btn-default">

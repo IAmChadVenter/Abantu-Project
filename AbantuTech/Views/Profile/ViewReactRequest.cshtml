@@ -1,0 +1,28 @@
+﻿@model Abantu_System.Models.AbantuMember
+
+@{
+    ViewBag.Title = "ViewReactRequest";
+    Layout = "~/Views/Shared/_Layout2.cshtml";
+}
+
+@{
+    var imgUrl = Url.Content("~/Content/images/profile/" + Model.FirstName + "_" + Model.Surname + ".png") + "?time=" + DateTime.Now.ToString();
+}
+<h2 style="text-align:center;">Member profile reactivation request</h2>
+<div class="container">
+    <h2 style="text-align:center;">Request by @Model.FirstName @Model.Surname</h2>
+    <hr />
+    <h3 class="list-group-item-heading">Deactivation request details</h3>
+    <br />
+    <ul class="list-group">
+        <li class="list-group-item"><b></b><img src="@imgUrl" alt="pic_of_@Model.FirstName @Model.Surname" height="250" width="250" /></li>
+        <li class="list-group-item"><b>Full Name :</b> @Model.FirstName @Model.Surname</li>
+    </ul>
+</div>
+@if (Request.IsAuthenticated)
+{
+    <p>
+        @Html.ActionLink("Approve Reactivation", "InitReactivation", new { id = Model.Member_ID }, new { @class = "btn btn-primary" }) |
+        @Html.ActionLink("Back to List", "AllReactivations", null, new { @class = "btn btn-primary" })
+    </p>
+}

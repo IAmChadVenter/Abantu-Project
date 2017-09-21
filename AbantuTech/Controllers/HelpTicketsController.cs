@@ -26,11 +26,22 @@ namespace AbantuTech.Controllers
                     messages == HelpMessages.Error ? "404 An error occurred during your request." :
                     messages == HelpMessages.UnrestrictedError ? "You are either not signed in or not a registered member, use the non-member help support" :
                     "";
+            return View(db.HelpTickets.Include(a => a.Category).Include(x => x.Comments).ToList());
+        }
+        [HttpGet]
+        [Authorize(Roles ="Admin")]
+        public ActionResult viewTicket(int id)
+        {
+            if (ModelState.IsValid)
+            {
+                var ticket = db.HelpTickets.Include(s => s.Category).Include(c=>c.Comment).FirstOrDefault(x => x.TicketId == id);
+                return View(ticket);
+            }
             return View();
         }
-        public ActionResult allTickets()
+        public ActionResult replyToTicket()
         {
-            return View(db.HelpTickets.Include(a => a.Category).Include(x => x.Comments).ToList());
+            return View();
         }
         public ActionResult Details(int? id)
         {

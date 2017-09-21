@@ -1,6 +1,7 @@
 ﻿using Abantu_System.Models;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
@@ -14,7 +15,12 @@ namespace AbantuTech.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Required]
         public int TicketId { get; set; }
+        [Required]
+        [DisplayName("Ticket Creation Date")]
         public DateTime tCreatedOn { get; set; }
+        [Required]
+        
+        [DisplayName("Ticket Creator Username")]
         public string tCreatedBy { get; set; }
         public int? cId { get; set; }
         public string Comment { get; set; }

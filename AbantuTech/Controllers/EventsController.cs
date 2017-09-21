@@ -25,14 +25,6 @@ namespace AbantuTech.Controllers
         private ApplicationDbContext db = new ApplicationDbContext();
         UserManager<ApplicationUser> UserManger = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(new ApplicationDbContext()));
         RoleManager<IdentityRole> roleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(new ApplicationDbContext()));
-        private IEventMethods _events;
-
-        public EventsController():this(new EventImplementation())
-        { }
-        public EventsController(IEventMethods _event)
-        {
-            this._events = _event;
-        }
 
         // GET: Events
         public ActionResult Index()
@@ -340,7 +332,7 @@ namespace AbantuTech.Controllers
             return View(ephoto);
         }
         [HttpPost]
-        public ActionResult PhotoUpload(EventPhoto photo, IEnumerable<HttpPostedFileBase> files)
+        public ActionResult PhotoUpload(EventPhoto photo, IEnumerable<HttpPostedFileBase> files, int id)
         {
             if (!ModelState.IsValid)
                 return View(photo);
@@ -349,7 +341,7 @@ namespace AbantuTech.Controllers
                 ViewBag.Error = "Please select images";
                 return View(photo);
             }
-            var evt = db.Events.FirstOrDefault(x => x.Event_ID == photo.eventid);
+            var evt = db.Events.FirstOrDefault(x => x.Event_ID == id);
             if (evt != null)
             {
                 var model = new EventPhoto();
@@ -357,13 +349,14 @@ namespace AbantuTech.Controllers
                 {
                     if (file.ContentLength == 0) continue;
                     model.Description = photo.Description;
-                    var filename = Guid.NewGuid().ToString();
+                    model.eventid = evt.Event_ID;
+                    var filename = evt.Name + "_" + Guid.NewGuid().ToString();
                     var extension = Path.GetExtension(file.FileName).ToLower();
 
                     using (var img = Image.FromStream(file.InputStream))
                     {
-                        model.ThumbPath = String.Format("/" + evt.Name + "/GalleryImages/thumbs/{0}{1}", filename, extension);
-                        model.ImagePath = String.Format("/" + evt.Name + "/GalleryImages/{0}{1}", filename, extension);
+                        model.ThumbPath = String.Format("~/Content/eventphotos" + evt.Name + "/thumbs/{0}{1}", filename, extension);
+                        model.ImagePath = String.Format("~/Content/eventphotos" + evt.Name + "/{0}{1}", filename, extension);
 
                         SaveToFolder(img, filename, extension, new Size(100, 100), model.ThumbPath);
 
@@ -374,7 +367,7 @@ namespace AbantuTech.Controllers
                     db.SaveChanges();
                 }
             }
-            return RedirectToAction("photoGallery");
+            return RedirectToAction("photoGallery", new { id = evt.Event_ID });
         }
         public Size NewImageSize(Size imageSize, Size newSize)
         {
@@ -400,89 +393,6 @@ namespace AbantuTech.Controllers
             {
                 newImg.Save(Server.MapPath(pathToSave), img.RawFormat);
             }
-        }
-        [HttpGet]
-        public ActionResult EventTeam(int id)
-        {
-            var eo = new EventOrganizers()
-            {
-                eventId = id
-            };
-            return View(eo);
-        }
-        [HttpPost]
-        public async Task<ActionResult> EventTeam(EventOrganizers org, int id)
-        {
-            if (ModelState.IsValid)
-            {
-                var @event = await db.Events.FirstOrDefaultAsync(x => x.Event_ID == id);
-                if (@event != null)
-                {
-                    var team = _events.getTeam(org.eventTeamId);
-                    return View(team);
-                }
-                else
-                {
-                    var eo = new EventOrganizers
-                    {
-                        eventId = @event.Event_ID
-                    };
-                    return View(eo);
-                }
-            }
-            return View();
-        }
-        [HttpPost]
-        public ActionResult getProgrammeMembers(int id)
-        {
-            if (ModelState.IsValid)
-            {
-                var pm = _events.getPMembers(id);
-                if (pm != null)
-                {
-                    foreach (var p in pm)
-                    {
-                        List<ProgrammeMember> pmem = new List<ProgrammeMember>();
-                        pmem.Add(p);
-                        return View(pmem.ToList());
-                    }
-                }
-            }
-            return View();
-        }
-        public ActionResult addToEventTeam(ProgrammeMember member)
-        {
-            var organizer = db.Organizers.FirstOrDefault(x => x.eventTeamId == member.organizers.eventTeamId);
-            var members = getProgrammeMembers(organizer.eventId);
-            if(members!=null)
-            {
-                _events.addToTeam(organizer);
-            }
-            return RedirectToAction("AssignTask", new { id = member.eventTeamId });
-        }
-        public ActionResult AssignTask(int? id)
-        {
-            var member = db.Organizers.Include(c=>c.pmember).FirstOrDefault(x=>x.eventTeamId==id);
-            if(member==null)
-            {
-                return HttpNotFound();
-            }
-            return View(member);
-        }
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult AssignTask(EventOrganizers organizer, int id)
-        {
-            if (ModelState.IsValid)
-            {
-                _events.assignTask(organizer, id);
-                RedirectToAction("EventTeam", new { id = organizer.eventTeamId });
-            }
-            else
-            {
-                return View(organizer);
-            }
-            return View();
         }
         public JsonResult AttendanceConfirmed(int id)
         {
