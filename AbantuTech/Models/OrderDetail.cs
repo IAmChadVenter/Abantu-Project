@@ -15,5 +15,6 @@ namespace AbantuTech.Models
         public virtual Album Album { get; set; }
         public virtual Order Order { get; set; }
         public bool isSent { get; set; }
+        public bool iscollected { get; set; }
     }
 }

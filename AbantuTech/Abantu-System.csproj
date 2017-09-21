@@ -1633,6 +1633,8 @@
     <Content Include="Views\Newsletters\UnSubedNull.cshtml" />
     <Content Include="Views\Newsletters\sentConfirm.cshtml" />
     <Content Include="Views\ShoppingCart\CartSummary.cshtml" />
+    <Content Include="Views\Store\Collect.cshtml" />
+    <Content Include="Views\Store\collecEdit.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

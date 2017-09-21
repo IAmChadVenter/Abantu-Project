@@ -21,7 +21,30 @@ namespace AbantuTech.Controllers
 
             return View(genres);
         }
+        public ActionResult Collect()
+        {
+            return View();
+        }
+        public ActionResult collecEdit(int id)
+        {
+            OrderDetail op = storeDB.OrderDetails.Find(id);
+            return View(op);
+        }
+        [HttpPost]
+        public ActionResult collecEdit([Bind(Include = "OrderId, AlbumId, Quantity, UnitPrice, isSent, iscollected")] OrderDetail or, int id)
+        {
+            if (ModelState.IsValid)
+            {
+                OrderDetail album = storeDB.OrderDetails.Find(id);
+                storeDB.OrderDetails.Remove(album);
+                storeDB.SaveChanges();
 
+                storeDB.OrderDetails.Add(or);
+                storeDB.SaveChanges();
+                return RedirectToAction("Collect");
+            }
+            return View(or);
+        }
         //
         // GET: /Store/Browse?genre=Disco
 

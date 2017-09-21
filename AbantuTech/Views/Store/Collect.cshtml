@@ -1,0 +1,40 @@
+﻿@model  AbantuTech.Models.OrderDetail
+@using AbantuTech.Models;
+
+@{
+    ViewBag.Title = "Order Details ";
+    Layout = "~/Views/Shared/_Layout3.cshtml";
+    ApplicationDbContext db = new ApplicationDbContext();
+}
+
+
+<h2>Order Details </h2>
+@{
+    var genres = db.Orders.FirstOrDefault(p => p.Username == this.User.Identity.Name);
+    var l = db.OrderDetails.Where(q => q.OrderId == genres.OrderId);
+    
+}
+@foreach (var i in l)
+{
+    <table width="50%">
+        <tr>
+            <th>Order Id</th>
+            <th>Order ready for collection</th>
+            <th>Collected Order</th>
+        </tr>
+        <tr>
+            <td>@i.OrderId</td>
+            <td>@i.isSent</td>
+            <td>@i.iscollected</td>
+
+        </tr>
+    </table>
+    <br />
+            @Html.ActionLink("Confirm Collection", "collecEdit", new { id = i.OrderDetailId })
+    
+}
+<br />
+<br />
+<br />
+<br />
+<br />

@@ -229,7 +229,7 @@ namespace AbantuTech.Controllers
             return View(op);
         }
         [HttpPost]
-        public ActionResult detsEdit([Bind(Include = "OrderId, AlbumId, Quantity, UnitPrice, isSent")] OrderDetail or, int id)
+        public ActionResult detsEdit([Bind(Include = "OrderId, AlbumId, Quantity, UnitPrice, isSent, iscollected")] OrderDetail or, int id)
         {
             if (ModelState.IsValid)
             {
