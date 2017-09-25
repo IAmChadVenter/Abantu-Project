@@ -7,6 +7,7 @@ using System.Data.Entity;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Net.Mail;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Hosting;
@@ -26,23 +27,76 @@ namespace AbantuTech.Controllers
                     messages == HelpMessages.Error ? "404 An error occurred during your request." :
                     messages == HelpMessages.UnrestrictedError ? "You are either not signed in or not a registered member, use the non-member help support" :
                     "";
-            return View(db.HelpTickets.Include(a => a.Category).Include(x => x.Comments).ToList());
+            return View(db.HelpTickets.Include(a => a.Category).ToList());
         }
         [HttpGet]
-        [Authorize(Roles ="Admin")]
+        [AllowAnonymous]
         public ActionResult viewTicket(int id)
         {
             if (ModelState.IsValid)
             {
-                var ticket = db.HelpTickets.Include(s => s.Category).Include(c=>c.Comment).FirstOrDefault(x => x.TicketId == id);
+                TempData["Message"] = "Your helpdesk inquiry has been submitted, a response will be email to you shortly";
+                var ticket = db.HelpTickets.Include(s => s.Category).FirstOrDefault(x => x.TicketId == id);
+                if(ticket == null)
+                {
+                    return HttpNotFound();
+                }
                 return View(ticket);
             }
             return View();
         }
-        public ActionResult replyToTicket()
+        public FileResult downloadTicketFile(HelpTicket ticket, string fileExt)
         {
+                var filePath = "~/App_Data/Upload/helpticketfiles/" + ticket.tCreatedOn + "/" + ticket.tCreatedBy;
+  
+                byte[] fileBytes = System.IO.File.ReadAllBytes(filePath);
+            
+                string fileName = "HelpDeskTicket_" + ticket.tCreatedBy + ".pdf";
+
+                return File(fileBytes, System.Net.Mime.MediaTypeNames.Application.Octet, fileName);
+        }
+        [HttpGet]
+        [Authorize(Roles = "Admin")]
+        public ActionResult replyToTicket(int id, string reply)
+        {
+            if (ModelState.IsValid)
+            {
+                var ticket = db.HelpTickets.Include(c => c.Category).FirstOrDefault(x => x.TicketId == id);
+                if (ticket != null)
+                {
+                    ticket.AdminResponse = reply;
+                    try
+                    {
+                        MailMessage message = new MailMessage();
+                        message.From = new MailAddress("inquiries.abantu@gmail.com");
+                        message.To.Add(new MailAddress(ticket.Members.Email));
+                        message.Subject = "Help desk support for your inquiry";
+                        message.Body = reply;
+
+                        using (var smtp = new SmtpClient())
+                        {
+                            var credential = new NetworkCredential
+                            {
+                                UserName = "abantusystem@gmail.com",  // replace with valid value
+                                Password = "Abantu2017"  // replace with valid value
+                            };
+                            smtp.Credentials = credential;
+                            smtp.Host = "smtp.gmail.com";
+                            smtp.Port = 587;
+                            smtp.EnableSsl = true;
+                            smtp.Send(message);
+
+                        }
+                    }
+                    catch(Exception ex)
+                    {
+                        Console.WriteLine(ex.Message);
+                    }
+                    }
+            }
             return View();
         }
+
         public ActionResult Details(int? id)
         {
             if (id == null)
@@ -70,7 +124,7 @@ namespace AbantuTech.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "TicketId,Comment,tCreatedOn")] HelpTicket helpTicket, HttpPostedFileBase file, string comment)
+        public ActionResult Create([Bind(Include = "TicketId,Comment,tCreatedOn,tCreatedBy")] HelpTicket helpTicket, HttpPostedFileBase file, string comment)
         {
             if (!ModelState.IsValid)
             {
@@ -88,32 +142,24 @@ namespace AbantuTech.Controllers
                     db.HelpTickets.Add(helpTicket);
                     member.Tickets.Add(helpTicket);
                     comment = helpTicket.Comment;
-                    var com = new TicketComment
-                    {
-                        Comment = comment,
-                        HelpTicket = helpTicket,
-                        tId = helpTicket.TicketId
-                    };
-                    helpTicket.Comments.Add(com);
-                    if (file != null && file.ContentLength > 0)
-                    {
-                        helpFileUpload(file, member.Email, helpTicket, helpTicket.tCreatedOn);
-                    }
                 }
                 db.SaveChanges();
                 ViewBag.cID = new SelectList(db.HelpCategories, "cID", "cName");
-                return RedirectToAction("Index", new { helpTicket.TicketId, HelpMessages.TicketSuccess });
+                return RedirectToAction("viewTicket", new { helpTicket.TicketId, HelpMessages.TicketSuccess });
             }
             return RedirectToAction("Index", new { HelpMessages.Error });
         }
-        public ActionResult helpFileUpload(HttpPostedFileBase file, string email, HelpTicket ticket, DateTime created)
+        [HttpGet]
+        public ActionResult helpFileUpload()
         {
-            email = User.Identity.Name;
-            var fname = Path.GetFileName(file.FileName) + email;
-
+            return View();
+        }
+        [HttpPost]
+        public ActionResult helpFileUpload(HttpPostedFileBase file, HelpTicket ticket)
+        {
             if (ModelState.IsValid)
             {
-                if (email != null)
+                if (ticket.tCreatedBy != null)
                 {
 
                     if (file != null && file.ContentLength > 0)
@@ -121,8 +167,8 @@ namespace AbantuTech.Controllers
                         var fileExt = Path.GetExtension(file.FileName);
                         if (fileExt.ToLower().EndsWith(".pdf"))
                         {
-                            var filePath = HostingEnvironment.MapPath("~/App_Data/Upload/helpticketfiles/" + email + "/" + created + ".pdf");
-                            var directory = new DirectoryInfo(HostingEnvironment.MapPath("~/App_Data/Upload/helpticketfiles/" + email));
+                            var filePath = HostingEnvironment.MapPath("~/App_Data/Upload/helpticketfiles/" + ticket.tCreatedOn.Date + "/" + ticket.tCreatedBy + ".pdf");
+                            var directory = new DirectoryInfo(HostingEnvironment.MapPath("~/App_Data/Upload/helpticketfiles/" + ticket.tCreatedOn.Date));
                             if (directory.Exists == false)
                             {
                                 directory.Create();
@@ -133,8 +179,8 @@ namespace AbantuTech.Controllers
                         }
                         else if (fileExt.ToLower().EndsWith(".jpg") || fileExt.ToLower().EndsWith(".png") || fileExt.ToLower().EndsWith(".gif"))
                         {
-                            var filePath = HostingEnvironment.MapPath("~/App_Data/Upload/helpticketfiles/" + email + "/" + created + ".png");
-                            var directory = new DirectoryInfo(HostingEnvironment.MapPath("~/App_Data/Upload/helpticketfiles/" + email));
+                            var filePath = HostingEnvironment.MapPath("~/App_Data/Upload/helpticketfiles/" + ticket.tCreatedOn.Date + "/" + ticket.tCreatedBy + ".png");
+                            var directory = new DirectoryInfo(HostingEnvironment.MapPath("~/App_Data/Upload/helpticketfiles/" + ticket.tCreatedOn.Date));
                             if (directory.Exists == false)
                             {
                                 directory.Create();

@@ -1,0 +1,33 @@
+﻿@model AbantuTech.Models.HelpTicket
+
+@{
+    ViewBag.Title = "helpFileUpload";
+    Layout = "~/Views/Shared/_Layout2.cshtml";
+}
+
+<h2 style="text-align:center;">Helpticket File upload</h2>
+<hr />
+
+    <p>
+        There are many reasons why a member may need to provide a file, as it can give the admin a better understanding of the inquiry. 
+        
+        For example, if a member has purchased an item from the online shopping cart and has not recieved it in the specified time of arrival, they can then provide
+        a proof of payment to increase the integrity of the inquiry. 
+
+        If you as the member have any file that you feel is important in relation to your help desk inquiry, please feel free to upload it, so that the admin may 
+        view and give a far more knowledgeable response.
+    </p>
+
+<div class="form-horizontal">
+
+    <div style="width:25%; margin:0 auto;">
+        <div class="btn btn-default">
+            <input type="file" name="file" id="files" onchange="this.form.submit()" multiple />
+        </div>
+    </div>
+
+</div>
+
+
+
+

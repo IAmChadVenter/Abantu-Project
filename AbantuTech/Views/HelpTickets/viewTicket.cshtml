@@ -1,0 +1,32 @@
+﻿@model AbantuTech.Models.HelpTicket
+
+@{
+    ViewBag.Title = "viewTicket";
+    Layout = "~/Views/Shared/_Layout2.cshtml";
+}
+<div class="container">
+    @{
+        if (TempData["Message"] != null)
+        {
+            <div class="alert alert-success">@TempData["Message"]</div>
+        }
+    }
+    <style>
+        img {
+            display: block;
+            margin: auto;
+        }
+    </style>
+    <img src="~/Content/Template/images/5.jpg" height="110" width="110" />
+    <h1><p align="center">View Inquiry Ticket</p></h1>
+    <h2>Inquiry Ticket by @Model.Members.Email</h2>
+    <hr />
+    <h3 class="list-group-item-heading">Applicant Personal Details</h3>
+    <br />
+    <ul class="list-group">
+        <li class="list-group-item"><b>Full Name :</b> @Model.Members.FirstName @Model.Members.Surname</li>
+        <li class="list-group-item"><b>Inquiry Creation Date :</b> @Model.tCreatedOn.ToLongDateString()</li>
+        <li class="list-group-item"><b>Inquiry Comment :</b> @Model.Comment</li>
+    </ul>
+    <br />
+</div>

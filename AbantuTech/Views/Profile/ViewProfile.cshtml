@@ -212,20 +212,23 @@
                                 {
                                     var daysLeft = (events.start_date - DateTime.Today).Days;
                                     var duration = (events.end_date.Hour - events.start_date.Hour);
-                                    <tr>
-                                        <td>
-                                            @events.Name
-                                        </td>
-                                        <td>
-                                            @events.start_date.ToLongDateString()
-                                        </td>
-                                        <td>
-                                            @events.end_date.ToLongDateString()
-                                        </td>
-                                        <td>
-                                            @daysLeft days left
-                                        </td>
-                                    </tr>
+                                    if (daysLeft >= 0)
+                                    {
+                                        <tr>
+                                            <td>
+                                                @events.Name
+                                            </td>
+                                            <td>
+                                                @events.start_date.ToLongDateString()
+                                            </td>
+                                            <td>
+                                                @events.end_date.ToLongDateString()
+                                            </td>
+                                            <td>
+                                                @daysLeft days left
+                                            </td>
+                                        </tr>
+                                    }
                                 }
                             }
                         </table>
