@@ -1,4 +1,5 @@
 ﻿@model AbantuTech.Models.PagedList<AbantuTech.Models.EventPhoto>
+    @using AbantuTech.Models;
 
     @{
         ViewBag.Title = "photoGallery";
@@ -7,7 +8,7 @@
 
     <h2>Image Gallery </h2>
 
-    @using (Html.BeginForm("photoGallery", null, FormMethod.Get))
+    @using (Html.BeginForm("photoGallery", "Events", FormMethod.Get))
     {
         <div class="row">
             <div class="col-sm-8">

@@ -308,7 +308,7 @@ namespace AbantuTech.Controllers
                 ViewBag.filter = filter;
 
                 records.Content = db.Photos
-                            .Where(x => filter == null || (x.Description.Contains(filter)))
+                            .Where(x => filter == null || (x.Description.Contains(filter)) && x.eventid == @event.Event_ID)
                             .OrderByDescending(x => x.PhotoId)
                             .Skip((page - 1) * pageSize)
                             .Take(pageSize)
@@ -345,12 +345,14 @@ namespace AbantuTech.Controllers
             if (evt != null)
             {
                 var model = new EventPhoto();
+                var count = 0;
                 foreach (var file in files)
                 {
+                    count++;
                     if (file.ContentLength == 0) continue;
                     model.Description = photo.Description;
                     model.eventid = evt.Event_ID;
-                    var filename = evt.Name + "_" + Guid.NewGuid().ToString();
+                    var filename = evt.Name + " photo #" + count;
                     var extension = Path.GetExtension(file.FileName).ToLower();
 
                     using (var img = Image.FromStream(file.InputStream))

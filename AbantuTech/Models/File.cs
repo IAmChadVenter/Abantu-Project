@@ -8,7 +8,9 @@ namespace AbantuTech.Models
 {
     public enum FileType
     {
-        Pdf
+        Pdf,
+        Png,
+        Txt
     }
     public class File
     {
@@ -17,6 +19,8 @@ namespace AbantuTech.Models
         public string FileName { get; set; }
         public FileType FileType { get; set; }
         public byte[] Content { get; set; }
+        public int? helpID { get; set; }
+        public HelpTicket HelpTicket { get; set; }
     }
     public class ApplicationForm
     {

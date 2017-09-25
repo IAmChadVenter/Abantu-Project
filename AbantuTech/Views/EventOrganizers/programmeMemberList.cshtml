@@ -14,7 +14,7 @@
             @Html.DisplayNameFor(model => model.Member.Surname)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.organizers.eventTeamId)
+            @Html.DisplayNameFor(model => model.Member.FirstName)
         </th>
         <th>
             @Html.DisplayNameFor(model => model.Programme.Name)
@@ -28,14 +28,17 @@
             @Html.DisplayFor(modelItem => item.Member.Surname)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.organizers.eventTeamId)
+            @Html.DisplayFor(modelItem => item.Member.FirstName)
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.Programme.Name)
         </td>
+        @if (item.organizers.pmember.FirstOrDefault(x => x.Member.FirstName == item.Member.FirstName) != null)
+        {
         <td>
-            @Html.ActionLink("Add To Team","AddToTeam", new { id = item.eventTeamId })
+            @Html.ActionLink("Add To Team", "AddToTeam", new { id = item.eventTeamId })
         </td>
+        }
     </tr>
 }
 </table>

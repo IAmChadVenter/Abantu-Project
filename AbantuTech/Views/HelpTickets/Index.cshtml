@@ -13,19 +13,17 @@
 <table class="table">
     <tr>
         <th>
+            @Html.DisplayNameFor(model => model.tCreatedBy)
+        </th>
+        <th>
             @Html.DisplayNameFor(model => model.Category.cName)
         </th>
         <th>
             @Html.DisplayNameFor(model => model.tCreatedOn)
         </th>
-        <th>
-            @Html.DisplayNameFor(model => model.tCreatedBy)
-        </th>
+        
         <th>
             @Html.DisplayNameFor(model => model.Comment)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.memberId)
         </th>
         <th></th>
     </tr>
@@ -33,19 +31,16 @@
 @foreach (var item in Model) {
     <tr>
         <td>
+            @Html.DisplayFor(modelItem => item.tCreatedBy)
+        </td>
+        <td>
             @Html.DisplayFor(modelItem => item.Category.cName)
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.tCreatedOn)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.tCreatedBy)
-        </td>
-        <td>
             @Html.DisplayFor(modelItem => item.Comment)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.memberId)
         </td>
         <td>
             @Html.ActionLink("Edit", "Edit", new { id=item.TicketId }) |
@@ -56,6 +51,7 @@
 }
 
 </table>
-<div class="list-group">
 
-</div>
+<h3 style="text-align:center;">Frequently Asked Questions</h3>
+<hr />
+

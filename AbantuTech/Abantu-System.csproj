@@ -1635,7 +1635,6 @@
     <Content Include="Views\Profile\AllReactivations.cshtml" />
     <Content Include="Views\Profile\ViewDeactRequest.cshtml" />
     <Content Include="Views\Profile\ViewReactRequest.cshtml" />
-    <Content Include="Views\HelpTickets\helpFileUpload.cshtml" />
     <Content Include="Views\HelpTickets\viewTicket.cshtml" />
   </ItemGroup>
   <ItemGroup>

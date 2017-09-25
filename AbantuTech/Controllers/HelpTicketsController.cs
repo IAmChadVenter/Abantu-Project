@@ -31,10 +31,14 @@ namespace AbantuTech.Controllers
         }
         [HttpGet]
         [AllowAnonymous]
-        public ActionResult viewTicket(int id)
+        public ActionResult viewTicket(int id, FileMessages ? fmessages)
         {
             if (ModelState.IsValid)
             {
+                ViewBag.FileMessage = fmessages == FileMessages.FileUploadSuccess ? "File has successfully been included" :
+                fmessages == FileMessages.FileUploadFailure ? "File has failed to be included" :
+                fmessages == FileMessages.FileError ? "An error occurred while uploading file, try again later" :
+                "";
                 TempData["Message"] = "Your helpdesk inquiry has been submitted, a response will be email to you shortly";
                 var ticket = db.HelpTickets.Include(s => s.Category).FirstOrDefault(x => x.TicketId == id);
                 if(ticket == null)
@@ -45,17 +49,18 @@ namespace AbantuTech.Controllers
             }
             return View();
         }
-        public FileResult downloadTicketFile(HelpTicket ticket, string fileExt)
-        {
-                var filePath = "~/App_Data/Upload/helpticketfiles/" + ticket.tCreatedOn + "/" + ticket.tCreatedBy;
-  
-                byte[] fileBytes = System.IO.File.ReadAllBytes(filePath);
-            
-                string fileName = "HelpDeskTicket_" + ticket.tCreatedBy + ".pdf";
-
-                return File(fileBytes, System.Net.Mime.MediaTypeNames.Application.Octet, fileName);
-        }
         [HttpGet]
+        [Authorize(Roles ="Admin")]
+        public FileResult downloadTicketFile(int? id)
+        {
+            HelpTicket ticket = db.HelpTickets.Find(id);
+            Models.File file = db.Files.FirstOrDefault(x=>x.helpID == ticket.TicketId);
+            string fileName = file.FileName;
+            string fileType = file.FileType.ToString();
+            byte[] contents = file.Content;
+            return File(contents, System.Net.Mime.MediaTypeNames.Application.Octet, fileName);
+        }
+        [HttpPost]
         [Authorize(Roles = "Admin")]
         public ActionResult replyToTicket(int id, string reply)
         {
@@ -65,6 +70,7 @@ namespace AbantuTech.Controllers
                 if (ticket != null)
                 {
                     ticket.AdminResponse = reply;
+                    ticket.hasResponse = true;
                     try
                     {
                         MailMessage message = new MailMessage();
@@ -87,12 +93,13 @@ namespace AbantuTech.Controllers
                             smtp.Send(message);
 
                         }
+                        return RedirectToAction("Index", new { id = ticket.TicketId });
                     }
                     catch(Exception ex)
                     {
                         Console.WriteLine(ex.Message);
                     }
-                    }
+                }
             }
             return View();
         }
@@ -116,10 +123,6 @@ namespace AbantuTech.Controllers
 
             HelpTicket ticket = new HelpTicket();
             ViewBag.cID = new SelectList(db.HelpCategories, "cID", "cName");
-            ViewBag.FileMessage = fmessages == FileMessages.FileUploadSuccess ? "File has successfully been included" :
-                fmessages == FileMessages.FileUploadFailure ? "File has failed to be included" :
-                fmessages == FileMessages.FileError ? "An error occurred while uploading file, try again later" :
-                "";
             return View(ticket);
         }
         [HttpPost]
@@ -149,11 +152,6 @@ namespace AbantuTech.Controllers
             }
             return RedirectToAction("Index", new { HelpMessages.Error });
         }
-        [HttpGet]
-        public ActionResult helpFileUpload()
-        {
-            return View();
-        }
         [HttpPost]
         public ActionResult helpFileUpload(HttpPostedFileBase file, HelpTicket ticket)
         {
@@ -167,37 +165,61 @@ namespace AbantuTech.Controllers
                         var fileExt = Path.GetExtension(file.FileName);
                         if (fileExt.ToLower().EndsWith(".pdf"))
                         {
-                            var filePath = HostingEnvironment.MapPath("~/App_Data/Upload/helpticketfiles/" + ticket.tCreatedOn.Date + "/" + ticket.tCreatedBy + ".pdf");
-                            var directory = new DirectoryInfo(HostingEnvironment.MapPath("~/App_Data/Upload/helpticketfiles/" + ticket.tCreatedOn.Date));
-                            if (directory.Exists == false)
-                            {
-                                directory.Create();
-                            }
-                            ViewBag.FilePath = filePath.ToString();
-                            file.SaveAs(filePath);
-                            return RedirectToAction("Create", new { FileMessages.FileUploadSuccess });
-                        }
+                             Models.File newFile = new Models.File
+                             {
+                                 FileName = "Helpticket file uploaded by " + ticket.tCreatedBy,
+                                 FileType = FileType.Pdf
+                             };
+                             using (var reader = new System.IO.BinaryReader(file.InputStream))
+                             {
+                                 newFile.Content = reader.ReadBytes(file.ContentLength);
+                             }
+                             newFile.helpID = ticket.TicketId;
+                             db.Files.Add(newFile);
+                             db.SaveChanges();
+                            return RedirectToAction("viewTicket", new { FileMessages.FileUploadSuccess });
+                         }
                         else if (fileExt.ToLower().EndsWith(".jpg") || fileExt.ToLower().EndsWith(".png") || fileExt.ToLower().EndsWith(".gif"))
                         {
-                            var filePath = HostingEnvironment.MapPath("~/App_Data/Upload/helpticketfiles/" + ticket.tCreatedOn.Date + "/" + ticket.tCreatedBy + ".png");
-                            var directory = new DirectoryInfo(HostingEnvironment.MapPath("~/App_Data/Upload/helpticketfiles/" + ticket.tCreatedOn.Date));
-                            if (directory.Exists == false)
+                            Models.File newFile = new Models.File
                             {
-                                directory.Create();
+                                FileName = "Helpticket file uploaded by " + ticket.tCreatedBy,
+                                FileType = FileType.Png
+                            };
+                            using (var reader = new System.IO.BinaryReader(file.InputStream))
+                            {
+                                newFile.Content = reader.ReadBytes(file.ContentLength);
                             }
-                            ViewBag.FilePath = filePath.ToString();
-                            file.SaveAs(filePath);
-                            return RedirectToAction("Create", new { FileMessages.FileUploadSuccess });
+                            newFile.helpID = ticket.TicketId;
+                            db.Files.Add(newFile);
+                            db.SaveChanges();
+                            return RedirectToAction("viewTicket", new { FileMessages.FileUploadSuccess });
+                        }
+                        else if(fileExt.ToLower().EndsWith(".docx") || fileExt.ToLower().EndsWith(".txt"))
+                        {
+                            Models.File newFile = new Models.File
+                            {
+                                FileName = "Helpticket file uploaded by " + ticket.tCreatedBy,
+                                FileType = FileType.Txt
+                            };
+                            using (var reader = new System.IO.BinaryReader(file.InputStream))
+                            {
+                                newFile.Content = reader.ReadBytes(file.ContentLength);
+                            }
+                            newFile.helpID = ticket.TicketId;
+                            db.Files.Add(newFile);
+                            db.SaveChanges();
+                            return RedirectToAction("viewTicket", new { FileMessages.FileUploadSuccess });
                         }
                         else
                         {
-                            return RedirectToAction("Create", new { FileMessages.FileUploadFailure });
+                            return RedirectToAction("viewTicket", new { FileMessages.FileUploadFailure });
                         }
                     }
                     
                 }
             }
-            return RedirectToAction("Create", new { FileMessages.FileError });
+            return RedirectToAction("viewTicket", new { FileMessages.FileError });
         }
         public ActionResult Edit(int? id)
         {

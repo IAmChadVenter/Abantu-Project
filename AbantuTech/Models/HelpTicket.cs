@@ -25,6 +25,7 @@ namespace AbantuTech.Models
         public int? cId { get; set; }
         public string Comment { get; set; }
         public string AdminResponse { get; set; }
+        public bool hasResponse { get; set; }
         public HelpCategory Category { get; set; }
         public int? memberId { get; set; }
         public AbantuMember Members { get; set; }
