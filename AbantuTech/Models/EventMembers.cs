@@ -16,8 +16,12 @@ namespace AbantuTech.Models
         public int Event_ID { get; set; }
         public bool attendanceConfirmed { get; set; }
         public DateTime arrivalTime { get; set; }
+        public bool hasRated { get; set; }
         public Event Event { get; set; }
         public int Member_ID { get; set; }
         public AbantuMember AbantuMember { get; set; }
+        public int RatingID { get; set; }
+        public EventRatings EventRatings { get; set; }
+
     }
 }

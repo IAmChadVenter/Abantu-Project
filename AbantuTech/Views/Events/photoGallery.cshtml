@@ -24,11 +24,14 @@
                     </span>
                 </div>
             </div>
-            <div class="pull-right col-lg-1">
-                <a class="btn btn-success" data-modal="" href="/Events/PhotoUpload" id="btnCreate">
-                    <span class="glyphicon glyphicon-plus"></span>
-                </a>
-            </div>
+            @if (User.IsInRole("Admin"))
+            {
+                <div class="pull-right col-lg-1">
+                    <a class="btn btn-success" data-modal="" href="~/Events/PhotoUpload" id="btnCreate">
+                        <span class="glyphicon glyphicon-plus"></span>
+                    </a>
+                </div>
+            }
         </div>
 
 

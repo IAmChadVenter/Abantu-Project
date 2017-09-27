@@ -67,5 +67,6 @@ namespace AbantuTech.Models
         public DbSet<HelpTicket> HelpTickets { get; set; }
         public DbSet<HelpCategory> HelpCategories { get; set; }
         public DbSet<EventTaskRole> EventTaskRoles { get; set; }
+        public DbSet<EventRatings> EventRatings { get; set; }
     }
 }

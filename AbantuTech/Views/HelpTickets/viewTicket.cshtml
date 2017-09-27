@@ -1,8 +1,16 @@
 ﻿@model AbantuTech.Models.HelpTicket
-
+@using AbantuTech.Models;
+@using Abantu_System.Models;
+@using Microsoft.AspNet.Identity;
+@using Microsoft.AspNet.Identity.EntityFramework;
+@using System.Data.Entity;
+@using System.Linq;
 @{
     ViewBag.Title = "viewTicket";
     Layout = "~/Views/Shared/_Layout2.cshtml";
+    ApplicationDbContext db = new ApplicationDbContext();
+    var file = db.Files.FirstOrDefault(x => x.helpID == Model.TicketId);
+    
 }
 <div class="container">
     @{
@@ -28,7 +36,14 @@
         <li class="list-group-item"><b>Inquiry Creation Date :</b> @Model.tCreatedOn.ToLongDateString()</li>
         <li class="list-group-item"><b>Inquiry Category: </b> @Model.Category.cName</li>
         <li class="list-group-item"><b>Inquiry Comment :</b> @Model.Comment</li>
-        <li class="list-group-item"><b>File upload confirmation: </b><p class="text-success">@ViewBag.FileMessage</p></li>
+        @if (file != null)
+        {
+            <li class="list-group-item"><b>File name: </b> @file.FileName</li>
+        }
+        else
+        {
+            <li class="list-group-item"><b>File name: </b> File not uploaded</li>
+        }
     </ul>
     <br />
     @if (User.Identity.Name == Model.Members.Email)
