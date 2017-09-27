@@ -11,7 +11,7 @@
 <script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
 <script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
 
-@using (Html.BeginForm()) {
+@using (Html.BeginForm("Create", "StoreManager", FormMethod.Post,new { enctype = "multipart/form-data" })) {
     @Html.ValidationSummary(true)
     <fieldset>
         <legend>Album</legend>
@@ -48,14 +48,12 @@
             @Html.ValidationMessageFor(model => model.Price)
         </div>
 
-        <div class="editor-label">
-            @Html.LabelFor(model => model.AlbumArtUrl, "Item Image Url")
-        </div>
-        <div class="editor-field">
-            <input class="text-box single-line" data-val="true" data-val-length="The field Item Art URL must be a string with a maximum length of 1024." data-val-length-max="1024" id="AlbumArtUrl" name="AlbumArtUrl" type="text" value="/Content/images/Store/">
-            @Html.ValidationMessageFor(model => model.AlbumArtUrl)
-        </div>
         <br />
+        <div class="form-group">
+            <div class="editor-field">
+                <input type="file" name="productImg" />
+            </div>
+        </div>
         <p>
             <input type="submit" value="Create" />
         </p>

@@ -75,10 +75,20 @@ namespace AbantuTech.Controllers
         // POST: /StoreManager/Create
 
         [HttpPost]
-        public ActionResult Create(Album album)
+        public ActionResult Create(Album album, HttpPostedFileBase productImg)
         {
             if (ModelState.IsValid)
             {
+                if (productImg != null)
+                {
+                    var fileName = Path.GetFileName(productImg.FileName);
+                    var directoryToSave = Server.MapPath(Url.Content("~/Content/images/Store"));
+
+                    var pathToSave = Path.Combine(directoryToSave, fileName);
+                    productImg.SaveAs(pathToSave);
+                    album.AlbumArtUrl = "/Content/images/Store/" + fileName;
+                }
+
                 db.Albums.Add(album);
                 db.SaveChanges();
                 return RedirectToAction("Index");
