@@ -11,7 +11,7 @@
     string currentUser = this.User.Identity.Name;
     ApplicationUser cu = db.Users.FirstOrDefault(x=>x.UserName == currentUser);
 
-    var e = db.Orders.LastOrDefault(x => x.Username == currentUser);
+    var e = db.Orders.FirstOrDefault(x => x.Username == currentUser);
 }
 
 <style>
