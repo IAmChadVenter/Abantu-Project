@@ -1653,7 +1653,6 @@
     <Content Include="Views\Manage\VolunteerMenu.cshtml" />
     <Content Include="Views\HelpDesk\EditTicketView.cshtml" />
     <Content Include="Views\HelpDesk\CreateTicket.cshtml" />
-    <Content Include="Views\Events\PastEvents.cshtml" />
     <Content Include="Views\Events\photoGallery.cshtml" />
     <Content Include="Views\Checkout\AddressAndPayment.cshtml" />
     <Content Include="Views\Checkout\Complete.cshtml" />

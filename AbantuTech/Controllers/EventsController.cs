@@ -17,6 +17,7 @@ using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity;
 using Microsoft.Ajax.Utilities;
 using AbantuTech.Helpers;
+using PagedList;
 
 namespace AbantuTech.Controllers
 {
@@ -301,17 +302,31 @@ namespace AbantuTech.Controllers
             return View();
         }
         [HttpGet]
-        public ActionResult PastE()
+        public ActionResult PastE(string searchString, string sortOrder, string currentFilter, int? page)
         {
-            var pastEvent = db.Events.Where(x => x.end_date <= DateTime.Today).ToList();
-            return View(pastEvent);
-        }
-        [HttpGet]
-        public ActionResult searchPastEvents(string Name)
-        {
-            var pastEvents = db.Events.Include(m => m.Photos)
-                .Where(m => m.Name.Equals(Name));
-            return View(pastEvents);
+            ViewBag.CurrentSort = sortOrder;
+            var we = from s in db.Events.Where(x => x.end_date <= DateTime.Today).ToList()
+                     select s;
+
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                we = we.Where(s => s.Name.Contains(searchString));
+            }
+
+            if (searchString != null)
+            {
+                page = 1;
+            }
+            else
+            {
+                searchString = currentFilter;
+            }
+
+            ViewBag.CurrentFilter = searchString;
+
+            int pageSize = 8;
+            int pageNumber = (page ?? 1);
+            return View(we.ToPagedList(pageNumber, pageSize));
         }
         [HttpGet]
         public async Task<ActionResult> photoGallery(int id, string filter = null, int page = 1, int pageSize = 20)
@@ -319,7 +334,7 @@ namespace AbantuTech.Controllers
             var @event = db.Events.FirstOrDefault(x => x.Event_ID == id);
             if (@event != null)
             {
-                var records = new PagedList<EventPhoto>();
+                var records = new Models.PagedList<EventPhoto>();
                 ViewBag.filter = filter;
 
                 records.Content = db.Photos
