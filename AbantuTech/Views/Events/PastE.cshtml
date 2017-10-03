@@ -1,0 +1,48 @@
+﻿@model IEnumerable<Abantu_System.Models.Event>
+
+@{
+    ViewBag.Title = "PastE";
+    Layout = "~/Views/Shared/_Layout2.cshtml";
+}
+<h2 style="text-align:center;">Past Events</h2>
+
+@using (Html.BeginForm("searchPastEvents", "Event", FormMethod.Post))
+{
+    <input type="search" name="Name" id="Name" , placeholder="Search By Name" class="form-control" />
+    <br />
+    <input type="submit" value="Search" class="btn btn-default" />
+}
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Name)
+        </th>
+        <th>
+            Description
+                </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Venue)
+        </th>
+        <th>
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.text)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Venue)
+            </td>
+            <td>
+                @Html.ActionLink("Photos", "photoGallery", new { id = item.Event_ID })
+            </td>
+        </tr>
+    }
+</table>

@@ -301,12 +301,12 @@ namespace AbantuTech.Controllers
             return View();
         }
         [HttpGet]
-        public ActionResult PastEvents()
+        public ActionResult PastE()
         {
-            var pastEvent = db.Events.Include(p=>p.programme).Where(x => x.end_date <= DateTime.Today).ToList();
+            var pastEvent = db.Events.Where(x => x.end_date <= DateTime.Today).ToList();
             return View(pastEvent);
         }
-        [HttpPost]
+        [HttpGet]
         public ActionResult searchPastEvents(string Name)
         {
             var pastEvents = db.Events.Include(m => m.Photos)
