@@ -1,0 +1,45 @@
+﻿@model IEnumerable<Abantu_System.Models.ProgrammeMember>
+
+@{
+    ViewBag.Title = "programmeMemberList";
+    Layout = "~/Views/Shared/_Layout2.cshtml";
+}
+
+<h2>List of ProgrammeMembers in this events programme</h2>
+
+<b class="text-success">@ViewBag.StatusMessage</b>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Member.Surname)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Member.FirstName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Programme.Name)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Member.Surname)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Member.FirstName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Programme.Name)
+        </td>
+        @if (item.organizers.pmember.FirstOrDefault(x => x.Member.FirstName == item.Member.FirstName) != null)
+        {
+        <td>
+            @Html.ActionLink("Add To Team", "AddToTeam", new { id = item.eventTeamId })
+        </td>
+        }
+    </tr>
+}
+</table>
+

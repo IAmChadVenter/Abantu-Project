@@ -14,12 +14,14 @@ namespace AbantuTech.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int EventMembers_ID { get; set; }
         public int Event_ID { get; set; }
+        public bool attendanceConfirmed { get; set; }
+        public DateTime arrivalTime { get; set; }
+        public bool hasRated { get; set; }
         public Event Event { get; set; }
         public int Member_ID { get; set; }
-        public string email_ { get; set; }
-        public string Name { get; set; }
-        public string LName { get; set; }
         public AbantuMember AbantuMember { get; set; }
-        
+        public int RatingID { get; set; }
+        public EventRatings EventRatings { get; set; }
+
     }
 }

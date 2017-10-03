@@ -13,12 +13,18 @@ using System.Net.Mail;
 using System.IO;
 using System.Drawing;
 using System.Threading.Tasks;
+using Microsoft.AspNet.Identity.EntityFramework;
+using Microsoft.AspNet.Identity;
+using Microsoft.Ajax.Utilities;
+using AbantuTech.Helpers;
 
 namespace AbantuTech.Controllers
 {
     public class EventsController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();
+        UserManager<ApplicationUser> UserManger = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(new ApplicationDbContext()));
+        RoleManager<IdentityRole> roleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(new ApplicationDbContext()));
 
         // GET: Events
         public ActionResult Index()
@@ -297,7 +303,7 @@ namespace AbantuTech.Controllers
         [HttpPost]
         public ActionResult PastEvents()
         {
-            var pastEvent = db.Events.Include(m => m.Photos).Where(x => x.end_date <= DateTime.Today).ToList();
+            var pastEvent = db.Events.Include(p=>p.programme).Where(x => x.end_date <= DateTime.Today).ToList();
             return View(pastEvent);
         }
         [HttpPost]
@@ -317,7 +323,7 @@ namespace AbantuTech.Controllers
                 ViewBag.filter = filter;
 
                 records.Content = db.Photos
-                            .Where(x => filter == null || (x.Description.Contains(filter)))
+                            .Where(x => filter == null || (x.Description.Contains(filter)) && x.eventid == @event.Event_ID)
                             .OrderByDescending(x => x.PhotoId)
                             .Skip((page - 1) * pageSize)
                             .Take(pageSize)
@@ -341,7 +347,7 @@ namespace AbantuTech.Controllers
             return View(ephoto);
         }
         [HttpPost]
-        public ActionResult PhotoUpload(EventPhoto photo, IEnumerable<HttpPostedFileBase> files)
+        public ActionResult PhotoUpload(EventPhoto photo, IEnumerable<HttpPostedFileBase> files, int id)
         {
             if (!ModelState.IsValid)
                 return View(photo);
@@ -350,29 +356,35 @@ namespace AbantuTech.Controllers
                 ViewBag.Error = "Please select images";
                 return View(photo);
             }
-            var evt = db.Events.FirstOrDefault(x => x.Event_ID == photo.eventid);
-            var model = new EventPhoto();
-            foreach (var file in files)
+            var evt = db.Events.FirstOrDefault(x => x.Event_ID == id);
+            if (evt != null)
             {
-                if (file.ContentLength == 0) continue;
-                model.Description = photo.Description;
-                var filename = Guid.NewGuid().ToString();
-                var extension = Path.GetExtension(file.FileName).ToLower();
-
-                using (var img = Image.FromStream(file.InputStream))
+                var model = new EventPhoto();
+                var count = 0;
+                foreach (var file in files)
                 {
-                    model.ThumbPath = String.Format("/" + evt.Name + "/GalleryImages/thumbs/{0}{1}", filename, extension);
-                    model.ImagePath = String.Format("/" + evt.Name + "/GalleryImages/{0}{1}", filename, extension);
+                    count++;
+                    if (file.ContentLength == 0) continue;
+                    model.Description = photo.Description;
+                    model.eventid = evt.Event_ID;
+                    var filename = evt.Name + " photo #" + count;
+                    var extension = Path.GetExtension(file.FileName).ToLower();
 
-                    SaveToFolder(img, filename, extension, new Size(100, 100), model.ThumbPath);
+                    using (var img = Image.FromStream(file.InputStream))
+                    {
+                        model.ThumbPath = String.Format("~/Content/eventphotos" + evt.Name + "/thumbs/{0}{1}", filename, extension);
+                        model.ImagePath = String.Format("~/Content/eventphotos" + evt.Name + "/{0}{1}", filename, extension);
 
-                    SaveToFolder(img, filename, extension, new Size(600, 600), model.ImagePath);
+                        SaveToFolder(img, filename, extension, new Size(100, 100), model.ThumbPath);
+
+                        SaveToFolder(img, filename, extension, new Size(600, 600), model.ImagePath);
+                    }
+                    model.CreatedOn = DateTime.Now;
+                    db.Photos.Add(model);
+                    db.SaveChanges();
                 }
-                model.CreatedOn = DateTime.Now;
-                db.Photos.Add(model);
-                db.SaveChanges();
             }
-            return RedirectToAction("photoGallery");
+            return RedirectToAction("photoGallery", new { id = evt.Event_ID });
         }
         public Size NewImageSize(Size imageSize, Size newSize)
         {
@@ -399,8 +411,35 @@ namespace AbantuTech.Controllers
                 newImg.Save(Server.MapPath(pathToSave), img.RawFormat);
             }
         }
-
-
+        public JsonResult AttendanceConfirmed(int id)
+        {
+            var @event = db.Events
+                .FirstOrDefault(x => x.Event_ID == id);
+            var member = db.Members
+                .ToList();
+            if (@event != null && member != null)
+            {
+                foreach (var m in member)
+                {
+                    var attendee = db.EventMembers
+                        .FirstOrDefault(p => p.Member_ID == m.Member_ID
+                        && p.Event_ID == @event.Event_ID && p.attendanceConfirmed == true);
+                    if (attendee != null)
+                    {
+                        return Json(new { message = "Already checked in" });
+                    }
+                    else
+                    {
+                        attendee.attendanceConfirmed = true;
+                        attendee.arrivalTime = DateTime.UtcNow;
+                        db.SaveChanges();
+                    }
+                }
+                return Json(new { success = true }, JsonRequestBehavior.AllowGet);
+            }
+            return Json(new { success = false }, JsonRequestBehavior.AllowGet);
+        }
+        
         protected override void Dispose(bool disposing)
         {
             if (disposing)

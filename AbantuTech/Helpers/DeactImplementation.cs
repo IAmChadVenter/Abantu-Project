@@ -54,7 +54,7 @@ namespace AbantuTech.Helpers
         public IEnumerable<AbantuMember> getDeactRequests()
         {
             var deactrequests = _context.Members
-                .Where(x => x.isDeactRequested == true)
+                .Where(x => x.isDeactRequested==true)
                 .ToList();
             return deactrequests;
         }
@@ -62,7 +62,7 @@ namespace AbantuTech.Helpers
         public IEnumerable<AbantuMember> getReactRequests()
         {
             var reactrequests = _context.Members
-                .Where(x => x.isProfileActive == false)
+                .Where(x => x.isReactRequested==true)
                 .ToList();
             return reactrequests;
         }
@@ -73,6 +73,7 @@ namespace AbantuTech.Helpers
             if (member != null)
             {
                 member.isProfileActive = false;
+                member.isDeactRequested = false;
                 member.deactApproved = true;
                 Save();
                 issueDeactEmail("Account Deactivation | Abantu Tech!", member.Member_ID);
@@ -85,6 +86,7 @@ namespace AbantuTech.Helpers
             if (member != null)
             {
                 member.isProfileActive = true;
+                member.isReactRequested = false;
                 member.reactApproved = true;
                 Save();
                 issueReactEmail("Account Reactivation | Abantu Tech!", member.Member_ID);

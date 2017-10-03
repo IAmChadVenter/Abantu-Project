@@ -1,0 +1,58 @@
+﻿@model AbantuTech.Models.HelpTicket
+
+@{
+    ViewBag.Title = "Details";
+    Layout = "~/Views/Shared/_Layout2.cshtml";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Help Ticket information</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Category.cName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Category.cName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.tCreatedBy)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.tCreatedBy)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.tCreatedOn)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.tCreatedOn)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Comment)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Comment)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.memberId)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.memberId)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.TicketId }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

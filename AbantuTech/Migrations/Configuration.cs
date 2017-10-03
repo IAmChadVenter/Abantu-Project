@@ -15,6 +15,7 @@ namespace AbantuTech.Migrations
         {
             AutomaticMigrationsEnabled = true;
             AutomaticMigrationDataLossAllowed = true;
+            Database.SetInitializer(new DropCreateDatabaseIfModelChanges<ApplicationDbContext>());
         }
 
         protected override void Seed(AbantuTech.Models.ApplicationDbContext context)

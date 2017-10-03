@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Abantu_System.Models;
+using AbantuTech.Models;
 
 namespace AbantuTech.Models
 {
@@ -45,7 +46,7 @@ namespace AbantuTech.Models
 
         public DbSet<Programme> Programmes { get; set; }
 
-        public DbSet<EventMembers > EventMembers { get; set; }
+        public DbSet<EventMembers> EventMembers { get; set; }
         public DbSet<ProgrammeMember> ProgrammeMembers { get; set; }
 
         public DbSet<Meeting> Meetings { get; set; }
@@ -62,13 +63,5 @@ namespace AbantuTech.Models
         public System.Data.Entity.DbSet<AbantuTech.Models.File> Files { get; set; }
         public DbSet<ApplicationForm> Applications { get; set; }
         public DbSet<EventPhoto> Photos { get; set; }
-        public DbSet<Album> Albums { get; set; }
-        public DbSet<Genre> Genres { get; set; }
-        public DbSet<Artist> Artists { get; set; }
-        public DbSet<Cart> Carts { get; set; }
-        public DbSet<Order> Orders { get; set; }
-        public DbSet<OrderDetail> OrderDetails { get; set; }
-
-        public System.Data.Entity.DbSet<AbantuTech.Models.Newsletter> Newsletters { get; set; }
     }
 }

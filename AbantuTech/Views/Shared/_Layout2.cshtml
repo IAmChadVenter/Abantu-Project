@@ -12,7 +12,6 @@
     <link rel="stylesheet" href="//blueimp.github.io/Gallery/css/blueimp-gallery.min.css">
     <link rel="stylesheet" href="~/Content/bootstrap-image-gallery.min.css">
 
-
     <script src="~/Scripts/jquery-3.1.1.js"></script>
     <!-- js -->
     <script type="text/javascript" src="~/Content/Template/js/jquery-2.1.4.min.js"></script>
@@ -57,7 +56,6 @@
                                     <ul class="nav navbar-nav navbar-right ">
                                         <li>@Html.ActionLink("Home", "Index", "Home")</li>
                                         <li>@Html.ActionLink("Admin Menu", "AdminMenu", "Manage")</li>
-
                                     </ul>
                                 }
                             <li>
@@ -65,7 +63,6 @@
                                 {
                                     <ul class="nav navbar-nav navbar-right ">
                                         <li>@Html.ActionLink("Intern Menu", "InternMenu", "Manage")</li>
-                                        <li>@Html.ActionLink("Store", "Index", "Store")</li>
 
                                     </ul>
                                 }
@@ -76,13 +73,14 @@
                                 {
                                     <ul class="nav navbar-nav navbar-right ">
                                         <li>@Html.ActionLink("Volunteer Menu", "VolunteerMenu", "Manage")</li>
-                                        <li>@Html.ActionLink("Store", "Index", "Store")</li>
 
                                     </ul>
                                 }
                             </li>
                         </ul>
+                        
                         @Html.Partial("_LoginPartial")
+                        
                     }
                     else
                     {
@@ -93,13 +91,11 @@
                             <li>@Html.ActionLink("Contact", "Contact", "Home")</li>
                             <li>@Html.ActionLink("Apply", "Create", "Apply")</li>
                             <li>@Html.ActionLink("Submit", "Create", "Files")</li>
-                            <li>@Html.ActionLink("Store", "Index", "Store")</li>
-
                         </ul>
+                        
                         @Html.Partial("_LoginPartial")
-
-                        }
                     }
+                }
 
 
             </div>
@@ -190,6 +186,10 @@
 
         });
     </script>
+
+    
+
+    
     <!-- //pop-up-box -->
     <!-- //js -->
     <script type="text/javascript" src="~/Content/Template/js/move-top.js"></script>

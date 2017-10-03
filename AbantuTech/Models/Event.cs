@@ -35,11 +35,13 @@ namespace Abantu_System.Models
         [MaxLength(50)]
         public string Venue { get; set; }
 
-
+        public int totalratings { get; set; }
+        public double averageratings { get; set; }
         public int Programme_ID { get; set; }
         public virtual Programme programme { get; set; }
 
         public ICollection<EventPhoto> Photos { get; set; }
+        public ICollection<EventRatings> TotalEventRatings { get; set; }
 
         //public int Programme_ID { get; set; }
         //public virtual Programme Programme { get; set; }

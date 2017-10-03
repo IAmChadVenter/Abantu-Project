@@ -1,0 +1,41 @@
+﻿@model IEnumerable<Abantu_System.Models.AbantuMember>
+@{
+    ViewBag.Title = "AllDeactivations";
+    Layout = "~/Views/Shared/_Layout2.cshtml";
+}
+
+<h2 style="text-align:center">List of Deactivation Requests</h2>
+
+<table class="table table-bordered table-striped table-condensed">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Surname)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.FirstName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.DeactReason)
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Surname)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FirstName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DeactReason)
+            </td>
+            <td>
+                @Html.ActionLink("View Deactivation Request", "ViewDeactRequest", new { id = item.Member_ID })
+            </td>
+        </tr>
+    }
+</table>
+

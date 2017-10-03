@@ -15,7 +15,7 @@
         margin: auto;
     }
 </style>
-<img src="~/Content/Template/images/5.jpg" height="110" width=110" />
+<img src="~/Content/Template/images/5.jpg" height="110" width="110" />
 <h1><p align="center">Profile</p></h1>
 <p class="text-success">@ViewBag.StatusMessage</p>
 
@@ -75,8 +75,8 @@
     {
         foreach(var i in eventmember)
         {
-            Event memeberEvent = db.Events.FirstOrDefault(x => x.Event_ID == i.Event_ID);
-            upcomeEvents.Add(memeberEvent);
+            Event memberEvent = db.Events.FirstOrDefault(x => x.Event_ID == i.Event_ID);
+            upcomeEvents.Add(memberEvent);
             //upcomeEvents = db.Events.Where(x => i.Event.Event_ID == x.Event_ID).ToList();
         }
 
@@ -212,20 +212,23 @@
                                 {
                                     var daysLeft = (events.start_date - DateTime.Today).Days;
                                     var duration = (events.end_date.Hour - events.start_date.Hour);
-                                    <tr>
-                                        <td>
-                                            @events.Name
-                                        </td>
-                                        <td>
-                                            @events.start_date.ToLongDateString()
-                                        </td>
-                                        <td>
-                                            @events.end_date.ToLongDateString()
-                                        </td>
-                                        <td>
-                                            @daysLeft days left
-                                        </td>
-                                    </tr>
+                                    if (daysLeft >= 0)
+                                    {
+                                        <tr>
+                                            <td>
+                                                @events.Name
+                                            </td>
+                                            <td>
+                                                @events.start_date.ToLongDateString()
+                                            </td>
+                                            <td>
+                                                @events.end_date.ToLongDateString()
+                                            </td>
+                                            <td>
+                                                @daysLeft days left
+                                            </td>
+                                        </tr>
+                                    }
                                 }
                             }
                         </table>

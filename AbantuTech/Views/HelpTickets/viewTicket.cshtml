@@ -1,0 +1,81 @@
+﻿@model AbantuTech.Models.HelpTicket
+@using AbantuTech.Models;
+@using Abantu_System.Models;
+@using Microsoft.AspNet.Identity;
+@using Microsoft.AspNet.Identity.EntityFramework;
+@using System.Data.Entity;
+@using System.Linq;
+@{
+    ViewBag.Title = "viewTicket";
+    Layout = "~/Views/Shared/_Layout2.cshtml";
+    ApplicationDbContext db = new ApplicationDbContext();
+    var file = db.Files.FirstOrDefault(x => x.helpID == Model.TicketId);
+    
+}
+<div class="container">
+    @{
+        if (TempData["Message"] != null)
+        {
+            <div class="alert alert-success">@TempData["Message"]</div>
+        }
+    }
+    <style>
+        img {
+            display: block;
+            margin: auto;
+        }
+    </style>
+    <img src="~/Content/Template/images/5.jpg" height="110" width="110" />
+    <h1><p align="center">View Inquiry Ticket</p></h1>
+    <h2>Inquiry Ticket by @Model.Members.Email</h2>
+    <hr />
+    <h3 class="list-group-item-heading">Inquiry Ticket Details</h3>
+    <br />
+    <ul class="list-group">
+        <li class="list-group-item"><b>Full Name :</b> @Model.Members.FirstName @Model.Members.Surname</li>
+        <li class="list-group-item"><b>Inquiry Creation Date :</b> @Model.tCreatedOn.ToLongDateString()</li>
+        <li class="list-group-item"><b>Inquiry Category: </b> @Model.Category.cName</li>
+        <li class="list-group-item"><b>Inquiry Comment :</b> @Model.Comment</li>
+        @if (file != null)
+        {
+            <li class="list-group-item"><b>File name: </b> @file.FileName</li>
+        }
+        else
+        {
+            <li class="list-group-item"><b>File name: </b> File not uploaded</li>
+        }
+    </ul>
+    <br />
+    @if (User.Identity.Name == Model.Members.Email)
+    {
+        <p>If you wish to include a file in your inquiry, as it may assist the Admin with giving better support, then please do so below</p>
+        using (Html.BeginForm("helpFileUpload", "HelpTickets", FormMethod.Post, new { enctype = "multipart/form-data" }))
+        {
+            <div class="btn btn-default">
+                <input type="file" name="file" id="files" onchange="this.form.submit()" />
+            </div>
+        }
+    }
+        @if (Request.IsAuthenticated)
+        {
+            using (Html.BeginForm("replyToTicket", "HelpTickets", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+            {
+                @Html.AntiForgeryToken()
+                <div class="form-group">
+                    @Html.Label("Admin Response", new { @class = "col-md-2 control-label" })
+                    <div class="col-md-10">
+                    @Html.HiddenFor(m => m.AdminResponse)
+                    @Html.TextArea("AdminResponse", null, new { @class = "form-control" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-md-10">
+                        <input type="submit" class="btn btn-default" value="Submit Response" />
+                    </div>
+                </div>
+            }
+            @Html.ActionLink("Download File", "downloadTicketFile", new { id = Model.TicketId })
+        }
+        @Html.ActionLink("Back to HelpDesk Home Page", "Index")
+    </div>
+

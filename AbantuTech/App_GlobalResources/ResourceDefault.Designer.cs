@@ -72,9 +72,9 @@ namespace Resources {
         /// <summary>
         ///   Looks up a localized string similar to Abantu System.
         /// </summary>
-        internal static string Abantu_System {
+        internal static string AbantuSystem {
             get {
-                return ResourceManager.GetString("Abantu-System", resourceCulture);
+                return ResourceManager.GetString("AbantuSystem", resourceCulture);
             }
         }
         

@@ -1,0 +1,56 @@
+﻿@model IEnumerable<AbantuTech.Models.EventOrganizers>
+@using AbantuTech.Models;
+
+@{
+    ViewBag.Title = "EventTeam";
+    Layout = "~/Views/Shared/_Layout2.cshtml";
+    ApplicationDbContext db = new ApplicationDbContext();
+    var mem = db.ProgrammeMembers.ToList();
+}
+
+<h2>EventTeam</h2>
+
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayName("Event Name")
+        </th>
+        <th>
+            @Html.DisplayName("First Name")
+        </th>
+        <th>
+            @Html.DisplayName("Last Name")
+        </th>
+        <th>
+            @Html.DisplayName("Event Task")
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.events.Name)
+            </td>
+            @if (item != null)
+            {
+                foreach (var i in item.pmember)
+                {
+            <td>
+                @Html.DisplayFor(modelItem => i.Member.FirstName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => i.Member.Surname)
+            </td>
+                }
+            }
+            <td>
+                @Html.DisplayFor(modelItem => item.eventTask)
+            </td>
+        </tr>
+    }
+</table>
+
+
+

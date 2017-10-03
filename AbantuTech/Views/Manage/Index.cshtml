@@ -1,16 +1,10 @@
 ﻿@model AbantuTech.Models.IndexViewModel
 @{
     ViewBag.Title = "Manage Account";
+    Layout = "~/Views/Shared/_Layout2.cshtml";
 }
-<style>
-    img {
-        display: block;
-        margin: auto;
-    }
-</style>
-<img src="~/Content/Template/images/5.jpg" height="110" width=110" />
-<h2 style="text-align:center;">@ViewBag.Title.</h2>
 
+<h2 style="text-align:center;">@ViewBag.Title.</h2>
 <p class="text-success">@ViewBag.StatusMessage</p>
 <div style="display:block;margin:0 auto;">
     <h4>Change your account settings</h4>
@@ -98,6 +92,7 @@
                 <h4><b>Profile is active</b></h4>
                 if (Model.isDeactRequested == false)
                 {
+
                     @Html.ActionLink("Request Deactivation", "RequestDeact")
                 }
                 else
@@ -106,6 +101,7 @@
                     {
                         using (Html.BeginForm("CancelDeact", "Manage", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
                         {
+                            @Html.AntiForgeryToken()
                             <text>Cancel Deactivation: <input type="submit" value="Cancel" class="btn btn-primary" /></text>
                         }
                     }

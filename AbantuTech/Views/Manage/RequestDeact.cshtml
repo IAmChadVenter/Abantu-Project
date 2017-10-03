@@ -1,4 +1,4 @@
-﻿@model Abantu_System.Models.AbantuMember
+﻿@model IndexViewModel
 @using Abantu_System.Models;
 @using AbantuTech.Models;
 @using Microsoft.AspNet.Identity;
@@ -6,15 +6,8 @@
 
 @{
     ViewBag.Title = "RequestDeact";
-    Layout = "~/Shared/_Layout2.cshtml";
+    Layout = "~/Views/Shared/_Layout2.cshtml";
 }
-<style>
-    img {
-        display: block;
-        margin: auto;
-    }
-</style>
-<img src="~/Content/Template/images/5.jpg" height="110" width=110" />
 <h2 style="text-align:center;">Request Deactivation of Profile</h2>
 <hr />
 @using (Html.BeginForm("RequestDeact", "Manage", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
@@ -24,11 +17,12 @@
     <hr />
     @Html.ValidationSummary("", new { @class = "text-danger" })
     <p style="text-align:center;"><b>Hi there !! We would much appreciate it, if you would provide a short reason as to why you are requesting such an action</b></p>
-    <br />
+    <br /><br />
     <div class="form-group">
-        @Html.LabelFor(m => m.DeactReason, new { @class = "col-md-2 control-label" })
+        @Html.Label("Deactivation Reason", new { @class = "col-md-2 control-label" })
         <div class="col-md-10">
-            @Html.TextBoxFor(m => m.DeactReason, new { @class = "form-control" })
+            @Html.HiddenFor(m => m.isProfileActive)
+            @Html.TextBox("DeactReason", null, new { @class = "form-control" })
         </div>
     </div>
     <div class="form-group">
@@ -38,4 +32,3 @@
         </div>
     </div>
 }
-

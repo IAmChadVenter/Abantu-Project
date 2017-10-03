@@ -53,7 +53,42 @@
             <td>
                 @Html.DisplayFor(modelItem => item.AbantuMember.Surname)
             </td>
+            @if (User.IsInRole("Admin"))
+            {
+                if (item.Event.start_date <= DateTime.UtcNow)
+                {
+                    <td>
+                        <div class="btn btn-success attend-confirm" data-href="/events/AttendanceConfirmed/@item.Event_ID">Confirm Attendance</div>
+                    </td>
+                }
+            }
         </tr>
     }
 
 </table>
+<script>
+    $('.attend-confirm').on('click', function () {
+        var self = $(this),
+            url = self.attr('data-href');
+        $.ajax({
+            method: 'POST',
+            url: url,
+            success: function (res) {
+                if (typeof res.message === "undefined") {
+                    if (res.success) {
+                        self.text("Confirmed");
+                    } else {
+                        self.text("Unable to Confirm");
+                    }
+                } else {
+                    self.text("Already Confirmed");
+                }
+            },
+            error: function (err) {
+                self.removeClass("alert-success");
+                self.addClass("alert-danger");
+                self.text("Failed");
+            }
+        });
+    });
+</script>

@@ -1,0 +1,27 @@
+﻿@model AbantuTech.Models.EventOrganizers
+
+@{
+    ViewBag.Title = "Details";
+    Layout = "~/Views/Shared/_Layout2.cshtml";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>EventOrganizers</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.eventId)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.eventId)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.eventTeamId }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

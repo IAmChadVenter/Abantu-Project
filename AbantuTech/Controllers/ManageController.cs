@@ -263,11 +263,17 @@ namespace AbantuTech.Controllers
         }
         public ActionResult RequestDeact()
         {
-            return View();
+            var user = UserManager.FindById(User.Identity.GetUserId());
+            var mem = _context.Members.Where(m => m.Email == user.Email).FirstOrDefault();
+            IndexViewModel model = new IndexViewModel
+            {
+                isProfileActive = mem.isProfileActive
+            };
+            return View(model);
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> RequestDeact(IndexViewModel model)
+        public async Task<ActionResult> RequestDeact(IndexViewModel model, string DeactReason)
         {
             if (ModelState.IsValid)
             {
@@ -275,6 +281,7 @@ namespace AbantuTech.Controllers
                 var mem = _context.Members.Where(m => m.Email == user.Email).FirstOrDefault();
                 if (mem != null && model.isProfileActive == true)
                 {
+                    mem.DeactReason = DeactReason;
                     postDeactRequest(mem);
                     return RedirectToAction("Index", new { Message = ManageMessageId.DeactProfileSuccess });
                 }
@@ -287,16 +294,22 @@ namespace AbantuTech.Controllers
         }
         public ActionResult RequestReact()
         {
-            return View();
+            var user = UserManager.FindById(User.Identity.GetUserId());
+            var mem = _context.Members.Where(m => m.Email == user.Email).FirstOrDefault();
+            IndexViewModel model = new IndexViewModel
+            {
+                isProfileActive = mem.isProfileActive
+            };
+            return View(model);
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> RequestReact(AbantuMember member)
+        public async Task<ActionResult> RequestReact(IndexViewModel model)
         {
             if (ModelState.IsValid)
             {
                 var user = await UserManager.FindByIdAsync(User.Identity.GetUserId());
-                var mem = _context.Members.Where(m => user.Email == member.Email).FirstOrDefault();
+                var mem = _context.Members.Where(m => m.Email == user.Email).FirstOrDefault();
                 if (mem != null && HasActiveProfile() == false)
                 {
                     postReactRequest(mem);
@@ -307,19 +320,20 @@ namespace AbantuTech.Controllers
                     return RedirectToAction("Index", new { Message = ManageMessageId.Error });
                 }
             }
-            return View(member);
+            return View(model);
 
         }
-        public async Task<ActionResult> CancelDeact(AbantuMember member)
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> CancelDeact(IndexViewModel model)
         {
             if (ModelState.IsValid)
             {
                 var user = await UserManager.FindByIdAsync(User.Identity.GetUserId());
                 var mem = _context.Members.Where(x => x.Email == user.Email && x.deactApproved == false).FirstOrDefault();
-                if (mem != null && HasRequestedDeact() && HasActiveProfile())
+                if (mem != null && model.isDeactRequested && model.isProfileActive == true)
                 {
-                    member.isDeactRequested = false;
-                    mem.isDeactRequested = member.isDeactRequested;
+                    model.isDeactRequested = false;
                     _context.SaveChanges();
                     return RedirectToAction("Index", new { Message = ManageMessageId.DeactCancelSuccess });
                 }
@@ -328,18 +342,20 @@ namespace AbantuTech.Controllers
                     return RedirectToAction("Index", new { Message = ManageMessageId.Error });
                 }
             }
-            return View(member);
+            return View(model);
         }
-        public async Task<ActionResult> CancelReact(AbantuMember member)
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> CancelReact(IndexViewModel model)
         {
             if (ModelState.IsValid)
             {
                 var user = await UserManager.FindByIdAsync(User.Identity.GetUserId());
                 var mem = _context.Members.Where(x => x.Email == user.Email).FirstOrDefault();
-                if (mem != null && HasRequestedReact() && HasActiveProfile() == false)
+                if (mem != null && model.isReactRequested && model.isProfileActive == false)
                 {
-                    member.isReactRequested = false;
-                    mem.isReactRequested = member.isReactRequested;
+                    mem.isReactRequested = false;
+                    model.isReactRequested = false;
                     _context.SaveChanges();
                     return RedirectToAction("Index", new { Message = ManageMessageId.ReactCancelSuccess });
                 }
@@ -348,7 +364,7 @@ namespace AbantuTech.Controllers
                     return RedirectToAction("Index", new { Message = ManageMessageId.Error });
                 }
             }
-            return View(member);
+            return View(model);
         }
         //
         // GET: /Manage/SetPassword

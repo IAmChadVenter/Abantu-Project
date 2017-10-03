@@ -23,7 +23,6 @@ namespace AbantuTech.Controllers
         private IProfileDeactivation _profile;
         private readonly ApplicationDbContext _context = new ApplicationDbContext();
         private ApplicationUserManager _userManager;
-        private DeactImplementation deactImplementation;
 
         public ProfileController(IProfileDeactivation _profile)
         {
