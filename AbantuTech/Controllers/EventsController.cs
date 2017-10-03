@@ -300,7 +300,7 @@ namespace AbantuTech.Controllers
             }
             return View();
         }
-        [HttpPost]
+        [HttpGet]
         public ActionResult PastEvents()
         {
             var pastEvent = db.Events.Include(p=>p.programme).Where(x => x.end_date <= DateTime.Today).ToList();
