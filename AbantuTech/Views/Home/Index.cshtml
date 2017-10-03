@@ -1,6 +1,7 @@
 ﻿<!-- banner -->
 <script src="~/Scripts/jquery-3.1.1.js"></script>
 <div class="w3ls_banner_section">
+    <p>Translation: </p><div id="google_translate_element"></div>
     <div class="container">
         @using (Html.BeginForm("PayFast","Home",FormMethod.Get))
         {
@@ -44,4 +45,11 @@
 </div>
 <script src="~/Scripts/bootstrap-notify.min.js"></script>
 <script src="~/Scripts/notifs.tasks.js"></script>
+<script type="text/javascript">
+        function googleTranslateElementInit() {
+          new google.translate.TranslateElement({pageLanguage: 'en'}, 'google_translate_element');
+        }
+</script>
+
+<script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 <!-- //banner -->

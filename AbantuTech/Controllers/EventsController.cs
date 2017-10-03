@@ -424,48 +424,7 @@ namespace AbantuTech.Controllers
             }
             return Json(new { success = false }, JsonRequestBehavior.AllowGet);
         }
-        public JsonResult SendRating(/*string r, string s, string id, string url,*/ int eid, int amount)
-        {
-            var @event = db.Events.FirstOrDefault(x => x.Event_ID == eid);
-            
-                    var name = User.Identity.Name;
-                    var member = db.Members.FirstOrDefault(x => x.Email == name);
-                    if(member != null && @event != null)
-                    {
-                        var eventmember = db.EventMembers.FirstOrDefault(x => x.Event_ID == @event.Event_ID && x.Member_ID == member.Member_ID);
-                        if(eventmember != null)
-                        {
-                            bool hasVoted;
-                            if(eventmember.hasRated == true)
-                            {
-                                hasVoted = true;
-                            }
-                            hasVoted = false;
-                            if(hasVoted)
-                            {
-                                return Json(new { message = "Already rated this event" }, JsonRequestBehavior.AllowGet);
-                            }
-                            else
-                            {
-                                EventRatings r = new EventRatings
-                                {
-                                    EventID = @event.Event_ID,
-                                    EventMemberID = eventmember.EventMembers_ID,
-                                    RatingAmt = amount
-                                };
-                                db.EventRatings.Add(r);
-                                @event.TotalEventRatings.Add(r);
-                                @event.totalratings += r.RatingAmt;
-                                return Json(new { message = "Thanks for rating this event" + r.RatingAmt + "star(s)" }, JsonRequestBehavior.AllowGet);
-                            }
-                            
-                        }
-                        return Json(new { success = true }, JsonRequestBehavior.AllowGet);
-                    }
-                    
-                    
-            return Json("<br />You rated " + r + " star(s), thanks !");
-        }
+        
         protected override void Dispose(bool disposing)
         {
             if (disposing)

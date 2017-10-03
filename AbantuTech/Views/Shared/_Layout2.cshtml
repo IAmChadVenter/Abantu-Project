@@ -76,7 +76,7 @@
                                 }
                             </li>
                         </ul>
-                        <div id="google_translate_element"></div>
+                        
                         @Html.Partial("_LoginPartial")
                         
                     }
@@ -89,8 +89,11 @@
                             <li>@Html.ActionLink("Contact", "Contact", "Home")</li>
                             <li>@Html.ActionLink("Apply", "Create", "Apply")</li>
                             <li>@Html.ActionLink("Submit", "Create", "Files")</li>
+                            <li>
+                                @Html.ActionLink("Need Help?", "Index", "HelpTickets")
+                            </li>
                         </ul>
-                        <div id="google_translate_element"></div>
+                        
                         @Html.Partial("_LoginPartial")
                     }
                 }
@@ -173,13 +176,7 @@
 
     
 
-    <script type="text/javascript">
-        function googleTranslateElementInit() {
-          new google.translate.TranslateElement({pageLanguage: 'en'}, 'google_translate_element');
-        }
-    </script>
-
-    <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+    
     <!-- //pop-up-box -->
     <!-- //js -->
     <script type="text/javascript" src="~/Content/Template/js/move-top.js"></script>

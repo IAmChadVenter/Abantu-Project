@@ -120,7 +120,6 @@ namespace AbantuTech.Controllers
         [HttpGet]
         public ActionResult Create(FileMessages? fmessages)
         {
-
             HelpTicket ticket = new HelpTicket();
             ViewBag.cID = new SelectList(db.HelpCategories, "cID", "cName");
             return View(ticket);
@@ -153,6 +152,7 @@ namespace AbantuTech.Controllers
             return RedirectToAction("Index", new { HelpMessages.Error });
         }
         [HttpPost]
+        [AllowAnonymous]
         public ActionResult helpFileUpload(HttpPostedFileBase file, HelpTicket ticket)
         {
             if (ModelState.IsValid)

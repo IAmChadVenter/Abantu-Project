@@ -42,24 +42,8 @@
                 @Html.DisplayFor(modelItem => item.Venue)
             </td>
             <td>
-                <span class="fa fa-star"></span>
-                <span class="fa fa-star"></span>
-                <span class="fa fa-star"></span>
-                <span class="fa fa-star"></span>
-                <span class="fa fa-star"></span>
-            </td>
-            <td>
                 @Html.ActionLink("Photos", "photoGallery", new { id = item.Event_ID })
             </td>
         </tr>
     }
 </table>
-<script>
-    $(document).ready(function () {
-        $(".fa fa-star").hover(function () {
-            $(this).attr("class", function (index, attr) {
-                return attr.replace(".fa fa-star", ".fa fa-star checked");
-            })
-        })
-    });
-</script>
