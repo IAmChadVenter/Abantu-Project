@@ -1,0 +1,157 @@
+﻿@model AbantuTech.Models.Order
+
+@{ ViewBag.Title = "Address And Payment"; Layout = "~/Views/Shared/_Layout3.cshtml";}
+@using AbantuTech.Models;
+
+
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+@{
+    ApplicationDbContext db = new ApplicationDbContext();
+    string currentUser = this.User.Identity.Name;
+    ApplicationUser cu = db.Users.FirstOrDefault(x=>x.UserName == currentUser);
+
+    var e = db.Orders.FirstOrDefault(x => x.Username == currentUser);
+}
+
+<style>
+    .button {
+        background-color: white; /* Green */
+        border: none;
+        color: white;
+        padding: 10px 32px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        margin: 2px 2px;
+        -webkit-transition-duration: 0.4s; /* Safari */
+        transition-duration: 0.4s;
+        cursor: pointer;
+    }
+
+    .button1 {
+        background-color: black;
+        color: white;
+    }
+
+        .button1:hover {
+            background-color: darkgray;
+            color: white;
+        }
+</style>
+
+
+@using (Html.BeginForm())
+{
+    if (e != null)
+    {
+    <h2>Address And Payment</h2>
+    <fieldset>
+        <legend>Shipping Information</legend>
+        
+
+            @Html.AntiForgeryToken()
+
+            <div class="form-horizontal">
+                <hr />
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                <div class="form-group">
+                    @Html.LabelFor(model => model.FirstName, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        <input class="form-control text-box single-line" data-val="true" data-val-length="The field First Name must be a string with a maximum length of 160." data-val-length-max="160" data-val-required="First Name is required" id="FirstName" name="FirstName" type="text" value="@e.FirstName">
+                        @Html.ValidationMessageFor(model => model.FirstName, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.LastName, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        <input class="form-control text-box single-line" data-val="true" data-val-length="The field Last Name must be a string with a maximum length of 160." data-val-length-max="160" data-val-required="Last Name is required" id="LastName" name="LastName" type="text" value="@e.LastName">
+                         @Html.ValidationMessageFor(model => model.LastName, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Address, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        <input class="form-control text-box single-line" data-val="true" data-val-length="The field Address must be a string with a maximum length of 70." data-val-length-max="70" data-val-required="Address is required" id="Address" name="Address" type="text" value="@e.Address">
+                        @Html.ValidationMessageFor(model => model.Address, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.City, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        <input class="form-control text-box single-line" data-val="true" data-val-length="The field City must be a string with a maximum length of 40." data-val-length-max="40" data-val-required="City is required" id="City" name="City" type="text" value="@e.City">
+                        @Html.ValidationMessageFor(model => model.City, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.State, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        <input class="form-control text-box single-line" data-val="true" data-val-length="The field State must be a string with a maximum length of 40." data-val-length-max="40" data-val-required="State is required" id="State" name="State" type="text" value="@e.State">
+                        @Html.ValidationMessageFor(model => model.State, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.PostalCode, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        <input class="form-control text-box single-line" data-val="true" data-val-length="The field Postal Code must be a string with a maximum length of 10." data-val-length-max="10" data-val-required="Postal Code is required" id="PostalCode" name="PostalCode" type="text" value="@e.PostalCode">
+                        @Html.ValidationMessageFor(model => model.PostalCode, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Country, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        <input class="form-control text-box single-line" data-val="true" data-val-length="The field Country must be a string with a maximum length of 40." data-val-length-max="40" data-val-required="Country is required" id="Country" name="Country" type="text" value="@e.Country">
+                        @Html.ValidationMessageFor(model => model.Country, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Phone, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        <input class="form-control text-box single-line" data-val="true" data-val-length="The field Phone must be a string with a maximum length of 24." data-val-length-max="24" data-val-required="Phone is required" id="Phone" name="Phone" type="text" value="@e.Phone">
+                        @Html.ValidationMessageFor(model => model.Phone, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Email, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        <input class="form-control text-box single-line" data-val="true" data-val-regex="Email is is not valid."  data-val-required="Email Address is required" id="Email" name="Email" type="email" value="@e.Email">
+                        @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                    </fieldset>
+    <fieldset>
+          
+    <div class="editor-field" style="borderlee"> 
+                    @Html.TextBox("PromoCode", "", new { @style = "display:none" })  
+           </div>
+    </fieldset>    
+    <br /> <input class="button button1" type="submit" value="Submit Order" />
+    <br />
+    }
+    else
+    {
+
+        <h2>Address And Payment</h2>
+        <fieldset>
+            <legend>Shipping Information</legend>
+
+            @Html.EditorForModel()
+        </fieldset>
+        <fieldset>
+
+            <div class="editor-field" style="borderlee">
+                @Html.TextBox("PromoCode", "", new { @style = "display:none" })
+            </div>
+        </fieldset>
+        <br /> <input class="button button1" type="submit" value="Submit Order" /><br />
+    }
+}

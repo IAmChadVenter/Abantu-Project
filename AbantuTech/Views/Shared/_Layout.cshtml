@@ -41,6 +41,9 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
     <link href='//fonts.googleapis.com/css?family=Open+Sans:400,300,300italic,400italic,600,600italic,700,700italic,800,800italic' rel='stylesheet' type='text/css'>
     <script src="~/Scripts/jquery-3.1.1.js"></script>
     <link href="~/Style/StyleSheet.css" rel="stylesheet" />
+    @model AbantuTech.Models.Newsletter
+
+
 </head>
 
 <body>
@@ -90,8 +93,8 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
                                     <li>@Html.ActionLink("Programmes", "Index", "Programmes")</li>
                                     <li>@Html.ActionLink("Events", "Index", "Events")</li>
                                     <li>@Html.ActionLink("Forum", "Index", "Forums")</li>
+                                    <li>@Html.ActionLink("Store", "Index", "Store")</li>
 
-                                    
 
                                     <li>
                                         @if (User.IsInRole("Admin"))
@@ -108,7 +111,7 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
                                         {
                                             <ul class="nav navbar-nav navbar-right">
                                                 <li>@Html.ActionLink("Intern Menu", "InternMenu", "Manage")</li>
-
+                                                <li>@Html.ActionLink("Store", "Index", "Store")</li>
                                             </ul>
                                         }
                                     </li>
@@ -118,7 +121,7 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
                                         {
                                             <ul class="nav navbar-nav navbar-right">
                                                 <li>@Html.ActionLink("Volunteer Menu", "VolunteerMenu", "Manage")</li>
-
+                                                <li>@Html.ActionLink("Store", "Index", "Store")</li>
                                             </ul>
                                         }
                                     </li>
@@ -136,7 +139,7 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
                                     <li>@Html.ActionLink("Contact", "Contact", "Home")</li>
                                     <li>@Html.ActionLink("Apply", "Create", "Apply")</li>
                                     <li>@Html.ActionLink("Submit", "Create", "Files")</li>
-                                   
+                                    <li>@Html.ActionLink("Store", "Index", "Store")</li>
                                 </ul>
 
                             }
@@ -188,6 +191,17 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
                     <div class="ftr-text">
                         <p><a href="zuma.musa5@gmail.com">poke-the-lion@sobantu.co.za</a></p>
                     </div>
+                    <div class="clearfix"> </div>
+                </div>
+                <div class="ftr-address">
+                    <div class="local">
+                        <i class="fa fa-envelope" aria-hidden="true"></i>
+                    </div>
+                    <div class="ftr-text">
+                        <p>@Html.ActionLink("Subscribe to our Newsletter", "Create", "Newsletters")</p>
+                    </div><div >
+                     <p>OR @Html.ActionLink("Unsubscribe", "Delete", "Newsletters")</p>
+                        </div>
                     <div class="clearfix"> </div>
                 </div>
             </div>

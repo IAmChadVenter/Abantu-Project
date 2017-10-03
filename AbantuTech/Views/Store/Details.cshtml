@@ -1,0 +1,60 @@
+﻿@model AbantuTech.Models.Album
+
+@{
+    ViewBag.Title = "Item - " + Model.Title;
+        Layout = "~/Views/Shared/_Layout3.cshtml";
+}
+<style>
+    .button {
+    background-color: white; /* Green */
+    border: none;
+    color: white;
+    padding: 10px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 2px 2px;
+    -webkit-transition-duration: 0.4s; /* Safari */
+    transition-duration: 0.4s;
+    cursor: pointer;
+}
+        
+.button1 {
+    background-color: black; 
+    color: white; 
+}
+
+.button1:hover {
+    background-color: darkgray;
+    color: white;
+}
+</style>
+
+<h2>@Model.Title</h2>
+
+<p>
+    <img alt="@Model.Title" src="@Model.AlbumArtUrl" />
+</p>
+
+<div id="album-details">
+    <p>
+        <em>Category:</em>
+        @Model.Genre.Name
+    </p>
+    <p>
+        <em>Fabric:</em>
+        @Model.Artist.Name
+    </p>
+    <p>
+        <em>Price:</em>
+        R @String.Format("{0:F}", Model.Price)
+    </p>
+    <p class="button">
+        @Html.ActionLink("Add to cart", "AddToCart",
+     "ShoppingCart", new { id = Model.AlbumId },  new { @class = "button button1" })
+    </p>
+</div>
+<br />
+<br />
+<br />

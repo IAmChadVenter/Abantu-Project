@@ -160,6 +160,7 @@ namespace AbantuTech.Controllers
                     {
                         Member_ID = member.Member_ID,
                         Member = member,
+                        email_ = member.Email,
                         Programme_ID = programme.Programme_ID,
                         Programme = programme
                     };

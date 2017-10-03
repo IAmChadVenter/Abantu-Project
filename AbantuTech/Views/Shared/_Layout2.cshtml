@@ -63,6 +63,7 @@
                                 {
                                     <ul class="nav navbar-nav navbar-right ">
                                         <li>@Html.ActionLink("Intern Menu", "InternMenu", "Manage")</li>
+
                                     </ul>
                                 }
                             </li>
@@ -72,6 +73,7 @@
                                 {
                                     <ul class="nav navbar-nav navbar-right ">
                                         <li>@Html.ActionLink("Volunteer Menu", "VolunteerMenu", "Manage")</li>
+
                                     </ul>
                                 }
                             </li>
@@ -89,9 +91,6 @@
                             <li>@Html.ActionLink("Contact", "Contact", "Home")</li>
                             <li>@Html.ActionLink("Apply", "Create", "Apply")</li>
                             <li>@Html.ActionLink("Submit", "Create", "Files")</li>
-                            <li>
-                                @Html.ActionLink("Need Help?", "Index", "HelpTickets")
-                            </li>
                         </ul>
                         
                         @Html.Partial("_LoginPartial")
@@ -108,7 +107,7 @@
     <div class="container body-content">
         @RenderBody()
         <hr />
-        <footer style="width:90%">
+        <footer style="width:100%">
             <table width="90%">
                 <tr>
                     <th>
@@ -124,6 +123,9 @@
                     <th>
                         Address:
                     </th>
+                    <th>
+                        Subscribe to our Newsletter:
+                    </th>
                 </tr>
                 <tr>
                     <td>
@@ -137,6 +139,17 @@
                     </td>
                     <td>
                         <p><i class="fa fa-map-marker" aria-hidden="true"></i>&nbsp;Sobantu Technologies (Pty) Ltd <br />&nbsp;&nbsp; PO Box 194<br />&nbsp;&nbsp; Durban<br /> &nbsp;&nbsp;4000</p>
+                    </td>
+                    <td>
+                        <div class="ftr-address">
+                            <div class="ftr-text">
+                                <p>@Html.ActionLink("Subscribe to our Newsletter", "Create", "Newsletters")</p>
+                            </div>
+                            <div>
+                                <p>@Html.ActionLink("Or Unsubscribe", "Delete", "Newsletters")</p>
+                            </div>
+                            <div class="clearfix"> </div>
+                        </div>
                     </td>
                 </tr>
             </table>
@@ -223,7 +236,7 @@
     </script>
     <!-- //Countdown-Timer-JavaScript -->
     <!-- smooth scrolling -->
-    <script type="text/javascript">
+    @*<script type="text/javascript">
         $(document).ready(function () {
             /*
                 var defaults = {
@@ -235,7 +248,7 @@
             */
             $().UItoTop({ easingType: 'easeOutQuart' });
         });
-    </script>
+    </script>*@
     <!-- //smooth scrolling -->
     <script type="text/javascript" src="~/Content/Template/js/bootstrap.js"></script>
     <script src="~/Scripts/jquery-1.10.2.min.js"></script>

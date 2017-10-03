@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
@@ -8,8 +7,14 @@ using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using AbantuTech.Models;
 using Abantu_System.Models;
-using AbantuTech.Helpers;
 using Microsoft.AspNet.Identity.EntityFramework;
+using System.Net;
+using System.Data;
+using System.Data.Entity;using System.IO;
+using iTextSharp.text;
+using iTextSharp.text.pdf;
+using iTextSharp.tool.xml;
+using iTextSharp.text.html.simpleparser;
 
 namespace AbantuTech.Controllers
 {
@@ -625,5 +630,64 @@ namespace AbantuTech.Controllers
             return View();
         }
 
+
+
+
+        private ApplicationDbContext p = new ApplicationDbContext();
+        
+        public ActionResult report()
+        {
+            return View();
+        }
+        public ActionResult BudgetReport(int? id)
+        {
+
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            Budget budget = p.Budgets.Find(id);
+            if (budget == null)
+            {
+                return HttpNotFound();
+            }
+            var i = System.Web.HttpContext.Current.Request.Url.PathAndQuery;
+            return View(budget);
+        }
+        
+        public ActionResult DonReport(int? id)
+        {
+            return View(p.DonationAmount.ToList());
+        }
+
+        public ActionResult eventReport(int id)
+        {
+            var @event = p.Events.FirstOrDefault(p => p.Event_ID == id);
+            //if (@event != null)
+            //{
+            //    var eventMember = p.EventMembers
+            //        .Include(p => p.AbantuMember)
+            //        .Where(x => x.Event_ID == @event.Event_ID)
+            //        .ToList();
+            //    return View(eventMember);
+            //}
+            return View(@event);
+        }
+        [HttpPost]
+        [ValidateInput(false)]
+        public FileResult Export(string GridHtml)
+        {
+            using (MemoryStream stream = new System.IO.MemoryStream())
+            {
+                StringReader sr = new StringReader(GridHtml);
+                Document pdfDoc = new Document(PageSize.A4, 10f, 10f, 100f, 0f);
+                PdfWriter writer = PdfWriter.GetInstance(pdfDoc, stream);
+                pdfDoc.Open();
+                XMLWorkerHelper.GetInstance().ParseXHtml(writer, pdfDoc, sr);
+                pdfDoc.Close();
+                return File(stream.ToArray(), "application/pdf", "Report.pdf");
+            }
+        }
+        
     }
 }

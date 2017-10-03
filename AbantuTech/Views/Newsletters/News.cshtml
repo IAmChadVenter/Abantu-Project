@@ -1,0 +1,59 @@
+﻿@model AbantuTech.Models.Newsletter
+
+@{
+    ViewBag.Title = "Newsletter";
+    Layout = "~/Views/Shared/_Layout2.cshtml";
+
+}
+<style >
+    input[type="text"]
+     {
+                width: 250px;
+     }
+    img {
+        display: block;
+        margin: auto;
+    }
+</style>
+<img src="~/Content/Template/images/5.jpg" height="110" width=110" />
+
+<h2>Newsletter Details</h2>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <h4>Newsletter</h4>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+
+      <div class="form-actions no-color">
+        <form action='@Url.Action("News", "NewslettersController")' method='post'>
+            <table width="75%">
+                <tr>
+                    <th>
+                        Newsletter Subject: 
+                    </th>
+                    <th>
+                        Newsletter Body:
+                    </th>
+                </tr>
+                <tr>
+                    <td style="vertical-align:top">
+                        @Html.TextBox("subj")
+                    </td>
+                    <td>
+                        @Html.TextArea("body",null, new { style = "width: 1000px; height:300px;" })
+                    </td>
+                </tr>
+            </table>
+            <br /><br />
+            <input type='submit' value="Send Email" class="btn btn-default" />
+
+
+        </form>
+      </div>
+    </div>
+}

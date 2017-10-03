@@ -9,7 +9,7 @@ using System.Web.Mvc;
 using AbantuTech.Models;
 using Abantu_System.Models;
 using System.Net.Mail;
-using SelectPdf;
+//using SelectPdf;
 using System.IO;
 using System.Drawing;
 using System.Threading.Tasks;
@@ -67,36 +67,41 @@ namespace AbantuTech.Controllers
                 db.Events.Add(@event);
                 db.SaveChanges();
 
-                foreach (var item in db.Members)
+                var progmember = db.ProgrammeMembers.Where(x => x.Programme_ID == @event.Programme_ID);
+                if (progmember != null)
                 {
-                    try
-                    {
-                        // create email message
-                        MailMessage message = new MailMessage();
-                        message.From = new MailAddress("abantusystem@gmail.com");
-                        message.To.Add(new MailAddress(item.Email));
-                        message.Subject = "Event " + @event.Name + " has been Created";
-                        message.Body = "You are part of a programme that has a new event " + @event.Name + " Event Details: " + @event.text + " Start Date: " + @event.start_date + " Finish Date: " + @event.end_date + " The Venue is: " + @event.Venue;
 
-                        using (var smtp = new SmtpClient())
+                    foreach (var item in progmember)
+                    {
+                        try
                         {
-                            var credential = new NetworkCredential
+                            // create email message
+                            MailMessage message = new MailMessage();
+                            message.From = new MailAddress("abantusystem@gmail.com");
+                            message.To.Add(new MailAddress(item.email_));
+                            message.Subject = "Event " + @event.Name + " has been Created";
+                            message.Body = "A Programme you are a part of has a new event - " + @event.Name + " Event Details: " + @event.text + " Start Date: " + @event.start_date + " Finish Date: " + @event.end_date + " The Venue is: " + @event.Venue;
+
+                            using (var smtp = new SmtpClient())
                             {
-                                UserName = "abantusystem@gmail.com",  // replace with valid value
-                                Password = "Abantu2017"  // replace with valid value
-                            };
-                            smtp.Credentials = credential;
-                            smtp.Host = "smtp.gmail.com";
-                            smtp.Port = 587;
-                            smtp.EnableSsl = true;
-                            smtp.Send(message);
+                                var credential = new NetworkCredential
+                                {
+                                    UserName = "abantusystem@gmail.com",  // replace with valid value
+                                    Password = "Abantu2017"  // replace with valid value
+                                };
+                                smtp.Credentials = credential;
+                                smtp.Host = "smtp.gmail.com";
+                                smtp.Port = 587;
+                                smtp.EnableSsl = true;
+                                smtp.Send(message);
+                            }
                         }
-                    }
 
 
-                    catch (Exception ex)
-                    {
-                        Console.WriteLine(ex.Message);
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine(ex.Message);
+                        }
                     }
                 }
 
@@ -122,39 +127,42 @@ namespace AbantuTech.Controllers
                 return HttpNotFound();
             }
 
-            foreach (var item in db.Members)
+            var eventmember = db.EventMembers.Where(x => x.Event_ID == id).ToList();
+            if (eventmember != null)
             {
-                try
-                {
-                    // create email message
-                    MailMessage message = new MailMessage();
-                    message.From = new MailAddress("abantusystem@gmail.com");
-                    message.To.Add(new MailAddress(item.Email));
-                    message.Subject = "Event " + @event.Name + " has been changed";
-                    message.Body = "Your event " + @event.Name + " has been changed. The new Details are, Start Date: " + @event.start_date + " Finish Date: " + @event.end_date + " The Venue is: " + @event.Venue + " Event Details " + @event.text;
 
-                    using (var smtp = new SmtpClient())
+                foreach (var item in eventmember)
+                {
+                    try
                     {
-                        var credential = new NetworkCredential
+                        // create email message
+                        MailMessage message = new MailMessage();
+                        message.From = new MailAddress("abantusystem@gmail.com");
+                        message.To.Add(new MailAddress(item.email_));
+                        message.Subject = "Event " + @event.Name + " has been changed";
+                        message.Body = "Your event " + @event.Name + " has been changed. The new Details are, Start Date: " + @event.start_date + " Finish Date: " + @event.end_date + " The Venue is: " + @event.Venue + " Event Details " + @event.text;
+
+                        using (var smtp = new SmtpClient())
                         {
-                            UserName = "abantusystem@gmail.com",  // replace with valid value
-                            Password = "Abantu2017"  // replace with valid value
-                        };
-                        smtp.Credentials = credential;
-                        smtp.Host = "smtp.gmail.com";
-                        smtp.Port = 587;
-                        smtp.EnableSsl = true;
-                        smtp.Send(message);
+                            var credential = new NetworkCredential
+                            {
+                                UserName = "abantusystem@gmail.com",  // replace with valid value
+                                Password = "Abantu2017"  // replace with valid value
+                            };
+                            smtp.Credentials = credential;
+                            smtp.Host = "smtp.gmail.com";
+                            smtp.Port = 587;
+                            smtp.EnableSsl = true;
+                            smtp.Send(message);
+                        }
+                    }
+
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(ex.Message);
                     }
                 }
-
-
-                catch (Exception ex)
-                {
-                    Console.WriteLine(ex.Message);
-                }
             }
-
             ViewBag.Programme_ID = new SelectList(db.Programmes, "Programme_ID", "Name", @event.Programme_ID);
             return View(@event);
         }
@@ -189,36 +197,40 @@ namespace AbantuTech.Controllers
                 return HttpNotFound();
             }
 
-            foreach (var item in db.Members)
+            var eventmember = db.EventMembers.Where(x => x.Event_ID == id).ToList();
+            if (eventmember != null)
             {
-                try
+                foreach (var item in eventmember)
                 {
-                    // create email message
-                    MailMessage message = new MailMessage();
-                    message.From = new MailAddress("abantusystem@gmail.com");
-                    message.To.Add(new MailAddress(item.Email));
-                    message.Subject = "Event " + @event.Name + " has been Cancelled";
-                    message.Body = "Sorry to inform you that the event " + @event.Name + " has been cancelled.";
-
-                    using (var smtp = new SmtpClient())
+                    try
                     {
-                        var credential = new NetworkCredential
+                        // create email message
+                        MailMessage message = new MailMessage();
+                        message.From = new MailAddress("abantusystem@gmail.com");
+                        message.To.Add(new MailAddress(item.email_));
+                        message.Subject = "Event " + @event.Name + " has been Cancelled";
+                        message.Body = "Sorry to inform you that the event " + @event.Name + " has been cancelled.";
+
+                        using (var smtp = new SmtpClient())
                         {
-                            UserName = "abantusystem@gmail.com",  // replace with valid value
-                            Password = "Abantu2017"  // replace with valid value
-                        };
-                        smtp.Credentials = credential;
-                        smtp.Host = "smtp.gmail.com";
-                        smtp.Port = 587;
-                        smtp.EnableSsl = true;
-                        smtp.Send(message);
+                            var credential = new NetworkCredential
+                            {
+                                UserName = "abantusystem@gmail.com",  // replace with valid value
+                                Password = "Abantu2017"  // replace with valid value
+                            };
+                            smtp.Credentials = credential;
+                            smtp.Host = "smtp.gmail.com";
+                            smtp.Port = 587;
+                            smtp.EnableSsl = true;
+                            smtp.Send(message);
+                        }
                     }
-                }
 
 
-                catch (Exception ex)
-                {
-                    Console.WriteLine(ex.Message);
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(ex.Message);
+                    }
                 }
             }
 
@@ -260,6 +272,9 @@ namespace AbantuTech.Controllers
                     {
                         Event_ID = @event.Event_ID,
                         Member_ID = member.Member_ID,
+                        email_ = member.Email,
+                        Name = member.FirstName,
+                        LName = member.Surname,
                         AbantuMember = member,
                         Event = @event
 

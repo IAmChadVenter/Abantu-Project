@@ -45,6 +45,8 @@ namespace Abantu_System.Models
 
         //public int Programme_ID { get; set; }
         //public virtual Programme Programme { get; set; }
+        public virtual ICollection<EventMembers> eventmem { get; set; }
+
 
     }
 }

@@ -1,0 +1,153 @@
+﻿@using AbantuTech.Models;
+@using Microsoft.AspNet.Identity;
+@using Microsoft.AspNet.Identity.EntityFramework;
+@using PagedList.Mvc;
+<link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
+@{
+    ViewBag.Title = "Reports";
+    Layout = "~/Views/Shared/_Layout2.cshtml";
+}
+<style>
+    img {
+        display: block;
+        margin: auto;
+    }
+</style>
+<img src="~/Content/Template/images/5.jpg" height="110" width=110" />
+<h1><p align="center">Reports</p></h1>
+<p class="text-success">@ViewBag.StatusMessage</p>
+
+<script src="~/Scripts/jquery-3.1.1.min.js"></script>
+<script src="~/Scripts/jquery.validate.min.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+<link href="~/Content/JQueryIU/jquery-ui.min.css" rel="stylesheet" />
+<link href="~/Content/JQueryIU/jquery-ui.theme.min.css" rel="stylesheet" />
+
+@{
+    ApplicationDbContext db = new ApplicationDbContext();
+    var UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(db));
+    ApplicationUser currentUser = UserManager.FindById(User.Identity.GetUserId());
+    var e = db.Budgets;
+}
+
+<div class="container">
+    <b>Choose what report you need.</b>
+    <ul class="nav nav-tabs">
+        <li class="active"><a data-toggle="tab" href="#bud">Budgets</a></li>
+        <li><a data-toggle="tab" href="#don">Donations</a></li>
+        <li><a data-toggle="tab" href="#eve">Events</a></li>
+    </ul>
+
+
+    <div class="tab-content clearfix">
+        <div id="bud" class="tab-pane fade in active">
+            <h3 class="list-group-item-heading" style="text-align:center;">Budgets</h3>
+            <br />
+            <ul class="list-group">
+                <table class="table">
+                    <tr>
+                        <th>
+                            Budget Name
+                        </th>
+                        <th></th>
+                    </tr>
+
+                    @foreach (var item in db.Budgets)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Name)
+                            </td>
+                            <td>
+                                @Html.ActionLink("Budget Report", "BudgetReport", new { id = item.Budget_ID })
+                            </td>
+                        </tr>
+                    }
+
+                </table>
+
+            </ul>
+        </div>
+
+
+        <div id="don" class="tab-pane fade">
+            <h3 class="list-group-item-heading" style="text-align:center;">Donations</h3>
+            <br />
+            <ul class="list-group">
+
+                <table class="table">
+                    <tr>
+                        <th>
+                            Donations:
+                        </th>
+                        <th>
+                            @Html.ActionLink("Donations Report", "DonReport")
+                        </th>
+                    </tr>
+
+                    @foreach (var item in db.DonationAmount)
+                    {
+                        <tr>
+                            <td>
+                                R @Html.DisplayFor(modelItem => item.C).00
+                            </td>
+                        </tr>
+                    }
+                    <tr>
+                    </tr>
+                </table>
+
+            </ul>
+        </div>
+
+
+        <div id="eve" class="tab-pane fade">
+            <h3 class="list-group-item-heading" style="text-align:center;">Events</h3>
+            <br />
+            <ul class="list-group">
+
+                <table class="table">
+                    <tr>
+                        <th>
+                            Name
+                        </th>
+                        <th>
+                            Description
+                        </th>
+                        <th>
+                            Venue
+                        </th>
+                        <th>
+                            Start Date
+                        </th>
+
+                        <th></th>
+                    </tr>
+
+                    @foreach (var item in db.Events)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Name)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.text)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Venue)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.start_date)
+                            </td>
+                            <td>
+                                @Html.ActionLink("Event Report", "eventReport", new { id = item.Event_ID })
+                            </td>
+                        </tr>
+                    }
+                    </table>
+</ul>
+        </div>
+
+    </div>
+</div>
+<br /><br /><br /><br />

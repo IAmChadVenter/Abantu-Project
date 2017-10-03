@@ -1,0 +1,288 @@
+﻿@model Abantu_System.Models.Budget
+
+@using AbantuTech.Models;
+@using Microsoft.AspNet.Identity;
+@using Microsoft.AspNet.Identity.EntityFramework;
+@using PagedList.Mvc;
+<link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
+
+
+<link href="~/Content/JQueryIU/chart.css" rel="stylesheet" type="text/css" />
+
+@{
+    Layout = "~/Views/Shared/_Layout2.cshtml";
+}
+@{
+    ViewBag.Title = "Budget Report";
+}
+
+
+
+
+
+
+<style>
+    img {
+        display: block;
+        margin: auto;
+    }
+</style>
+<img src="~/Content/Template/images/5.jpg" height="110" width=110" />
+<h1><p align="center">Reports</p></h1>
+
+<p class="text-success">@ViewBag.StatusMessage</p>
+
+<script src="~/Scripts/jquery-3.1.1.min.js"></script>
+<script src="~/Scripts/jquery.validate.min.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+<link href="~/Content/JQueryIU/jquery-ui.min.css" rel="stylesheet" />
+<link href="~/Content/JQueryIU/jquery-ui.theme.min.css" rel="stylesheet" />
+
+@{
+    ApplicationDbContext db = new ApplicationDbContext();
+    var UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(db));
+    ApplicationUser currentUser = UserManager.FindById(User.Identity.GetUserId());
+    var e = db.Budgets;
+}
+
+<div class="container">
+    <b>Choose what report you need.</b>
+    <ul class="nav nav-tabs">
+        <li class="active"><a data-toggle="tab" href="#bud">Budgets</a></li>
+        <li><a data-toggle="tab" href="#don">Donations</a></li>
+        <li><a data-toggle="tab" href="#eve">Events</a></li>
+    </ul>
+
+
+    <div class="tab-content clearfix">
+        <div id="bud" class="tab-pane fade in active">
+            <h3 class="list-group-item-heading" style="text-align:center;">Budgets</h3>
+            <h4 class="list-group-item-heading" style="text-align:center;">@Html.ActionLink("View All Budgets", "report")</h4>
+            <hr />
+            <br />
+
+            <ul class="list-group">
+
+
+
+
+
+                <div id="Grid">
+                    <h1><p align="center">Budget Report for @Html.DisplayFor(model => model.Name)</p></h1>
+
+                    <div>
+                        <table style="width:50%; text-align:left ">
+                            <tr>
+                                <th style="text-align:left ">Programme Name</th>
+                                <td valign="top">
+                                    @Html.DisplayFor(model => model.Programme.Name)
+                                </td>
+                            </tr>
+                            <tr>
+                                <th style="text-align:left ">Budget Name</th>
+                                <td valign="top">
+                                    @Html.DisplayFor(model => model.Name)
+                                </td>
+                            </tr>
+                            <tr>
+                                <th style="text-align:left ">@Html.DisplayNameFor(model => model.Amount)</th>
+                                <td valign="top">
+                                    @Html.DisplayFor(model => model.Amount)
+                                </td>
+                            </tr>
+                            <tr>
+                                <th style="text-align:left ">Budget Expenses</th>
+                                <td>
+                                    <table style="width:100%;">
+                                        <tr>
+                                            <th style="text-align: left;">Name</th>
+                                            <th style="text-align: left;">Amount</th>
+                                        </tr>
+                                        @foreach (var item in Model.Expenses)
+                                        {
+                                            <tr>
+                                                <td style="text-align: left;">@Html.DisplayFor(modelItem => item.ExpenseName)</td>
+                                                <td style="text-align: left;">@Html.DisplayFor(modelItem => item.Amount)</td>
+                                            </tr>
+                                        }
+                                    </table>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th style="text-align:left ">Total Expenses</th>
+                                @{ double A = Model.Expenses.Sum(v => v.Amount);}
+                                <td valign="top">R @A,00</td>
+                            </tr>
+                            <tr>
+                                <th style="text-align:left ">Total Budget Left</th>
+                                <td valign="top">R @(Model.Amount - Model.Expenses.Sum(v => v.Amount)),00</td>
+                            </tr>
+                        </table>
+                    </div>
+                    <h2 style="width:50%">Budget Expense Statistics</h2>
+                    <table width="65%">
+                        <tr>
+                            <th>
+                                Budget Expenses
+                            </th>
+                            <th>
+                                % of Budget Used
+                            </th>
+                            <th>
+                                % of Budget Left
+                            </th>
+                        </tr>
+                        <tr>
+                            <td >
+                                @{ int count = Model.Expenses.Count();
+                                    @count }
+                            </td>
+                            <td >
+                                <div>@((Model.Expenses.Sum(v => v.Amount) / Model.Amount) * 100)%</div>
+                            </td>
+                            <td >
+                                <div>@(100 - ((Model.Expenses.Sum(v => v.Amount) / Model.Amount) * 100))%</div>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="container">
+                    <div class="row" style="margin-top:30px; ">
+                        <div class="col-md-12">
+                            <h2 style="padding-left:380px">Expense % Info</h2>
+                            <small class="ash" style="padding-left:340px">Shows what % of the Budget each expense consists of</small> <br />
+                            <dl style="display: flex; background-color: white; flex-direction: column; width: 100%; max-width: 700px; position: relative; padding: 20px;">
+                                <dt style="align-self: flex-start; width: 100%; font-weight: 700; display: block; text-align: center; font-size: 1.2em; font-weight: 700; margin-bottom: 20px; margin-left: 130px;">
+                                    Budget Expenses %
+                                </dt>
+
+                                @foreach (var tem in Model.Expenses)
+                                {
+                                    <dd class="percentage percentage-@(tem.Amount /(Model.Amount) * 100)">
+                                        <span style="font-weight: 600;
+  display: flex;
+  align-items: center;
+  height: 40px;
+  width: 150px;
+  background-color: white;
+  position: absolute;
+  left: 0;
+  justify-content: flex-end">Expense:&nbsp;@tem.ExpenseName:@((tem.Amount) / Model.Amount * 100)%&nbsp;</span>
+</dd>
+                                }
+                            </dl>
+
+
+                        </div>
+                    </div>
+                </div>
+                <br />
+
+                @using (Html.BeginForm("Export", "Manage", FormMethod.Post))
+                {
+                    <input type="hidden" name="GridHtml" />
+                    <input type="submit" id="btnSubmit" value="Download Simplified Report" />
+                }
+                <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+                <script type="text/javascript">
+                    $(function () {
+                        $("#btnSubmit").click(function () {
+                            $("input[name='GridHtml']").val($("#Grid").html());
+                        });
+                    });
+                </script>
+
+
+
+
+
+
+
+
+
+
+
+            </ul>
+        </div>
+
+
+        <div id="don" class="tab-pane fade">
+            <h3 class="list-group-item-heading" style="text-align:center;">Donations</h3>
+            <br />
+            <ul class="list-group">
+
+                <table class="table">
+                    <tr>
+                        <th>
+                            Donations:
+                        </th>
+                        <th>
+                            @Html.ActionLink("Donations Report", "DonReport")
+                        </th>
+                    </tr>
+
+                    @foreach (var item in db.DonationAmount)
+                    {
+                        <tr>
+                            <td>
+                                R @Html.DisplayFor(modelItem => item.C).00
+                            </td>
+                        </tr>
+                    }
+                    <tr></tr>
+                </table>
+
+            </ul>
+        </div>
+
+
+        <div id="eve" class="tab-pane fade">
+            <h3 class="list-group-item-heading" style="text-align:center;">Events</h3>
+            <br />
+            <ul class="list-group">
+
+                <table class="table">
+                    <tr>
+                        <th>
+                            Name
+                        </th>
+                        <th>
+                            Description
+                        </th>
+                        <th>
+                            Venue
+                        </th>
+                        <th>
+                            Start Date
+                        </th>
+
+                        <th></th>
+                    </tr>
+
+                    @foreach (var item in db.Events)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Name)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.text)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Venue)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.start_date)
+                            </td>
+                            <td>
+                                @Html.ActionLink("Event Report", "eventReport", new { id = item.Event_ID })
+                            </td>
+                        </tr>
+                    }
+                </table>
+            </ul>
+        </div>
+
+    </div>
+</div>
+<br /><br /><br /><br />

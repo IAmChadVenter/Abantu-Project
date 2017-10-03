@@ -1,0 +1,22 @@
+﻿@model IEnumerable<AbantuTech.Models.Genre>
+@{
+    ViewBag.Title = "Store";
+    Layout = "~/Views/Shared/_Layout3.cshtml";
+}
+<h3>Browse Categories</h3>
+
+<h1>
+    Select from @Model.Count() Categories:</h1>
+<ul>
+    @foreach (var genre in Model)
+    {
+        <li>@Html.ActionLink(genre.Name, "Browse", new { genre = genre.Name }, new { @style = "font-size:20px;" })</li>
+    }
+</ul>
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
