@@ -1,8 +1,8 @@
 ﻿@model AbantuTech.ViewModel.ShoppingCartViewModel
 @{
     ViewBag.Title = "Shopping Cart";
-        Layout = "~/Views/Shared/_Layout3.cshtml";
-    
+    Layout = "~/Views/Shared/_Layout3.cshtml";
+
 }
 
 <script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
@@ -15,27 +15,37 @@
             // Get the id from the link
             var recordToDelete = $(this).attr("data-id");
 
+            var countToUpdate = 0;
+            if ($("#" + $(this).attr("txt-id")).val() !== '') {
+                countToUpdate = $("#" + $(this).attr("txt-id")).val();
+            }
+
+
             if (recordToDelete != '') {
-                
+
                 // Perform the ajax post
-                $.post("/ShoppingCart/RemoveFromCart", { "id": recordToDelete },
+                $.post("/ShoppingCart/RemoveFromCart", { "id": recordToDelete, "cartCount": countToUpdate },
                     function (data) {
                         // Successful requests get here
-                        // Update the page elements
-                        //==if (data.ItemCount == 0) {
-                        $('#row-' + data.DeleteId).fadeOut('slow');
-                        //==} else {
+                        //// Update the page elements
+                        if (data.ItemCount == 0) {
+                            $('#row-' + data.DeleteId).fadeOut('slow');
+                        }
+                        else {
+                            $('#item-count-' + data.DeleteId).text(data.ItemCount);
+                        }
                         // ==   $('#item-count-' + data.DeleteId).text(data.ItemCount);
                         //==}
-
-                        $('#cart-total').text('R' + data.CartTotal + ',00');
-                        $('#update-message').text(data.Message);
-                        $('#cart-status').text('Cart (' + data.CartCount + ')');
+                        if (data.ItemCount != -1) {
+                            $('#cart-total').text('R' + data.CartTotal + ',00');
+                            $('#update-message').text(data.Message);
+                            $('#cart-status').text('Cart (' + data.CartCount + ')');
+                        }
                     });
             }
         });
         $(".RefreshQuantity").click(function () {
-            // Get the id from the link 
+            // Get the id from the link
             var recordToUpdate = $(this).attr("data-id");
 
             var countToUpdate = 0;
@@ -43,30 +53,30 @@
                 countToUpdate = $("#" + $(this).attr("txt-id")).val();
             }
 
-            if (recordToUpdate != '') {        
-                // Perform the ajax post 
+            if (recordToUpdate != '') {
+                // Perform the ajax post
                 $.post("/ShoppingCart/UpdateCartCount", { "id": recordToUpdate, "cartCount": countToUpdate },
                     function (data) {
-                        // Successful requests get here 
-                        // Update the page elements                        
+                        // Successful requests get here
+                        // Update the page elements
                         if (data.ItemCount == 0) {
                             $('#row-' + data. DeleteId).fadeOut('slow');
                         }if (data.ItemCount == 0) {
                             $('#row-' + data.DeleteId).fadeOut('slow');
                         }
                         $('#update-message').text(data.Message);
-    
+
                         //Only process the callback data when no server error occurs
                         if (data.ItemCount != -1) {
                             $('#update-message').text(data.Message);
                             $('#cart-total').text('R' + data.CartTotal+',00');
-                            $('#cart-status').text('Cart (' + data.CartCount + ')');   
+                            $('#cart-status').text('Cart (' + data.CartCount + ')');
                         }
                     });
             }
         });
 
-    
+
 
 
         function handleUpdate() {
@@ -118,77 +128,79 @@
 
 @using (Html.BeginForm())
 {
-<h3>
-    <em>Review</em> your cart:
-</h3>
-<p class="button">
-    <a class="button button1" href="/Checkout/AddressAndPayment">Checkout &gt;&gt;</a>
-     &nbsp; &nbsp; <a class="button button1" href="/Store/Index">Keep Shopping &gt;&gt;</a>
-</p>
-<div>
-    @for (int i = 0; i < Model.CartItems.Count; i++)
-    {
-        <p>
-            @Html.ValidationMessageFor(model => model.CartItems[i].Count)
-        </p>
-    }
-</div>
-<div id="update-message">
-</div>
-<table width="60%">
-    <tr>
-        <th style="font-size:17px">
-            Album Name
-        </th>
-        <th style="font-size:17px">
-            Price (each)
-        </th>
-        <th style="font-size:17px">
-            Quantity
-        </th>
-        <th></th>
-    </tr>
-    @{int ix = 0;}
-    @foreach (var item in Model.CartItems)
-    {
-        <tr id="row-@item.RecordId">
-            <td style="font-size:17px">
-                @Html.ActionLink(item.Album.Title, "Details", "Store", new { id = item.AlbumId }, null)
+    <h3>
+        <em>Review</em> your cart:
+    </h3>
+    <p class="button">
+        <a class="button button1" href="/Checkout/AddressAndPayment">Checkout &gt;&gt;</a>
+        &nbsp; &nbsp; <a class="button button1" href="/Store/Index">Keep Shopping &gt;&gt;</a>
+    </p>
+    <div>
+        @for (int i = 0; i < Model.CartItems.Count; i++)
+        {
+            <p>
+                @Html.ValidationMessageFor(model => model.CartItems[i].Count)
+            </p>
+        }
+    </div>
+    <div id="update-message">
+    </div>
+    <table width="60%">
+        <tr>
+            <th style="font-size:17px">
+                Item Name
+            </th>
+            <th style="font-size:17px">
+                Price (each)
+            </th>
+            <th style="font-size:17px">
+                Quantity
+            </th>
+            <th>
+                @Html.ActionLink("Refresh Cart", "Index", "ShoppingCart")
+            </th>
+        </tr>
+        @{int ix = 0;}
+        @foreach (var item in Model.CartItems)
+        {
+            <tr id="row-@item.RecordId">
+                <td style="font-size:17px">
+                    @Html.ActionLink(item.Album.Title, "Details", "Store", new { id = item.AlbumId }, null)
+                </td>
+                <td style="font-size:17px">
+                    R @item.Album.Price
+                </td>
+
+
+                <td>
+                    @Html.TextBoxFor(model => model.CartItems[ix].Count, new { style = "width:30px; text-align:right;" })
+                </td>
+
+                <td>
+                    <a href="#" class="RefreshQuantity" data-id="@item.RecordId"
+                       txt-id="CartItems_@(ix)__Count" style="font-size:17px">Refresh quantity</a>&nbsp;|&nbsp;
+                    <a href="#" class="RemoveLink" data-id="@item.RecordId" style="font-size:17px">Remove from cart</a>
+
+                </td>
+            </tr>
+            ix++;
+        }
+
+
+
+        <tr><td style="color:white">fvfvb</td></tr>
+        <tr>
+            <td style="font-size:20px">
+                Total
             </td>
-            <td style="font-size:17px">
-               R @item.Album.Price
-            </td>
-
-
-            <td>
-                @Html.TextBoxFor(model => model.CartItems[ix].Count, new { style = "width:30px; text-align:right;" })
-            </td>
-
-            <td>
-            <a href="#" class="RefreshQuantity" data-id="@item.RecordId"
-               txt-id="CartItems_@(ix)__Count" style="font-size:17px">Refresh quantity</a>&nbsp;|&nbsp;
-                <a href="#" class="RemoveLink" data-id="@item.RecordId" style="font-size:17px">Remove from cart</a>
-
+            <td id="cart-total" style="font-size:20px">
+                R @Model.CartTotal
             </td>
         </tr>
-        ix++;
-    }
-
-    
-
-    <tr><td style="color:white">fvfvb</td></tr>
-    <tr>
-        <td style="font-size:20px">
-            Total
-        </td>
-        <td id="cart-total" style="font-size:20px">
-           R @Model.CartTotal
-        </td>
-    </tr>
-</table>
-<br />
-<br />
-<br />
-<br />
-<br />
-        }
+    </table>
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+            }
