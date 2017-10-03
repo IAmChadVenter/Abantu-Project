@@ -1713,6 +1713,7 @@
     <Content Include="Views\AccountC\ChangePasswordSuccess.cshtml" />
     <Content Include="Views\AccountC\LogOn.cshtml" />
     <Content Include="Views\AccountC\Register.cshtml" />
+    <Content Include="Views\DonationAmounts\Create.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\Upload\helpticketfiles\" />
