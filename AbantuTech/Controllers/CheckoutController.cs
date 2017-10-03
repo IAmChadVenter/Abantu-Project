@@ -88,7 +88,7 @@ namespace AbantuTech.Controllers
                     message.From = new MailAddress("abantusystem@gmail.com");
                     
                     message.To.Add(new MailAddress(@order.Email));
-                    message.Subject = "Abantu System - Budget Report";
+                    message.Subject = "Purchase Invoice";
                     message.IsBodyHtml = true;
                     message.Body = "Congratulations " + @order.FirstName + " " + @order.LastName + " on your purchase! <br /><br />" + 
                                     "Your Order Total is R " + @order.Total + " <br /><br />"
