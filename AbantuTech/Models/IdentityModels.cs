@@ -63,5 +63,15 @@ namespace AbantuTech.Models
         public System.Data.Entity.DbSet<AbantuTech.Models.File> Files { get; set; }
         public DbSet<ApplicationForm> Applications { get; set; }
         public DbSet<EventPhoto> Photos { get; set; }
+        public DbSet<Order> Orders { get; set; }
+        public DbSet<OrderDetail> OrderDetails { get; set; }
+        public DbSet<EventOrganizers> Organizers { get; set; }
+        public DbSet<HelpCategory> HelpCategories { get; set; }
+        public DbSet<Newsletter> Newsletters { get; set; }
+        public DbSet<HelpTicket> HelpTickets { get; set; }
+        public DbSet<Genre> Genres { get; set; }
+        public DbSet<Album> Albums { get; set; }
+        public DbSet<Cart> Carts { get; set; }
+        public DbSet<Artist> Artists { get; set; }
     }
 }

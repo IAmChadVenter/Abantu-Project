@@ -88,6 +88,14 @@
       <HintPath>..\packages\Google.Apis.Translate.v2.1.29.1.875\lib\net45\Google.Apis.Translate.v2.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="itextsharp, Version=5.5.12.0, Culture=neutral, PublicKeyToken=8354ae6d2174ddca, processorArchitecture=MSIL">
+      <HintPath>..\packages\iTextSharp.5.5.12\lib\itextsharp.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="itextsharp.xmlworker, Version=5.5.12.0, Culture=neutral, PublicKeyToken=8354ae6d2174ddca, processorArchitecture=MSIL">
+      <HintPath>..\packages\itextsharp.xmlworker.5.5.12\lib\itextsharp.xmlworker.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Microsoft.CodeDom.Providers.DotNetCompilerPlatform, Version=1.0.7.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.7\lib\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll</HintPath>
@@ -300,8 +308,10 @@
     <Compile Include="Helpers\LocalEmailHelpers.cs" />
     <Compile Include="Helpers\RatingsHelper.cs" />
     <Compile Include="Helpers\SendGridKey.cs" />
+    <Compile Include="Models\Cart.cs" />
+    <Compile Include="Models\Category.cs" />
+    <Compile Include="Models\EmergiencyContact.cs" />
     <Compile Include="Models\EventOrganizers.cs" />
-    <Compile Include="Models\EventRatings.cs" />
     <Compile Include="Models\EventTaskRole.cs" />
     <Compile Include="Models\HelpCategory.cs" />
     <Compile Include="Models\HelpTicket.cs" />
@@ -1521,6 +1531,7 @@
     <Content Include="Scripts\respond.matchmedia.addListener.js" />
     <Content Include="Scripts\respond.matchmedia.addListener.min.js" />
     <Content Include="Scripts\respond.min.js" />
+    <Content Include="StyleSheet1.css" />
     <Content Include="Style\StyleSheet.css" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
@@ -1644,6 +1655,64 @@
     <Content Include="Views\HelpDesk\CreateTicket.cshtml" />
     <Content Include="Views\Events\PastEvents.cshtml" />
     <Content Include="Views\Events\photoGallery.cshtml" />
+    <Content Include="Views\Checkout\AddressAndPayment.cshtml" />
+    <Content Include="Views\Checkout\Complete.cshtml" />
+    <Content Include="Views\EventOrganizers\AssignTasks.cshtml" />
+    <Content Include="Views\EventOrganizers\Create.cshtml" />
+    <Content Include="Views\EventOrganizers\Delete.cshtml" />
+    <Content Include="Views\EventOrganizers\Details.cshtml" />
+    <Content Include="Views\EventOrganizers\Edit.cshtml" />
+    <Content Include="Views\EventOrganizers\getEvents.cshtml" />
+    <Content Include="Views\EventOrganizers\Index.cshtml" />
+    <Content Include="Views\EventOrganizers\programmeMemberList.cshtml" />
+    <Content Include="Views\EventOrganizers\viewTeam.cshtml" />
+    <Content Include="Views\HelpTickets\Create.cshtml" />
+    <Content Include="Views\HelpTickets\Details.cshtml" />
+    <Content Include="Views\HelpTickets\Index.cshtml" />
+    <Content Include="Views\HelpTickets\viewTicket.cshtml" />
+    <Content Include="Views\HelpCategories\Create.cshtml" />
+    <Content Include="Views\HelpCategories\Delete.cshtml" />
+    <Content Include="Views\HelpCategories\Details.cshtml" />
+    <Content Include="Views\HelpCategories\Edit.cshtml" />
+    <Content Include="Views\HelpCategories\Index.cshtml" />
+    <Content Include="Views\Newsletters\Create.cshtml" />
+    <Content Include="Views\Newsletters\Delete.cshtml" />
+    <Content Include="Views\Newsletters\News.cshtml" />
+    <Content Include="Views\Newsletters\sentConfirm.cshtml" />
+    <Content Include="Views\Newsletters\subed.cshtml" />
+    <Content Include="Views\Newsletters\UnSubed.cshtml" />
+    <Content Include="Views\Newsletters\UnSubedNull.cshtml" />
+    <Content Include="Views\Shared\_Layout3.cshtml" />
+    <Content Include="Views\Shared\_LoginPartial1.cshtml" />
+    <Content Include="Views\ShoppingCart\CartSummary.cshtml" />
+    <Content Include="Views\ShoppingCart\Index.cshtml" />
+    <Content Include="Views\Store\Browse.cshtml" />
+    <Content Include="Views\Store\collecEdit.cshtml" />
+    <Content Include="Views\Store\Collect.cshtml" />
+    <Content Include="Views\Store\Details.cshtml" />
+    <Content Include="Views\Store\GenreMenu.cshtml" />
+    <Content Include="Views\Store\Index.cshtml" />
+    <Content Include="Views\StoreManager\Artist.cshtml" />
+    <Content Include="Views\StoreManager\category.cshtml" />
+    <Content Include="Views\StoreManager\Create.cshtml" />
+    <Content Include="Views\StoreManager\Delete.cshtml" />
+    <Content Include="Views\StoreManager\Details.cshtml" />
+    <Content Include="Views\StoreManager\dets.cshtml" />
+    <Content Include="Views\StoreManager\detsEdit.cshtml" />
+    <Content Include="Views\StoreManager\Edit.cshtml" />
+    <Content Include="Views\StoreManager\Index.cshtml" />
+    <Content Include="Views\Manage\BudgetReport.cshtml" />
+    <Content Include="Views\Manage\DonReport.cshtml" />
+    <Content Include="Views\Manage\eventReport.cshtml" />
+    <Content Include="Views\Manage\RequestDeact.cshtml" />
+    <Content Include="Views\Manage\report.cshtml" />
+    <Content Include="Views\Manage\RequestReact.cshtml" />
+    <Content Include="Views\Home\Cart.cshtml" />
+    <Content Include="Views\Events\EventTeam.cshtml" />
+    <Content Include="Views\AccountC\ChangePassword.cshtml" />
+    <Content Include="Views\AccountC\ChangePasswordSuccess.cshtml" />
+    <Content Include="Views\AccountC\LogOn.cshtml" />
+    <Content Include="Views\AccountC\Register.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\Upload\helpticketfiles\" />

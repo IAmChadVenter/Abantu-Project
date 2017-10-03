@@ -41,7 +41,6 @@ namespace Abantu_System.Models
         public virtual Programme programme { get; set; }
 
         public ICollection<EventPhoto> Photos { get; set; }
-        public ICollection<EventRatings> TotalEventRatings { get; set; }
 
         //public int Programme_ID { get; set; }
         //public virtual Programme Programme { get; set; }
