@@ -15,32 +15,22 @@
             // Get the id from the link
             var recordToDelete = $(this).attr("data-id");
 
-            var countToUpdate = 0;
-            if ($("#" + $(this).attr("txt-id")).val() !== '') {
-                countToUpdate = $("#" + $(this).attr("txt-id")).val();
-            }
-
-
             if (recordToDelete != '') {
                 
                 // Perform the ajax post
-                $.post("/ShoppingCart/RemoveFromCart", { "id": recordToDelete, "cartCount": countToUpdate },
+                $.post("/ShoppingCart/RemoveFromCart", { "id": recordToDelete },
                     function (data) {
                         // Successful requests get here
-                        //// Update the page elements
-                        if (data.ItemCount == 0) {
-                            $('#row-' + data.DeleteId).fadeOut('slow');
-                        }
-                        else {
-                            $('#item-count-' + data.DeleteId).text(data.ItemCount);
-                        }
+                        // Update the page elements
+                        //==if (data.ItemCount == 0) {
+                        $('#row-' + data.DeleteId).fadeOut('slow');
+                        //==} else {
                         // ==   $('#item-count-' + data.DeleteId).text(data.ItemCount);
                         //==}
-                        if (data.ItemCount != -1) {
-                            $('#cart-total').text('R' + data.CartTotal + ',00');
-                            $('#update-message').text(data.Message);
-                            $('#cart-status').text('Cart (' + data.CartCount + ')');
-                        }
+
+                        $('#cart-total').text('R' + data.CartTotal + ',00');
+                        $('#update-message').text(data.Message);
+                        $('#cart-status').text('Cart (' + data.CartCount + ')');
                     });
             }
         });
@@ -148,7 +138,7 @@
 <table width="60%">
     <tr>
         <th style="font-size:17px">
-            Item Name
+            Album Name
         </th>
         <th style="font-size:17px">
             Price (each)
@@ -156,9 +146,7 @@
         <th style="font-size:17px">
             Quantity
         </th>
-        <th>
-            @Html.ActionLink("Refresh Cart", "Index", "ShoppingCart")
-        </th>
+        <th></th>
     </tr>
     @{int ix = 0;}
     @foreach (var item in Model.CartItems)
