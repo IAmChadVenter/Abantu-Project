@@ -15,6 +15,7 @@ namespace Abantu_System.Models
         [Required]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Event_ID { get; set; }
+        [DisplayName("Text")]
         public string text { get; set; }
         [Required(ErrorMessage = "*")]
 
