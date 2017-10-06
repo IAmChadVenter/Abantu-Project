@@ -8,6 +8,7 @@ using System.Web;
 using System.Web.Mvc;
 using AbantuTech.Models;
 using Abantu_System.Models;
+using PagedList;
 
 namespace AbantuTech.Controllers
 {
@@ -16,9 +17,32 @@ namespace AbantuTech.Controllers
         private ApplicationDbContext db = new ApplicationDbContext();
 
         // GET: Branches
-        public ActionResult Index()
+        public ActionResult Index(string searchString, string sortOrder, string currentFilter, int? page)
         {
-            return View(db.Branches.ToList());
+            ViewBag.CurrentSort = sortOrder;
+            var we = from s in db.Branches
+                     select s;
+            we = db.Branches.OrderBy(b => b.Branch_Name);
+
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                we = we.Where(s => s.Branch_Name.Contains(searchString));
+            }
+
+            if (searchString != null)
+            {
+                page = 1;
+            }
+            else
+            {
+                searchString = currentFilter;
+            }
+
+            ViewBag.CurrentFilter = searchString;
+
+            int pageSize = 8;
+            int pageNumber = (page ?? 1);
+            return View(we.ToPagedList(pageNumber, pageSize));
         }
 
         // GET: Branches/Details/5
