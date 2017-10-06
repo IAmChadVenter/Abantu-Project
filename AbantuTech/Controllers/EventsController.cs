@@ -28,10 +28,32 @@ namespace AbantuTech.Controllers
         RoleManager<IdentityRole> roleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(new ApplicationDbContext()));
 
         // GET: Events
-        public ActionResult Index()
+        public ActionResult Index(string searchString, string sortOrder, string currentFilter, int? page)
         {
-            var events = db.Events.Include(p => p.programme);
-            return View(events.OrderBy(b => b.start_date));
+            ViewBag.CurrentSort = sortOrder;
+            var we = from s in db.Events
+                     select s;
+            we = db.Events.Include(b=> b.programme).OrderBy(b => b.Name);
+
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                we = we.Where(s => s.Name.Contains(searchString));
+            }
+
+            if (searchString != null)
+            {
+                page = 1;
+            }
+            else
+            {
+                searchString = currentFilter;
+            }
+
+            ViewBag.CurrentFilter = searchString;
+
+            int pageSize = 8;
+            int pageNumber = (page ?? 1);
+            return View(we.ToPagedList(pageNumber, pageSize));
         }
 
         // GET: Events/Details/5

@@ -12,7 +12,16 @@
 </style>
 <img src="~/Content/Template/images/5.jpg" height="110" width="110" />
 <h1><p align="center">Events</p></h1>
-
+@using (Html.BeginForm("Index", "Events", FormMethod.Get))
+{
+    <table>
+        <tr>
+            <td style="padding-right:10px">Find by event name:  </td>
+            <td style="padding-bottom:8px">@Html.TextBox("Searchstring", null, new { @class = "form-control"})</td>
+            <td style="padding-left:10px; padding-bottom:8px"><input type="submit" value="Search"/></td>
+        </tr>
+    </table>
+}
 
 <p>
     @Html.ActionLink("Create New", "Create")
