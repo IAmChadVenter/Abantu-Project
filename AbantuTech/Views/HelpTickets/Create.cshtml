@@ -15,7 +15,7 @@
     var e = db.Members.Where(m => m.Email == currentUser.Email).FirstOrDefault();
 }
 
-<h2 style="text-align:center;">Welcome @e.Email, to the Abantu-HelpDesk</h2>
+<h2 style="text-align:center;">Welcome to the Abantu-HelpDesk</h2>
 <p class="text-success">@ViewBag.FileMessages</p>
 @using (Html.BeginForm()) 
 {
