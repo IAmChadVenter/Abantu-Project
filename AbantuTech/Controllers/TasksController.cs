@@ -9,6 +9,7 @@ using System.Web.Mvc;
 using AbantuTech.Models;
 using Abantu_System.Models;
 using System.Collections;
+using PagedList;
 
 namespace AbantuTech.Controllers
 {
@@ -17,10 +18,32 @@ namespace AbantuTech.Controllers
         private ApplicationDbContext db = new ApplicationDbContext();
 
         // GET: Tasks
-        public ActionResult Index()
+        public ActionResult Index(string searchString, string sortOrder, string currentFilter, int? page)
         {
-            var tasks = db.Tasks.Include(t => t.Committee);
-            return View(tasks.ToList());
+            ViewBag.CurrentSort = sortOrder;
+            var we = from s in db.Tasks
+                     select s;
+            we = db.Tasks.Include(b=> b.Committee).OrderBy(b=> b.Name);
+
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                we = we.Where(s => s.Name.Contains(searchString));
+            }
+
+            if (searchString != null)
+            {
+                page = 1;
+            }
+            else
+            {
+                searchString = currentFilter;
+            }
+
+            ViewBag.CurrentFilter = searchString;
+
+            int pageSize = 8;
+            int pageNumber = (page ?? 1);
+            return View(we.ToPagedList(pageNumber, pageSize));
         }
         public ActionResult ViewTasks()
         {
