@@ -8,6 +8,7 @@ using System.Web;
 using System.Web.Mvc;
 using AbantuTech.Models;
 using Abantu_System.Models;
+using PagedList;
 
 namespace AbantuTech.Controllers
 {
@@ -16,9 +17,32 @@ namespace AbantuTech.Controllers
         private ApplicationDbContext db = new ApplicationDbContext();
 
         // GET: Committees
-        public ActionResult Index()
+        public ActionResult Index(string searchString, string sortOrder, string currentFilter, int? page)
         {
-            return View(db.Committtes.ToList());
+            ViewBag.CurrentSort = sortOrder;
+            var we = from s in db.Committtes
+                     select s;
+            we = db.Committtes.OrderBy(b => b.Committee_Name);
+
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                we = we.Where(s => s.Committee_Name.Contains(searchString));
+            }
+
+            if (searchString != null)
+            {
+                page = 1;
+            }
+            else
+            {
+                searchString = currentFilter;
+            }
+
+            ViewBag.CurrentFilter = searchString;
+
+            int pageSize = 8;
+            int pageNumber = (page ?? 1);
+            return View(we.ToPagedList(pageNumber, pageSize));
         }
 
         // GET: Committees/Details/5
