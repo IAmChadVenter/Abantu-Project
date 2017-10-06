@@ -44,6 +44,28 @@
                 <div class="form-group">
                     @Html.LabelFor(model => model.PhysicalAddress, htmlAttributes: new { @class = "control-label col-md-2" })
                     <div class="col-md-5">
+                        <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?key=AIzaSyDYt9as2cjmqUnGKD5POvx0xegcT_z40tw&libraries=places"></script>
+                        <script type="text/javascript">
+                    google.maps.event.addDomListener(window,
+                        'load',
+                        function () {
+                            var places = new google.maps.places.Autocomplete(document.getElementById('PhysicalAddress'));
+                            google.maps.event.addListener(places,
+                                'place_changed',
+                                function () {
+                                    var place = places.getPlace();
+                                    var address = place.formatted_address;
+                                    var latitude = place.geometry.location.lat();
+                                    var longitude = place.geometry.location.lng();
+                                    var mesg = "Address: " + address;
+                                    mesg += "\nLatitude: " + latitude;
+                                    mesg += "\nLongitude: " + longitude;
+
+                                });
+                        });
+                        </script>
+
+
                         @Html.EditorFor(model => model.PhysicalAddress, new { htmlAttributes = new { @class = "form-control", @placeholder = "Enter the address" } })
                         @Html.ValidationMessageFor(model => model.PhysicalAddress, "", new { @class = "text-danger" })
                     </div>
