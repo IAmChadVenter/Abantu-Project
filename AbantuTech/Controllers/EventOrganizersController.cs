@@ -18,9 +18,32 @@ namespace AbantuTech.Controllers
         private ApplicationDbContext db = new ApplicationDbContext();
 
         // GET: EventOrganizers
-        public ActionResult Index()
+        public ActionResult Index(string searchString, string sortOrder, string currentFilter, int? page)
         {
-            return View(db.Organizers.ToList());
+            ViewBag.CurrentSort = sortOrder;
+            var we = from s in db.Events
+                     select s;
+            we = db.Events.OrderBy(b => b.Name);
+
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                we = we.Where(s => s.Name.Contains(searchString));
+            }
+
+            if (searchString != null)
+            {
+                page = 1;
+            }
+            else
+            {
+                searchString = currentFilter;
+            }
+
+            ViewBag.CurrentFilter = searchString;
+
+            int pageSize = 8;
+            int pageNumber = (page ?? 1);
+            return View(we.ToPagedList(pageNumber, pageSize));
         }
 
         // GET: EventOrganizers/Details/5
