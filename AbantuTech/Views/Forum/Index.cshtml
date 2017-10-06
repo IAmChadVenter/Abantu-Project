@@ -12,7 +12,17 @@
 </style>
 <img src="~/Content/Template/images/5.jpg" height="110" width=110" />
 <h1><p align="center">Forum</p></h1>
-<h2>Index</h2>
+
+@using (Html.BeginForm("Index", "Forum",FormMethod.Get))
+{
+    <table>
+        <tr>
+            <td style="padding-right:10px;">Find by topic:  </td>
+            <td style="padding-bottom:8px;">@Html.TextBox("SearchString", null, new {@class="form-control" })</td>
+            <td style="padding-left:10px; padding-bottom:8px"><input type="submit" value="Search"/></td>
+        </tr>
+    </table>
+}
 
 <p>
     @Html.ActionLink("Create New", "Create")
