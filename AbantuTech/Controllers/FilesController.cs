@@ -7,6 +7,7 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using AbantuTech.Models;
+using PagedList;
 
 namespace AbantuTech.Controllers
 {
@@ -17,9 +18,32 @@ namespace AbantuTech.Controllers
 
         // GET: File
         [AllowAnonymous]
-        public ActionResult Index()
+        public ActionResult Index(string searchString, string sortOrder, string currentFilter, int? page)
         {
-            return View(db.Files.ToList());
+            ViewBag.CurrentSort = sortOrder;
+            var we = from s in db.Files
+                     select s;
+            we = db.Files.OrderBy(b => b.FileName);
+
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                we = we.Where(s => s.FileName.Contains(searchString));
+            }
+
+            if (searchString != null)
+            {
+                page = 1;
+            }
+            else
+            {
+                searchString = currentFilter;
+            }
+
+            ViewBag.CurrentFilter = searchString;
+
+            int pageSize = 8;
+            int pageNumber = (page ?? 1);
+            return View(we.ToPagedList(pageNumber, pageSize));
         }
 
         // GET: Files/Details/5
