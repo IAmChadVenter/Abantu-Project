@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
@@ -16,6 +17,7 @@ namespace AbantuTech.Models
         public int Views { get; set; }
         public string Creator { get; set; }
         [DataType(DataType.Date)]
+        [DisplayName("Date Created")]
         public DateTime DataCreated { get; set; }
     }
 }
