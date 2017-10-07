@@ -42,6 +42,7 @@ namespace Abantu_System.Models
         [DisplayName("End Date")]
         public DateTime EndDate { get; set; }
       
+        [DisplayName("Status")]
         public status status { get; set; }
         //Navigational Properties
         [DisplayName("Committee ID")]
