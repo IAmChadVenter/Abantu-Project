@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
@@ -32,14 +33,18 @@ namespace Abantu_System.Models
 
 
         [Required(ErrorMessage = "*")]
+        [DisplayName("Start Date")]
+        [DataType(DataType.Date)]
         public DateTime StartDate { get; set; }
 
         [Required(ErrorMessage = "*")]
         [DataType(DataType.Date)]
+        [DisplayName("End Date")]
         public DateTime EndDate { get; set; }
       
         public status status { get; set; }
         //Navigational Properties
+        [DisplayName("Committee ID")]
         public int Committee_ID { get; set; }
         public Committee Committee { get; set; }
 
